@@ -1,0 +1,11 @@
+/* channel tabs: chips in the filter-control style, a dark pill slides to the selection */
+.p-channels{position:relative;display:flex;gap:8px;margin:0 0 20px;flex-wrap:wrap}
+.p-channel{position:relative;z-index:1;height:44px;display:flex;align-items:center;gap:8px;padding:0 14px;border:1px solid #bfbfbf;border-radius:8px;background:transparent;color:var(--ink);font-size:16px;white-space:nowrap;transition:color .25s ease,border-color .25s ease}
+.p-channel:hover{background:#f0f4f9}
+.p-channel img{width:22px;height:22px;object-fit:contain}
+.p-channel small{min-width:22px;padding:0 6px;border-radius:999px;background:#edf0f6;color:var(--muted);font-size:13px;line-height:20px;text-align:center;transition:background-color .25s ease,color .25s ease}
+.p-channel[aria-selected=true]{color:white;border-color:#3d3d3d;background:transparent}
+.p-channel[aria-selected=true] small{background:#ffffff2e;color:white}
+.p-indicator{position:absolute;left:0;top:0;height:44px;border-radius:8px;background:#3d3d3d;transition:transform .38s cubic-bezier(.32,.72,0,1),width .38s cubic-bezier(.32,.72,0,1)}
+
+@media (prefers-reduced-motion:reduce){.p-channel,.p-channel small,.p-indicator{transition:none!important}}

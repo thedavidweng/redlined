@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Deliverect – Pickup Manager Mock</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <aside class="sidebar" aria-label="Main navigation">
+    <img class="brand-mark" src="assets/deliverect.svg" alt="Deliverect">
+    <nav>
+      <button class="nav-icon restaurants" aria-label="Restaurants" title="Restaurants (outside this mock)"><img src="assets/restaurants.svg" alt=""></button>
+      <button class="nav-icon direct-suite" aria-label="Direct Suite" title="Direct Suite (outside this mock)"><img src="assets/direct-suite.svg" alt=""></button>
+      <button class="nav-icon active" aria-label="Pickup Manager" aria-current="page"><img src="assets/pickup-manager.svg" alt=""></button>
+      <hr>
+      <button class="nav-icon" aria-label="Explore more" title="Outside this mock"><img src="assets/explore-more.svg" alt=""></button>
+    </nav>
+    <div class="nav-bottom">
+      <button class="nav-icon" aria-label="Help center" title="Outside this mock"><img src="assets/help-center.svg" alt=""></button>
+      <button class="nav-icon" aria-label="Configurations" title="Outside this mock"><img src="assets/settings.svg" alt=""></button>
+    </div>
+  </aside>
+  <div class="app">
+    <header class="topbar"><strong>Pickup Manager</strong><button class="profile" aria-label="JJ"><span>J</span> JJ</button></header>
+    <div class="filterbar">
+      <div class="tabs"><button data-view="manage">Manage pickup orders</button><button data-view="pickup" class="selected" aria-current="page">Pickup screen</button></div>
+      <div id="filters" class="filters"></div>
+    </div>
+    <main id="pickup-screen">
+      <div class="screen-toolbar">
+        <img class="wordmark" src="assets/deliverect.svg" alt="Deliverect">
+        <div class="manage-tools" hidden>
+          <label class="order-search"><img src="assets/search.svg" alt=""><input id="order-search" type="search" aria-label="Search pickup orders" placeholder="Search by Order ID, Driver Name, Delivery Channel or Customer Name"></label>
+          <button id="qr-scanning" class="action-button">Activate QR scanning</button>
+        </div>
+        <div class="tools">
+          <button id="zoom" aria-label="Enlarge font size" title="Enlarge font size"><img src="assets/plus.svg" alt=""><img src="assets/search.svg" alt=""></button>
+          <button id="settings" aria-label="Settings" title="Settings"><img src="assets/settings.svg" alt=""></button>
+          <button id="fullscreen" aria-label="Full screen" title="Full screen"><img src="assets/full-screen.svg" alt=""></button>
+        </div>
+      </div>
+      <div id="board" class="board" aria-live="polite"></div>
+      <footer id="tracker" hidden>Track your order <span>clubkitchen.example/track</span></footer>
+    </main>
+  </div>
+  <button class="messenger" aria-label="Open Intercom Messenger" title="Support is outside this mock"><img src="assets/intercom.png" alt=""></button>
+  <dialog id="settings-dialog" aria-labelledby="settings-title">
+    <header class="modal-header"><h1 id="settings-title">Settings</h1><button id="close-settings" aria-label="Close modal">×</button></header>
+    <div id="settings-body" class="modal-body"></div>
+    <footer class="modal-footer"><button disabled title="Sales booking is outside this mock">Book a Demo</button></footer>
+  </dialog>
+  <dialog id="qr-dialog" aria-labelledby="qr-title">
+    <header><h2 id="qr-title">Settings</h2><button id="close-qr" aria-label="Close QR settings">×</button></header>
+    <p>You can activate QR code scanning for a location, to allow tracking order statuses.</p>
+  </dialog>
+  <script src="model.js"></script>
+  <script src="manage.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

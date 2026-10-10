@@ -1,0 +1,148 @@
+<!doctype html>
+<!-- Generic before/after stage. Recording: driven by _tools/record.py. Manual preview:
+     /_tools/stage.html?product=deliverect&redline=ux-swipe-to-confirm -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Redlined stage</title>
+<style>
+  :root { --bg: #efede8; --ink: #14130f; --muted: #6f6b62; --good: #00a862; --bad: #d4442e; --ease: cubic-bezier(.32,.72,0,1); }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); color: var(--ink);
+    font-family: -apple-system, "SF Pro Display", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  header { position: absolute; left: 72px; right: 72px; top: 38px; }
+  .eyebrow { font-size: 17px; font-weight: 600; letter-spacing: .02em; color: var(--muted); display: flex; align-items: center; white-space: pre; }
+  .eyebrow b { color: var(--ink); font-weight: 600; }
+  .panels { position: absolute; left: 72px; right: 72px; top: 92px; bottom: 56px; display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
+  .panel { position: relative; display: flex; flex-direction: column; transition: opacity .5s var(--ease), filter .5s var(--ease); }
+  .panel.dim { opacity: .42; filter: saturate(.4); }
+  .label { display: flex; align-items: center; gap: 14px; height: 44px; margin-bottom: 14px; }
+  .tag { font-size: 18px; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; padding: 6px 12px; border-radius: 999px; background: #dedad2; color: #57534a; }
+  .after .tag { background: #d3f1e2; color: #007a47; }
+  .note { font-size: 25px; font-weight: 550; letter-spacing: -.005em; display: flex; align-items: center; gap: 10px; opacity: 0; transform: translateY(6px);
+    transition: opacity .35s var(--ease), transform .45s var(--ease), color .2s; }
+  .note.on { opacity: 1; transform: none; }
+  .note::before { content: ''; width: 9px; height: 9px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+  .note.bad { color: var(--bad); } .note.good { color: var(--good); } .note.neutral { color: #57534a; }
+  .window { position: relative; flex: 1; border-radius: 18px; overflow: hidden; background: white;
+    box-shadow: 0 1px 0 #0000000a, 0 18px 50px -18px #3a2f1a40, 0 0 0 1px #00000010; }
+  .window iframe { position: absolute; top: 0; left: 0; width: 1000px; height: 1000px; border: 0; transform-origin: 0 0; }
+  .receipt { position: absolute; right: 26px; bottom: 26px; width: 238px; padding: 18px 18px 26px; background: #fdfdfb; color: #111;
+    font: 500 14px/1.45 ui-monospace, "SF Mono", Menlo, monospace; text-align: center; transform: translateY(140%) rotate(3deg);
+    transition: transform .7s var(--ease); filter: drop-shadow(0 14px 24px #0003);
+    -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom/14px 51% repeat-x, linear-gradient(#000 0 0) top/100% calc(100% - 7px) no-repeat; }
+  .receipt.on { transform: translateY(0) rotate(-2deg); }
+  .receipt .cap { font-size: 11px; letter-spacing: .14em; color: #888; margin-bottom: 10px; }
+  .receipt .big { font-size: 26px; font-weight: 700; letter-spacing: .08em; margin: 4px 0 2px; }
+  .receipt svg { width: 58px; height: 58px; display: block; margin: 6px auto 4px; }
+  .receipt hr { border: 0; border-top: 1px dashed #bbb; margin: 10px 0; }
+  .finger { position: absolute; left: 0; top: 0; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; pointer-events: none; z-index: 10;
+    background: #1d1b1640; box-shadow: inset 0 0 0 2px #ffffffd9, 0 0 0 1px #00000024, 0 8px 20px #00000026; backdrop-filter: blur(1px);
+    opacity: 0; transition: opacity .3s ease, scale .14s ease-out; }
+  .finger.on { opacity: 1; } .finger.down { scale: .84; background: #1d1b1660; }
+  .ripple { position: absolute; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; border: 2px solid #1d1b1659;
+    pointer-events: none; z-index: 9; animation: ripple .55s var(--ease) forwards; }
+  @keyframes ripple { from { opacity: .9; scale: .7; } to { opacity: 0; scale: 1.9; } }
+  .curtain { position: absolute; inset: 0; background: var(--bg); opacity: 0; pointer-events: none; z-index: 20; transition: opacity .45s ease; }
+  .curtain.on { opacity: 1; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="eyebrow"><b id="eyebrow"></b><span id="number"></span></div>
+  </header>
+  <div class="panels">
+    <section class="panel before" id="before">
+      <div class="label"><span class="tag">Before</span><span class="note"></span></div>
+      <div class="window"><iframe></iframe><div class="receipt"></div></div>
+    </section>
+    <section class="panel after" id="after">
+      <div class="label"><span class="tag">After</span><span class="note"></span></div>
+      <div class="window"><iframe></iframe><div class="receipt"></div></div>
+    </section>
+  </div>
+  <div class="finger" id="finger"></div>
+  <div class="curtain" id="curtain"></div>
+<script>
+  const params = new URLSearchParams(location.search);
+  let product = params.get('product'), redline = null, config = null, frameCss = '', redlines = [];
+  const ready = product && fetch(`/${product}/_shared/stage.json`).then(r => r.json()).then(async c => {
+    config = c;
+    frameCss = await fetch(`/${c.frame_css}`).then(r => r.text());
+    redlines = await new Promise((resolve, reject) => document.head.append(Object.assign(document.createElement('script'), {
+      src: `/${product}/_shared/redlines.js`, onload: () => resolve(REDLINED.redlines), onerror: reject })));
+    document.querySelector('#eyebrow').textContent = `Redlined · ${c.name}`;
+  });
+  function load(side) {
+    const frame = document.querySelector(`#${side} iframe`);
+    const box = frame.parentElement.getBoundingClientRect();
+    const scale = box.width / 1000;
+    frame.style.transform = `scale(${scale})`;
+    frame.style.height = `${box.height / scale}px`;
+    return new Promise(resolve => {
+      frame.onload = () => {
+        const style = frame.contentDocument.createElement('style');
+        style.textContent = frameCss;
+        frame.contentDocument.head.append(style);
+        // Retry any image that failed under the burst of parallel requests.
+        for (const img of frame.contentDocument.images) if (img.complete && !img.naturalWidth) img.src = img.src.split('?')[0] + '?r=' + Date.now();
+        setTimeout(resolve, 400);
+      };
+      frame.src = `/${config.mock}&redline=${redline}&side=${side}&t=${Date.now()}`;
+    });
+  }
+  window.stage = {
+    async setup({ redline: name }) {
+      await ready;
+      redline = name;
+      // Posting number, shown as "1: feat-order-details".
+      const n = redlines.find(r => r.folder === name)?.n;
+      document.querySelector('#number').textContent = n ? ` · ${n}: ${name}` : ` · ${name}`;
+      await Promise.all([load('before'), load('after')]);
+    },
+    reload: load,
+    note(side, text, tone = 'neutral') {
+      const el = document.querySelector(`#${side} .note`);
+      if (!text) return el.classList.remove('on');
+      el.className = `note ${tone}`;
+      el.textContent = text;
+      requestAnimationFrame(() => el.classList.add('on'));
+    },
+    focus(side) {
+      for (const s of ['before', 'after']) document.querySelector(`#${s}`).classList.toggle('dim', side && s !== side);
+    },
+    receipt(side, html) {
+      const el = document.querySelector(`#${side} .receipt`);
+      if (html) el.innerHTML = html;
+      el.classList.toggle('on', Boolean(html));
+    },
+    highlight(side, name, cls) {
+      const doc = document.querySelector(`#${side} iframe`).contentDocument;
+      for (const row of doc.querySelectorAll('.manage-row')) {
+        row.classList.remove('cap-hl', 'cap-bad', 'cap-good');
+        if (name && row.textContent.includes(name)) row.classList.add(cls);
+      }
+    },
+    finger(x, y, on = true) {
+      const f = document.querySelector('#finger');
+      f.style.translate = `${x}px ${y}px`;
+      f.classList.toggle('on', on);
+    },
+    press(down) {
+      const f = document.querySelector('#finger');
+      f.classList.toggle('down', down);
+      if (down) {
+        const r = document.createElement('div');
+        r.className = 'ripple';
+        r.style.translate = f.style.translate;
+        document.body.append(r);
+        setTimeout(() => r.remove(), 600);
+      }
+    },
+    curtain(on) { document.querySelector('#curtain').classList.toggle('on', on); },
+  };
+  // Manual preview: opening the stage with ?redline= shows the pair straight away.
+  if (params.get('redline')) window.stage.setup({ redline: params.get('redline') });
+</script>
+</body>
+</html>

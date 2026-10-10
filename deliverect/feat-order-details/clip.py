@@ -1,0 +1,21 @@
+# Storyboard for feat-order-details. `d` is the Director from _tools/record.py.
+async def run(d):
+    await d.intro()
+    r = await d.box('before', '.manage-row', 'Ronan')
+    await d.glide(r['x'] + r['width'] * .45, r['y'] + r['height'] / 2, 0.9)
+    await d.wait(0.25)
+    await d.tap()
+    await d.wait(0.5)
+    await d.tap()
+    await d.note('before', 'Tapping an order does nothing', 'bad')
+    await d.wait(1.6)
+
+    await d.focus('after')
+    r = await d.box('after', '.manage-row', 'Ronan')
+    await d.glide(r['x'] + r['width'] * .45, r['y'] + r['height'] / 2, 1.0)
+    await d.wait(0.25)
+    await d.tap()
+    await d.note('after', 'Items and notes, right where you tapped', 'good')
+    await d.wait(2.4)
+    await d.focus(None)
+    await d.outro()

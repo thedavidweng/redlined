@@ -1,0 +1,14 @@
+/* swipe: same footprint and colour as .action-button; green fill trails the knob */
+.p-swipe{--x:0px;--p:0;position:relative;width:190px;height:36px;border-radius:8px;background:#3d3d3d;color:white;user-select:none;touch-action:none;overflow:hidden;isolation:isolate}
+.p-swipe-fill{position:absolute;inset:2px auto 2px 2px;width:calc(var(--x) + 32px);background:#00a862;border-radius:6px;z-index:-1;transition:width .5s cubic-bezier(.32,.72,0,1),background-color .2s}
+.p-swipe span{position:absolute;inset:0;display:grid;place-items:center;padding-left:30px;font-size:15px;pointer-events:none;white-space:nowrap;opacity:calc(1 - var(--p) * 1.6);transform:translateX(calc(var(--p) * 14px));transition:opacity .5s cubic-bezier(.32,.72,0,1),transform .5s cubic-bezier(.32,.72,0,1)}
+.p-swipe button{position:absolute;top:2px;left:2px;width:32px;height:32px;border-radius:6px;background:white;color:#3d3d3d;font-size:20px;cursor:grab;touch-action:none;box-shadow:0 1px 2px #0003;translate:var(--x) 0;scale:var(--s,1);transition:translate .5s cubic-bezier(.32,.72,0,1),scale .15s ease-out,color .2s}
+.p-swipe button b{position:absolute;inset:0;display:grid;place-items:center;font-weight:400;transition:opacity .2s,transform .3s cubic-bezier(.34,1.4,.64,1)}
+.p-swipe button b+b{opacity:0;transform:scale(.4);font-size:16px;font-weight:700}
+.p-swipe.dragging button{--s:.94;cursor:grabbing}
+.p-swipe.dragging .p-swipe-fill,.p-swipe.dragging span{transition:none}
+.p-swipe.dragging button{transition:translate 0s,scale .15s ease-out}
+.p-swipe.done .p-swipe-fill{width:calc(100% - 4px)}
+.p-swipe.done button{color:#00a862}.p-swipe.done button b:first-child{opacity:0;transform:scale(.4)}.p-swipe.done button b+b{opacity:1;transform:none}
+
+@media (prefers-reduced-motion:reduce){.p-swipe *{transition:none!important;animation:none!important}}

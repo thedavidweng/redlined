@@ -1,0 +1,11 @@
+/* double: press, armed (amber + draining hairline), done (green) */
+.action-button.p-tap{position:relative;overflow:hidden;transition:background-color .22s ease,color .22s ease,transform .12s ease-out}
+.action-button.p-tap:active{transform:scale(.96)}
+.action-button.p-tap span{display:inline-block}
+.action-button.p-tap i{position:absolute;left:0;right:0;bottom:0;height:2px;background:currentColor;opacity:.55;transform:scaleX(0);transform-origin:left}
+.action-button.p-armed{background:#f5a524;color:#241600}.action-button.p-armed:hover{background:#eb9a12}
+.action-button.p-armed i{animation:p-drain 3s linear forwards}
+.action-button.p-done,.action-button.p-done:hover{background:#00a862;color:white}
+@keyframes p-drain{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+
+@media (prefers-reduced-motion:reduce){.action-button.p-tap{transition:none!important;animation:none!important}}

@@ -1,0 +1,18 @@
+/* completion: button turns green "✓ Picked up"; the row plays one of three effects */
+.manage-row.p-complete{position:relative}
+.action-button.p-picked,.action-button.p-picked:hover{background:#00a862;color:white;cursor:default}
+
+/* shine: green tint + light sweep */
+.manage-row.p-shine{overflow:hidden;background:#effaf4;border-color:#b6e8cd;transition:background-color .3s ease,border-color .3s ease}
+.p-sweep{position:absolute;top:-10px;bottom:-10px;left:0;width:9%;pointer-events:none;background:linear-gradient(90deg,#fff0,#ffffffd9 50%,#fff0)}
+
+/* ring: outline traces the perimeter, then pulses */
+.manage-row.p-ring{background:#effaf4;transition:background-color .4s ease .45s}
+svg.p-ring{position:absolute;left:-5px;top:-5px;overflow:visible;pointer-events:none}
+svg.p-ring rect{fill:none;stroke:#00a862;stroke-width:3;stroke-dasharray:1;stroke-dashoffset:0}
+
+/* strike: details dim, a line draws through them */
+.manage-row.p-strike .manage-cell,.manage-row.p-strike .manage-timer{opacity:.45;transition:opacity .35s ease .25s}
+i.p-strike{position:absolute;top:calc(50% - 1px);height:2.5px;border-radius:2px;background:var(--ink);transform-origin:left;pointer-events:none}
+
+@media (prefers-reduced-motion:reduce){.manage-row.p-complete,.manage-row.p-complete *{transition:none!important}}

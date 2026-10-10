@@ -1,0 +1,7 @@
+/* Applied to framed mock pages (recording stage + side-by-side viewer): hide the app chrome so each window
+   shows just the order list, and add the outlines used to point at rows. Nothing in the list itself changes. */
+.sidebar,.topbar,.filterbar,.screen-toolbar,.messenger{display:none!important}
+.app{margin:0!important}.board{height:100vh!important;padding:26px 26px 0!important;scrollbar-width:none}
+.board .section h2{margin-top:0}
+.manage-row{transition:background-color .2s ease,outline-color .25s ease,outline-offset .35s cubic-bezier(.32,.72,0,1),border-radius .3s cubic-bezier(.32,.72,0,1);outline:3px solid transparent;outline-offset:8px}
+.manage-row.cap-hl{outline-color:#f5a524;outline-offset:3px}.manage-row.cap-bad{outline-color:#d4442e;outline-offset:3px}.manage-row.cap-good{outline-color:#00a862;outline-offset:3px}

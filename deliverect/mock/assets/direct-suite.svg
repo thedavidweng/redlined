@@ -1,0 +1,35 @@
+<svg viewBox="0 0 340 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<g id="clip1">
+		<circle cx="170.001" cy="170" r="31.9892" fill="currentColor"/>
+		<circle cx="170.001" cy="91.3974" r="31.9892" fill="currentColor"/>
+		<circle opacity="0.6" cx="248.603" cy="91.3974" r="21.9355" fill="currentColor"/>
+		<circle opacity="0.6" cx="248.603" cy="248.602" r="21.9355" fill="currentColor"/>
+		<circle opacity="0.6" cx="91.3964" cy="248.602" r="21.9355" fill="currentColor"/>
+		<circle opacity="0.6" cx="91.3964" cy="91.3974" r="21.9355" fill="currentColor"/>
+		<circle opacity="0.3" cx="28.3345" cy="97.7954" r="15.5376" fill="currentColor"/>
+		<circle opacity="0.3" cx="97.7954" cy="28.3335" r="15.5376" fill="currentColor"/>
+		<circle opacity="0.3" cx="97.7954" cy="311.667" r="15.5376" fill="currentColor"/>
+		<circle opacity="0.3" cx="242.206" cy="28.3335" r="15.5376" fill="currentColor"/>
+		<circle opacity="0.3" cx="242.206" cy="311.667" r="15.5376" fill="currentColor"/>
+		<circle opacity="0.3" cx="28.3345" cy="242.205" r="15.5376" fill="currentColor"/>
+		<circle opacity="0.3" cx="311.667" cy="97.7954" r="15.5376" fill="currentColor"/>
+		<circle opacity="0.3" cx="311.667" cy="242.205" r="15.5376" fill="currentColor"/>
+		<circle opacity="0.6" cx="170.002" cy="21.9355" r="21.9355" fill="currentColor"/>
+		<circle opacity="0.6" cx="170.002" cy="318.064" r="21.9355" fill="currentColor"/>
+		<circle opacity="0.6" cx="318.065" cy="170" r="21.9355" fill="currentColor"/>
+		<circle opacity="0.6" cx="21.9356" cy="170" r="21.9355" fill="currentColor"/>
+		<circle cx="170.001" cy="248.603" r="31.9892" fill="currentColor"/>
+		<circle cx="248.603" cy="170" r="31.9892" fill="currentColor"/>
+		<circle cx="91.3994" cy="170" r="31.9892" fill="currentColor"/>
+	</g>
+	<defs>
+	  <clipPath id="clip1">
+	    <rect
+	      width="340"
+	      height="340"
+	      fill="currentColor"
+	      transform="translate(1 1)"
+	    />
+	  </clipPath>
+	</defs>
+</svg>
