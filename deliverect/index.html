@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#07090c">
 <title>Redlined · Deliverect</title>
 <link rel="icon" type="image/svg+xml" href="../_tools/logo.svg">
 <link rel="stylesheet" href="../_tools/brand.css">
@@ -15,6 +16,8 @@
   body > * { position: relative; z-index: 1; }
   body > .brand-bg { position: fixed; z-index: 0; }
   .top { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+  .home { text-decoration: none; border-radius: 6px; transition: opacity .2s ease; }
+  .home:hover { opacity: .8; }
   .product { font-size: 13px; color: var(--muted); white-space: nowrap; }
   .product b { color: var(--ink-2); font-weight: 600; }
   header { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
@@ -68,7 +71,7 @@
 <body>
   <div class="brand-bg"></div>
   <div class="top">
-    <div class="brand"><span class="brand-mark"></span><span class="brand-word">Redlined</span></div>
+    <a class="brand home" href="../index.html" aria-label="Redlined home"><span class="brand-mark"></span><span class="brand-word">Redlined</span></a>
     <div class="product" id="product"></div>
   </div>
   <header>

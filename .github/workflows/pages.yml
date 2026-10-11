@@ -1,0 +1,47 @@
+# Publishes the site to GitHub Pages on every push to main. Build: _tools/build.py (slim copy of the repo + web-encoded clips).
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generated files are up to date
+        run: |
+          python3 _tools/sync.py
+          git diff --exit-code -- '*/_shared/redlines.js' products.js README.md || { echo "::error::Run python3 _tools/sync.py and commit the result."; exit 1; }
+      - uses: actions/cache@v4
+        with:
+          path: .cache/web-clips
+          key: web-clips-${{ hashFiles('**/media/clip.mp4') }}
+          restore-keys: web-clips-
+      - name: Install ffmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - name: Build
+        run: python3 _tools/build.py
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4

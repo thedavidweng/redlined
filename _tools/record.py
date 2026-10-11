@@ -1,4 +1,4 @@
-# Generic recorder: plays <path>/clip.py on _tools/stage.html and writes <path>/media/clip.{mp4,gif}.
+# Generic recorder: plays <path>/clip.py on _tools/stage.html and writes <path>/media/clip.{mp4,gif} and cover.webp.
 # Needs the server on :4173 (python3 ~/Development/redlined/_tools/serve.py). Run from anywhere:
 #   uv run --with playwright python ~/Development/redlined/_tools/record.py deliverect/ux-swipe-to-confirm [more paths...]
 import asyncio, base64, importlib.util, json, pathlib, shutil, subprocess, sys
@@ -77,6 +77,14 @@ class Director:
         await self.wait(0.6)
 
 
+def cover(mp4):
+    # Still for the series home: the resting frame the previewer also stops on (2 s before the end, after the finger leaves).
+    dur = float(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', mp4],
+                               capture_output=True, text=True, check=True).stdout)
+    subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-ss', f'{max(0, dur - 2):.2f}', '-i', mp4, '-frames:v', '1',
+                    '-vf', 'scale=1280:-1:flags=lanczos', '-c:v', 'libwebp', '-quality', '80', mp4.with_name('cover.webp')], check=True)
+
+
 async def record(rel):
     folder = (ROOT / rel).resolve()
     product = folder.relative_to(ROOT).parts[0]
@@ -125,11 +133,16 @@ async def record(rel):
     subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', mp4, '-vf',
                     'fps=25,scale=1280:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=256:stats_mode=diff[p];[b][p]paletteuse=dither=bayer:bayer_scale=4:diff_mode=rectangle',
                     '-loop', '0', gif], check=True)
+    cover(mp4)
     shutil.rmtree(frames_dir)
     print(f'{rel}: {len(frames)} frames, {frames[-1][0] - frames[0][0]:.1f}s, mp4 {mp4.stat().st_size / 1e6:.1f} MB, gif {gif.stat().st_size / 1e6:.1f} MB')
 
 
 async def main():
+    if sys.argv[1:] == ['--covers']:  # regenerate stills from existing clips, no recording
+        for mp4 in sorted(ROOT.glob('*/*/media/clip.mp4')):
+            cover(mp4)
+        return sync()
     if not sys.argv[1:]:
         sys.exit('usage: record.py <product>/<redline> [...]  (paths relative to redlined/)')
     sync()

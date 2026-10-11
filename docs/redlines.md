@@ -30,8 +30,10 @@ Create `<product>/` containing:
 
 - `mock/`
 - `_shared/` (copy the structure from `deliverect/`)
-- a README with the company intro, an index table and a preview link
-- `index.html`
+- a README with the company intro (its first sentence shows on the home page), an index table and a preview link
+- `index.html` (copy `deliverect/index.html`)
+
+`sync.py` then lists it in `products.js` (home page) and the root README. Pushing to main publishes it to GitHub Pages.
 
 ## Verify before reporting done
 
