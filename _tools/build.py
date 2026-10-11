@@ -10,7 +10,7 @@ from sync import ROOT, sync
 
 OUT = ROOT / '_site'
 CACHE = ROOT / '.cache' / 'web-clips'  # encodes keyed by master hash; CI keeps it between runs, so only new clips encode
-SKIP_DIRS = {'.git', '.github', '.lody', '.cache', '_site', 'docs', '__pycache__', 'node_modules'}
+SKIP_DIRS = {'.git', '.github', '.lody', '.cache', '.scratch', '_site', 'docs', '__pycache__', 'node_modules'}
 SKIP_SUFFIXES = {'.md', '.py', '.mjs', '.gif', '.json'}
 SKIP_NAMES = {'.DS_Store', '.gitignore', 'frame.css', 'stage.html', 'serve.py'}
 KEEP = {'_tools/brand.css', '_tools/logo.svg'}  # the only _tools/ files pages link to

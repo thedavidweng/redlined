@@ -3,3 +3,4 @@ media/.frames-*
 __pycache__/
 _site/
 .cache/
+.scratch/
