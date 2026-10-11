@@ -6,7 +6,7 @@
 
 **Caption**
 
-> Order rows aren’t tappable, so checking what’s in a bag means leaving the list. My fix: tap a row and its items and notes expand right underneath it. Staff can verify a bag without losing their place.
+> Checking what items are in a bag should not force staff to leave the pickup screen. Tapping an order expands the items and kitchen notes right there so anyone can verify a ticket without losing their place.
 
 ![Order details on tap](media/clip.gif)
 

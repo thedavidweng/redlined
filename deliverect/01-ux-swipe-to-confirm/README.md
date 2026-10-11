@@ -2,11 +2,11 @@
 
 **Problem** Completing an order takes one tap on "Picked up", with no undo, so a stray tap loses the wrong order.
 
-**Change** The action button becomes a slide-to-confirm control with the same footprint. A tap only nudges the knob; a deliberate slide past 85% confirms and the row closes up.
+**Change** The action button becomes a slide to confirm control with the same footprint. A tap only nudges the knob; sliding past 85% confirms and the row closes up.
 
 **Caption**
 
-> One tap on “Picked up” completes an order, with no undo. A stray tap in a busy kitchen closes the wrong one. My fix: slide to confirm, same footprint as the button. A tap only nudges the knob; a deliberate slide completes it.
+> A single tap on Picked up closes the ticket instantly with no undo. Swiping across instead keeps the same flow and stops accidental completions during a rush.
 
 ![Swipe to confirm](media/clip.gif)
 

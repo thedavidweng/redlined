@@ -10,42 +10,42 @@ globalThis.REDLINED = {
       "n": 1,
       "folder": "01-ux-swipe-to-confirm",
       "title": "Swipe to confirm",
-      "caption": "One tap on “Picked up” completes an order, with no undo. A stray tap in a busy kitchen closes the wrong one. My fix: slide to confirm, same footprint as the button. A tap only nudges the knob; a deliberate slide completes it.",
+      "caption": "A single tap on Picked up closes the ticket instantly with no undo. Swiping across instead keeps the same flow and stops accidental completions during a rush.",
       "clip": true
     },
     {
       "n": 2,
       "folder": "02-ux-tap-twice-to-confirm",
       "title": "Tap twice to confirm",
-      "caption": "Same stray-tap risk, lighter fix: confirm twice. The first tap arms the existing button for 3 seconds; a second, deliberate tap completes the order. An accidental quick double-tap is ignored, so no new control is needed.",
+      "caption": "If swiping feels like too much, confirm twice instead. The first tap turns the button into Tap again for three seconds, and the second tap completes the order.",
       "clip": true
     },
     {
       "n": 3,
       "folder": "03-feat-order-symbols",
       "title": "Order symbols",
-      "caption": "Rohan or Ronan? Same restaurant, near-identical names, and the bag has to go to the right person. My fix: every order gets a symbol, on screen and printed on the receipt. Square on the bag, square on the row. Shape plus colour, so it still reads on black-and-white thermal paper.",
+      "caption": "Similar customer names like Rohan and Ronan cause constant mixups on the counter. Giving each order a simple shape that prints on the receipt makes matching instant, even on plain thermal paper.",
       "clip": true
     },
     {
       "n": 4,
       "folder": "04-feat-order-details",
       "title": "Order details on tap",
-      "caption": "Order rows aren’t tappable, so checking what’s in a bag means leaving the list. My fix: tap a row and its items and notes expand right underneath it. Staff can verify a bag without losing their place.",
+      "caption": "Checking what items are in a bag should not force staff to leave the pickup screen. Tapping an order expands the items and kitchen notes right there so anyone can verify a ticket without losing their place.",
       "clip": true
     },
     {
       "n": 5,
       "folder": "05-ux-picked-up-feedback",
       "title": "Picked up feedback",
-      "caption": "Tap “Picked up” and the order just vanishes. Finished, or moved? Staff scan the list to be sure. My fix: let completion look like completion. The row celebrates for a beat, then leaves. Three takes, in order: shine, ring, strike-through. Any of them beats a silent disappearance.",
+      "caption": "When an order disappears with zero feedback, staff second guess whether it actually went through. Showing a quick confirmation before the row leaves removes all doubt. Here are three ways to do it.",
       "clip": true
     },
     {
       "n": 6,
       "folder": "06-ux-channel-tabs",
       "title": "Channel tabs",
-      "caption": "Couriers lead with the platform: “DoorDash pickup.” Filtering by it today means opening a dropdown and ticking a box. My fix: one-tap channel tabs with counts above the list. Tap DoorDash, see only DoorDash orders.",
+      "caption": "Drivers always announce their app first, but filtering by channel takes three clicks in a dropdown. Dedicated tabs with order counts cut that down to a single tap.",
       "clip": true
     }
   ]
