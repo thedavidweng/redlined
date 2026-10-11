@@ -8,8 +8,9 @@
 ## Clip
 
 - Side by side: the before state on the left, the after state on the right. Show the problem first, then the fix.
-- The only text on screen is the redline number and folder (`1: feat-order-details`, added by the stage), the Before/After tags and one short note per side. Explanations go in the caption.
+- The clip is a wordless demo. The only text on screen is the Redlined wordmark, the product label, the redline number and the Before/After tags, all added by the stage. Everything to read, including what the clip shows, goes in the caption.
 - The clip loops seamlessly, and the finger must never hide the confirmation.
+- The look (cool near-black backdrop with the logo on a diagonal, wordmark, tokens) lives in `_tools/brand.css`, shared with the previewer. Change it there, then re-record every clip.
 - Record it with `uv run --with playwright python _tools/record.py <product>/<folder>`. Details are in `_tools/README.md`.
 
 ## Media

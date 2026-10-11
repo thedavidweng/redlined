@@ -1,0 +1,24 @@
+/* Redlined brand: colour tokens, the wordmark and the logo pattern. Shared by the stage (clips) and each product's previewer.
+   Cool, near-black palette after X's dark theme, so clips sit naturally in the timeline. Logo source: _tools/logo.svg. */
+:root {
+  --bg: #07090c; --bg-raise: #0f1318; --ink: #e7e9ea; --ink-2: #b7bdc3; --muted: #71767b; --line: #ffffff17; --chip: #ffffff0f; --chip-hover: #ffffff1c;
+  --accent: #1d9bf0; --accent-ink: #6cc2ff; --red: #f4212e; --good: #00ba7c; --bad: #f4212e;
+  --ease: cubic-bezier(.32,.72,0,1);
+  --mark: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="52 39 416 416"><g fill="none" stroke="%23fff" stroke-linecap="round" stroke-linejoin="round"><path stroke-width="28" d="M450 262C420 226 362 212 302 212C285 186 270 162 250 140C246 168 240 194 232 213C190 218 142 226 112 240C100 216 86 196 70 176C78 214 90 244 100 256C88 272 78 290 72 308C98 292 114 278 124 272C170 290 240 300 300 298C290 320 274 338 254 354C290 346 320 322 342 296C390 292 428 282 450 262Z"/><path stroke-width="42" d="M388 245h0"/></g></svg>');
+}
+
+/* Backdrop: a soft top light over the logo, repeated on a diagonal at low opacity. Put .brand-bg first in <body>. */
+.brand-bg { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;
+  background: radial-gradient(120% 80% at 50% -10%, #16202b 0%, #0b0f14 45%, var(--bg) 100%); }
+.brand-bg::before { content: ''; position: absolute; inset: -60%; transform: rotate(-24deg); opacity: var(--pattern-opacity, .04);
+  background-image: var(--mark), var(--mark); background-size: var(--pattern-size, 132px) var(--pattern-size, 132px);
+  background-position: 0 0, calc(var(--pattern-size, 132px) / 2) calc(var(--pattern-size, 132px) / 2); background-repeat: repeat; }
+.brand-bg::after { content: ''; position: absolute; inset: 0; background: radial-gradient(90% 70% at 50% 45%, transparent 40%, #000a 100%); }
+
+/* Wordmark: the mark, then "Redlined" with a short red rule, the editor's redline. */
+.brand { display: inline-flex; align-items: center; gap: .32em; color: var(--ink); font-size: var(--brand-size, 30px); line-height: 1; white-space: nowrap; }
+.brand-mark { width: 1.4em; height: 1.4em; flex-shrink: 0; background: currentColor;
+  -webkit-mask: var(--mark) center / contain no-repeat; mask: var(--mark) center / contain no-repeat; }
+.brand-word { position: relative; font-family: -apple-system, "SF Pro Display", system-ui, sans-serif; font-weight: 750; letter-spacing: -.04em; padding-right: .04em; }
+.brand-word::after { content: ''; position: absolute; left: .02em; right: .06em; bottom: -.2em; height: max(2px, .085em); border-radius: 1px; background: var(--red);
+  transform: rotate(-1.2deg); transform-origin: left; }

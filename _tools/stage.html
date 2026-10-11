@@ -5,27 +5,32 @@
 <head>
 <meta charset="UTF-8">
 <title>Redlined stage</title>
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="stylesheet" href="brand.css">
 <style>
-  :root { --bg: #efede8; --ink: #14130f; --muted: #6f6b62; --good: #00a862; --bad: #d4442e; --ease: cubic-bezier(.32,.72,0,1); }
   * { box-sizing: border-box; }
   html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); color: var(--ink);
     font-family: -apple-system, "SF Pro Display", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
-  header { position: absolute; left: 72px; right: 72px; top: 38px; }
-  .eyebrow { font-size: 17px; font-weight: 600; letter-spacing: .02em; color: var(--muted); display: flex; align-items: center; white-space: pre; }
-  .eyebrow b { color: var(--ink); font-weight: 600; }
-  .panels { position: absolute; left: 72px; right: 72px; top: 92px; bottom: 56px; display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
-  .panel { position: relative; display: flex; flex-direction: column; transition: opacity .5s var(--ease), filter .5s var(--ease); }
-  .panel.dim { opacity: .42; filter: saturate(.4); }
-  .label { display: flex; align-items: center; gap: 14px; height: 44px; margin-bottom: 14px; }
-  .tag { font-size: 18px; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; padding: 6px 12px; border-radius: 999px; background: #dedad2; color: #57534a; }
-  .after .tag { background: #d3f1e2; color: #007a47; }
-  .note { font-size: 25px; font-weight: 550; letter-spacing: -.005em; display: flex; align-items: center; gap: 10px; opacity: 0; transform: translateY(6px);
-    transition: opacity .35s var(--ease), transform .45s var(--ease), color .2s; }
-  .note.on { opacity: 1; transform: none; }
-  .note::before { content: ''; width: 9px; height: 9px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
-  .note.bad { color: var(--bad); } .note.good { color: var(--good); } .note.neutral { color: #57534a; }
+  header { position: absolute; left: 72px; right: 72px; top: 40px; height: 40px; display: flex; align-items: center; justify-content: space-between; z-index: 1; }
+  .meta { display: flex; align-items: center; gap: 18px; font-size: 19px; font-weight: 500; letter-spacing: -.005em; color: var(--muted); white-space: pre; }
+  .meta b { color: var(--ink-2); font-weight: 600; }
+  .num { display: inline-flex; align-items: baseline; gap: 6px; padding: 7px 14px 7px 13px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--line);
+    font-size: 15px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .num b { font-size: 19px; letter-spacing: 0; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .num:empty { display: none; }
+  .panels { position: absolute; left: 72px; right: 72px; top: 112px; bottom: 52px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; z-index: 1;
+    transition: opacity .45s ease; }
+  body.curtain .panels { opacity: 0; }
+  .panel { position: relative; display: flex; flex-direction: column; transition: filter .5s var(--ease); }
+  .panel.dim { filter: brightness(.42) saturate(.3); }
+  .label { display: flex; align-items: center; gap: 14px; height: 36px; margin-bottom: 16px; }
+  .tag { display: inline-flex; align-items: center; gap: 9px; font-size: 16px; font-weight: 650; letter-spacing: .12em; text-transform: uppercase;
+    padding: 8px 14px 8px 12px; border-radius: 999px; background: var(--chip); color: var(--ink-2); box-shadow: inset 0 0 0 1px var(--line); }
+  .tag::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--muted); }
+  .after .tag { background: #1d9bf01f; color: var(--accent-ink); box-shadow: inset 0 0 0 1px #1d9bf040; }
+  .after .tag::before { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
   .window { position: relative; flex: 1; border-radius: 18px; overflow: hidden; background: white;
-    box-shadow: 0 1px 0 #0000000a, 0 18px 50px -18px #3a2f1a40, 0 0 0 1px #00000010; }
+    box-shadow: 0 0 0 1px #ffffff1f, 0 30px 80px -24px #000000e6, 0 0 0 9px #ffffff08; }
   .window iframe { position: absolute; top: 0; left: 0; width: 1000px; height: 1000px; border: 0; transform-origin: 0 0; }
   .receipt { position: absolute; right: 26px; bottom: 26px; width: 238px; padding: 18px 18px 26px; background: #fdfdfb; color: #111;
     font: 500 14px/1.45 ui-monospace, "SF Mono", Menlo, monospace; text-align: center; transform: translateY(140%) rotate(3deg);
@@ -37,32 +42,31 @@
   .receipt svg { width: 58px; height: 58px; display: block; margin: 6px auto 4px; }
   .receipt hr { border: 0; border-top: 1px dashed #bbb; margin: 10px 0; }
   .finger { position: absolute; left: 0; top: 0; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; pointer-events: none; z-index: 10;
-    background: #1d1b1640; box-shadow: inset 0 0 0 2px #ffffffd9, 0 0 0 1px #00000024, 0 8px 20px #00000026; backdrop-filter: blur(1px);
+    background: #0f141a47; box-shadow: inset 0 0 0 2px #ffffffd9, 0 0 0 1px #00000024, 0 8px 20px #00000026; backdrop-filter: blur(1px);
     opacity: 0; transition: opacity .3s ease, scale .14s ease-out; }
-  .finger.on { opacity: 1; } .finger.down { scale: .84; background: #1d1b1660; }
-  .ripple { position: absolute; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; border: 2px solid #1d1b1659;
+  .finger.on { opacity: 1; } .finger.down { scale: .84; background: #0f141a66; }
+  .ripple { position: absolute; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; border: 2px solid #0f141a59;
     pointer-events: none; z-index: 9; animation: ripple .55s var(--ease) forwards; }
   @keyframes ripple { from { opacity: .9; scale: .7; } to { opacity: 0; scale: 1.9; } }
-  .curtain { position: absolute; inset: 0; background: var(--bg); opacity: 0; pointer-events: none; z-index: 20; transition: opacity .45s ease; }
-  .curtain.on { opacity: 1; }
 </style>
 </head>
 <body>
+  <div class="brand-bg"></div>
   <header>
-    <div class="eyebrow"><b id="eyebrow"></b><span id="number"></span></div>
+    <div class="brand"><span class="brand-mark"></span><span class="brand-word">Redlined</span></div>
+    <div class="meta"><span id="product"></span><span class="num" id="number"></span></div>
   </header>
   <div class="panels">
     <section class="panel before" id="before">
-      <div class="label"><span class="tag">Before</span><span class="note"></span></div>
+      <div class="label"><span class="tag">Before</span></div>
       <div class="window"><iframe></iframe><div class="receipt"></div></div>
     </section>
     <section class="panel after" id="after">
-      <div class="label"><span class="tag">After</span><span class="note"></span></div>
+      <div class="label"><span class="tag">After</span></div>
       <div class="window"><iframe></iframe><div class="receipt"></div></div>
     </section>
   </div>
   <div class="finger" id="finger"></div>
-  <div class="curtain" id="curtain"></div>
 <script>
   const params = new URLSearchParams(location.search);
   let product = params.get('product'), redline = null, config = null, frameCss = '', redlines = [];
@@ -71,7 +75,9 @@
     frameCss = await fetch(`/${c.frame_css}`).then(r => r.text());
     redlines = await new Promise((resolve, reject) => document.head.append(Object.assign(document.createElement('script'), {
       src: `/${product}/_shared/redlines.js`, onload: () => resolve(REDLINED.redlines), onerror: reject })));
-    document.querySelector('#eyebrow').textContent = `Redlined · ${c.name}`;
+    // "Deliverect · Pickup Manager": the product in full weight, the surface after it.
+    const [name, ...rest] = (c.label ?? c.name).split(' · ');
+    document.querySelector('#product').innerHTML = `<b>${name}</b>${rest.map(part => ` · ${part}`).join('')}`;
   });
   function load(side) {
     const frame = document.querySelector(`#${side} iframe`);
@@ -95,19 +101,12 @@
     async setup({ redline: name }) {
       await ready;
       redline = name;
-      // Posting number, shown as "1: feat-order-details".
+      // Posting number only; the folder name and explanations belong in the caption.
       const n = redlines.find(r => r.folder === name)?.n;
-      document.querySelector('#number').textContent = n ? ` · ${n}: ${name}` : ` · ${name}`;
+      document.querySelector('#number').innerHTML = n ? `No.<b>${String(n).padStart(2, '0')}</b>` : '';
       await Promise.all([load('before'), load('after')]);
     },
     reload: load,
-    note(side, text, tone = 'neutral') {
-      const el = document.querySelector(`#${side} .note`);
-      if (!text) return el.classList.remove('on');
-      el.className = `note ${tone}`;
-      el.textContent = text;
-      requestAnimationFrame(() => el.classList.add('on'));
-    },
     focus(side) {
       for (const s of ['before', 'after']) document.querySelector(`#${s}`).classList.toggle('dim', side && s !== side);
     },
@@ -139,7 +138,8 @@
         setTimeout(() => r.remove(), 600);
       }
     },
-    curtain(on) { document.querySelector('#curtain').classList.toggle('on', on); },
+    // Fades only the panels, so the brand and backdrop hold still across the loop seam.
+    curtain(on) { document.body.classList.toggle('curtain', on); },
   };
   // Manual preview: opening the stage with ?redline= shows the pair straight away.
   if (params.get('redline')) window.stage.setup({ redline: params.get('redline') });
