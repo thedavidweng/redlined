@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#07090c">
+<meta name="theme-color" content="#0a0a0a">
 <title>Redlined · Deliverect</title>
 <link rel="icon" type="image/svg+xml" href="../_tools/logo.svg">
 <link rel="stylesheet" href="../_tools/brand.css">
@@ -37,7 +37,7 @@
   .btn.quiet { background: none; color: var(--muted); box-shadow: none; padding: 0 8px; }
   .btn.quiet:hover { color: var(--ink); }
   .player { min-height: 0; display: grid; place-items: center; }
-  .screen { position: relative; max-width: 100%; max-height: 100%; aspect-ratio: 16 / 9; height: 100%; border-radius: 14px; overflow: hidden; background: var(--bg);
+  .screen { position: relative; max-width: 100%; max-height: 100%; aspect-ratio: 16 / 9; height: 100%; border-radius: 14px; overflow: hidden; background: #111;
     box-shadow: 0 0 0 1px #ffffff1f, 0 30px 80px -30px #000, 0 0 0 7px #ffffff08; }
   video { display: block; width: 100%; height: 100%; object-fit: contain; }
   .replay { position: absolute; inset: 0; display: grid; place-items: center; background: #07090c8c; border: 0; cursor: pointer; opacity: 0; pointer-events: none;
@@ -111,7 +111,7 @@
   const $ = selector => document.querySelector(selector);
   const video = $('#video'), overlay = $('#replay'), empty = $('#empty');
   const [name, ...rest] = label.split(' · ');
-  $('#product').innerHTML = `<b>${name}</b>${rest.map(part => ` · ${part}`).join('')}`;
+  $('#product').innerHTML = `<b>${name}</b>${rest.map(part => ` ${part}`).join('')}`;
 
   const seg = $('#seg');
   for (const { folder, n } of redlines) {

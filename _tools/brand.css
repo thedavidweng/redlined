@@ -1,15 +1,15 @@
-/* Redlined brand: colour tokens, the wordmark and the logo pattern. Shared by the stage (clips) and each product's previewer.
-   Cool, near-black palette after X's dark theme, so clips sit naturally in the timeline. Logo source: _tools/logo.svg. */
+/* Redlined brand: colour tokens, the wordmark and the logo pattern. Shared by each product's previewer.
+   Neutral black, white and gray. The stage does not use this pattern; a clip sits on its own solid plate.
+   Logo source: _tools/logo.svg. */
 :root {
-  --bg: #07090c; --bg-raise: #0f1318; --ink: #e7e9ea; --ink-2: #b7bdc3; --muted: #71767b; --line: #ffffff17; --chip: #ffffff0f; --chip-hover: #ffffff1c;
-  --accent: #1d9bf0; --accent-ink: #6cc2ff; --red: #f4212e; --good: #00ba7c; --bad: #f4212e;
+  --bg: #0a0a0a; --bg-raise: #141414; --ink: #e8e8e8; --ink-2: #b5b5b5; --muted: #737373; --line: #ffffff17; --chip: #ffffff0f; --chip-hover: #ffffff1c;
+  --accent: #e8e8e8; --accent-ink: #e8e8e8; --red: #f4212e; --good: #00ba7c; --bad: #f4212e;
   --ease: cubic-bezier(.32,.72,0,1);
   --mark: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="52 39 416 416"><g fill="none" stroke="%23fff" stroke-linecap="round" stroke-linejoin="round"><path stroke-width="28" d="M450 262C420 226 362 212 302 212C285 186 270 162 250 140C246 168 240 194 232 213C190 218 142 226 112 240C100 216 86 196 70 176C78 214 90 244 100 256C88 272 78 290 72 308C98 292 114 278 124 272C170 290 240 300 300 298C290 320 274 338 254 354C290 346 320 322 342 296C390 292 428 282 450 262Z"/><path stroke-width="42" d="M388 245h0"/></g></svg>');
 }
 
-/* Backdrop: a soft top light over the logo, repeated on a diagonal at low opacity. Put .brand-bg first in <body>. */
-.brand-bg { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;
-  background: radial-gradient(120% 80% at 50% -10%, #16202b 0%, #0b0f14 45%, var(--bg) 100%); }
+/* Backdrop: the logo repeated on a diagonal, on a flat neutral field. Put .brand-bg first in <body>. */
+.brand-bg { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; background: var(--bg); }
 .brand-bg::before { content: ''; position: absolute; inset: -60%; transform: rotate(-24deg); opacity: var(--pattern-opacity, .04);
   background-image: var(--mark), var(--mark); background-size: var(--pattern-size, 132px) var(--pattern-size, 132px);
   background-position: 0 0, calc(var(--pattern-size, 132px) / 2) calc(var(--pattern-size, 132px) / 2); background-repeat: repeat; }
