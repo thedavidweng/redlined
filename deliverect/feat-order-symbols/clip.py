@@ -11,7 +11,6 @@ async def run(d):
         await d.js('([s, n, c]) => stage.highlight(s, n, c)', ['before', name, 'cap-hl'])
         await d.wait(0.55)
     await d.js('([s, n, c]) => stage.highlight(s, n, c)', ['before', 'Rohan', 'cap-bad'])
-    await d.note('before', 'Same restaurant, near-identical names', 'bad')
     await d.wait(1.8)
 
     await d.focus('after')
@@ -20,7 +19,6 @@ async def run(d):
     await d.js('([s, h]) => stage.receipt(s, h)', ['after', RECEIPT_AFTER])
     await d.wait(1.0)
     await d.js('([s, n, c]) => stage.highlight(s, n, c)', ['after', 'Ronan', 'cap-good'])
-    await d.note('after', 'Square on the bag, square on the screen', 'good')
     await d.wait(2.2)
     await d.focus(None)
     await d.outro()

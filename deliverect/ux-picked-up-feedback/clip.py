@@ -7,17 +7,15 @@ async def run(d):
     await d.wait(0.25)
     await d.tap()
     await d.lift()
-    await d.note('before', 'Gone. Finished, or just moved?', 'bad')
     await d.wait(1.8)
 
     await d.focus('after')
-    for name, label in [('Ronan', 'Shine'), ('Carter', 'Ring'), ('Kevin', 'Strike-through')]:
+    for name in ['Ronan', 'Carter', 'Kevin']:  # shine, ring, strike-through
         a = await d.box('after', '.action-button', name)
         await d.glide(*d.center(a), 0.8)
         await d.wait(0.2)
         await d.tap()
         await d.lift()
-        await d.note('after', label, 'good')
         await d.wait(2.0)
     await d.wait(0.4)
     await d.focus(None)

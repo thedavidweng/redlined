@@ -7,7 +7,6 @@ async def run(d):
     await d.tap()
     await d.wait(0.5)
     await d.tap()
-    await d.note('before', 'Tapping an order does nothing', 'bad')
     await d.wait(1.6)
 
     await d.focus('after')
@@ -15,7 +14,6 @@ async def run(d):
     await d.glide(r['x'] + r['width'] * .45, r['y'] + r['height'] / 2, 1.0)
     await d.wait(0.25)
     await d.tap()
-    await d.note('after', 'Items and notes, right where you tapped', 'good')
     await d.wait(2.4)
     await d.focus(None)
     await d.outro()

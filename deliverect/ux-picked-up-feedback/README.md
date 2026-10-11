@@ -6,7 +6,7 @@
 
 **Caption**
 
-> Tap “Picked up” and the order just vanishes. Did it finish, or move somewhere? Staff have to scan the list to be sure. My fix: let completion look like completion. The row celebrates for a beat, then leaves. Three takes here: shine, ring, strike-through. Any of them beats a silent disappearance, and each gives a small hit of satisfaction on every handoff.
+> Tap “Picked up” and the order just vanishes. Finished, or moved? Staff scan the list to be sure. My fix: let completion look like completion. The row celebrates for a beat, then leaves. Three takes, in order: shine, ring, strike-through. Any of them beats a silent disappearance.
 
 ![Picked up feedback](media/clip.gif)
 

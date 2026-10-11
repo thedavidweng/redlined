@@ -6,7 +6,7 @@
 
 **Caption**
 
-> Rohan or Ronan? Same restaurant, near-identical names, and the bag has to go to the right person. My fix: every order gets a symbol, shown on screen and printed on the receipt. Shape plus colour, so it still reads on black-and-white thermal paper.
+> Rohan or Ronan? Same restaurant, near-identical names, and the bag has to go to the right person. My fix: every order gets a symbol, on screen and printed on the receipt. Square on the bag, square on the row. Shape plus colour, so it still reads on black-and-white thermal paper.
 
 ![Order symbols](media/clip.gif)
 

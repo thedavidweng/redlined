@@ -25,7 +25,7 @@ def sync_product(product):
             'n': n,
             'folder': folder,
             'title': readme_field(text, r'^# (.+)$', folder),
-            'problem': readme_field(text, r'^\*\*Problem\*\* (.+)$', ''),
+            'caption': readme_field(text, r'^\*\*Caption\*\*\s*\n\s*> (.+)$', ''),
             'clip': (product / folder / 'media' / 'clip.mp4').exists(),
         })
     stage = json.loads((product / '_shared' / 'stage.json').read_text())

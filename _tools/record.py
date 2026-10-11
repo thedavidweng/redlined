@@ -58,9 +58,6 @@ class Director:
     async def js(self, expr, arg=None):
         return await self.page.evaluate(expr, arg)
 
-    async def note(self, side, text, tone='neutral'):
-        await self.js('([s, t, k]) => stage.note(s, t, k)', [side, text, tone])
-
     async def focus(self, side):
         await self.js('s => stage.focus(s)', side)
 

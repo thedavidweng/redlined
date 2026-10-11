@@ -6,7 +6,6 @@ async def run(d):
     await d.wait(0.25)
     await d.tap()
     await d.wait(0.15)
-    await d.note('before', 'One accidental tap — Rohan’s order is gone', 'bad')
     await d.wait(1.6)
 
     await d.focus('after')
@@ -14,7 +13,6 @@ async def run(d):
     await d.glide(*d.center(k), 1.0)
     await d.wait(0.25)
     await d.tap()
-    await d.note('after', 'A tap only nudges the slider', 'neutral')
     await d.wait(1.3)
     track = await d.box('after', '.p-swipe', 'Rohan')
     await d.js('stage.press(true)')
@@ -25,7 +23,6 @@ async def run(d):
     await d.page.mouse.up()
     await d.js('stage.press(false)')
     await d.lift()
-    await d.note('after', 'A deliberate slide confirms', 'good')
     await d.wait(1.5)
     await d.focus(None)
     await d.outro()
