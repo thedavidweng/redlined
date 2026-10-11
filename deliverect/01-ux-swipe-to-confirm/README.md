@@ -12,5 +12,5 @@
 
 Upload `media/clip.mp4` to X. `clip.gif` is a fallback.
 
-Preview: [../index.html#ux-swipe-to-confirm](../index.html#ux-swipe-to-confirm)
-Live: [../mock/index.html?redline=ux-swipe-to-confirm](../mock/index.html?redline=ux-swipe-to-confirm)
+Preview: [../index.html#01-ux-swipe-to-confirm](../index.html#01-ux-swipe-to-confirm)
+Live: [../mock/index.html?redline=01-ux-swipe-to-confirm](../mock/index.html?redline=01-ux-swipe-to-confirm)

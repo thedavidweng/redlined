@@ -1,4 +1,4 @@
-# Storyboard for ux-tap-twice-to-confirm. `d` is the Director from _tools/record.py.
+# Storyboard for 02-ux-tap-twice-to-confirm. `d` is the Director from _tools/record.py.
 async def run(d):
     await d.intro()
     b = await d.box('before', '.action-button', 'Ronan')

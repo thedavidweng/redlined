@@ -12,5 +12,5 @@
 
 Upload `media/clip.mp4` to X. `clip.gif` is a fallback.
 
-Preview: [../index.html#ux-channel-tabs](../index.html#ux-channel-tabs)
-Live: [../mock/index.html?redline=ux-channel-tabs](../mock/index.html?redline=ux-channel-tabs)
+Preview: [../index.html#06-ux-channel-tabs](../index.html#06-ux-channel-tabs)
+Live: [../mock/index.html?redline=06-ux-channel-tabs](../mock/index.html?redline=06-ux-channel-tabs)

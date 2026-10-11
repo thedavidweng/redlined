@@ -1,4 +1,4 @@
-# Storyboard for ux-channel-tabs. `d` is the Director from _tools/record.py.
+# Storyboard for 06-ux-channel-tabs. `d` is the Director from _tools/record.py.
 async def run(d):
     await d.intro()
     for name in ['Malik', 'Ronan', 'Carter', 'Kevin']:

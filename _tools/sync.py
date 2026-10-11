@@ -6,7 +6,7 @@
 import json, pathlib, re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-FOLDER = re.compile(r'^(fix|ux|feat|ui|a11y)-[a-z0-9-]+$')
+FOLDER = re.compile(r'^\d{2}-(?:fix|ux|feat|ui|a11y)-[a-z0-9-]+$')
 
 
 def readme_field(text, pattern, default):

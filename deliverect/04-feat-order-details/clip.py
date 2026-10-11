@@ -1,4 +1,4 @@
-# Storyboard for feat-order-details. `d` is the Director from _tools/record.py.
+# Storyboard for 04-feat-order-details. `d` is the Director from _tools/record.py.
 async def run(d):
     await d.intro()
     r = await d.box('before', '.manage-row', 'Ronan')

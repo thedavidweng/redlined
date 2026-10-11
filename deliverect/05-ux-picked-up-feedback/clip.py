@@ -1,4 +1,4 @@
-# Storyboard for ux-picked-up-feedback. `d` is the Director from _tools/record.py.
+# Storyboard for 05-ux-picked-up-feedback. `d` is the Director from _tools/record.py.
 # After side: three orders, three candidate effects (shine, ring, strike-through), one per tap.
 async def run(d):
     await d.intro()

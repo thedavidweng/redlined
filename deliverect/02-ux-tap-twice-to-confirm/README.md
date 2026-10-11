@@ -12,5 +12,5 @@
 
 Upload `media/clip.mp4` to X. `clip.gif` is a fallback.
 
-Preview: [../index.html#ux-tap-twice-to-confirm](../index.html#ux-tap-twice-to-confirm)
-Live: [../mock/index.html?redline=ux-tap-twice-to-confirm](../mock/index.html?redline=ux-tap-twice-to-confirm)
+Preview: [../index.html#02-ux-tap-twice-to-confirm](../index.html#02-ux-tap-twice-to-confirm)
+Live: [../mock/index.html?redline=02-ux-tap-twice-to-confirm](../mock/index.html?redline=02-ux-tap-twice-to-confirm)

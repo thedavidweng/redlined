@@ -1,6 +1,6 @@
 # Generic recorder: plays <path>/clip.py on _tools/stage.html and writes <path>/media/clip.{mp4,gif} and cover.webp.
 # Needs the server on :4173 (python3 ~/Development/redlined/_tools/serve.py). Run from anywhere:
-#   uv run --with playwright python ~/Development/redlined/_tools/record.py deliverect/ux-swipe-to-confirm [more paths...]
+#   uv run --with playwright python ~/Development/redlined/_tools/record.py deliverect/01-ux-swipe-to-confirm [more paths...]
 import asyncio, base64, importlib.util, json, pathlib, shutil, subprocess, sys
 from playwright.async_api import async_playwright
 

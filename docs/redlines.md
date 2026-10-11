@@ -2,7 +2,7 @@
 
 ## Naming
 
-Name folders `<type>-<slug>` in lowercase kebab-case. The type comes before the first hyphen:
+Name folders `<nn>-<type>-<slug>` in lowercase kebab-case. `<nn>` is the two-digit posting number, the same number the list assigns. The type is the segment after that number:
 
 - `fix`: broken or missing
 - `ux`: flow or error prevention
@@ -22,7 +22,7 @@ Every page must work when opened straight from disk (`file://`), so: classic `<s
 
 ## Numbering
 
-Every redline has a number: its 1-based position in the generated list (README table order, then unlisted folders). The README table's `#` column and the previewer show it as `<n>: <folder>`, e.g. `1: feat-order-details`; the clip shows the number alone. The stage adds it to clips automatically. Reordering means re-recording the clips whose number changed.
+Every redline has a number: its 1-based position in the generated list (README table order, then unlisted folders). That number is also the two-digit prefix of the folder name, so `4` is `04-feat-order-details`. The README table's `#` column and the previewer show it as `<n>: <folder>`; the clip shows the number alone. The stage adds it to clips automatically. Reordering means renaming the folders whose number changed and re-recording those clips.
 
 ## Add a product
 

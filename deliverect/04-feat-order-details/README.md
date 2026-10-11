@@ -12,5 +12,5 @@
 
 Upload `media/clip.mp4` to X. `clip.gif` is a fallback.
 
-Preview: [../index.html#feat-order-details](../index.html#feat-order-details)
-Live: [../mock/index.html?redline=feat-order-details](../mock/index.html?redline=feat-order-details)
+Preview: [../index.html#04-feat-order-details](../index.html#04-feat-order-details)
+Live: [../mock/index.html?redline=04-feat-order-details](../mock/index.html?redline=04-feat-order-details)

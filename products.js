@@ -5,7 +5,7 @@ globalThis.REDLINED_PRODUCTS = [
     "name": "Deliverect",
     "label": "Deliverect · Pickup Manager",
     "about": "Deliverect is a SaaS platform for restaurants and food businesses.",
-    "cover": "deliverect/ux-swipe-to-confirm/media/cover.webp",
+    "cover": "deliverect/01-ux-swipe-to-confirm/media/cover.webp",
     "count": 6
   }
 ];

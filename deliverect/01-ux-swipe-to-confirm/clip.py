@@ -1,4 +1,4 @@
-# Storyboard for ux-swipe-to-confirm. `d` is the Director from _tools/record.py.
+# Storyboard for 01-ux-swipe-to-confirm. `d` is the Director from _tools/record.py.
 async def run(d):
     await d.intro()
     b = await d.box('before', '.action-button', 'Rohan')

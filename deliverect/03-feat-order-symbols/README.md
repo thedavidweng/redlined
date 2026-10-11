@@ -12,5 +12,5 @@
 
 Upload `media/clip.mp4` to X. `clip.gif` is a fallback.
 
-Preview: [../index.html#feat-order-symbols](../index.html#feat-order-symbols)
-Live: [../mock/index.html?redline=feat-order-symbols](../mock/index.html?redline=feat-order-symbols)
+Preview: [../index.html#03-feat-order-symbols](../index.html#03-feat-order-symbols)
+Live: [../mock/index.html?redline=03-feat-order-symbols](../mock/index.html?redline=03-feat-order-symbols)

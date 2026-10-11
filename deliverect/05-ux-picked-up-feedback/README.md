@@ -12,5 +12,5 @@
 
 Upload `media/clip.mp4` to X. `clip.gif` is a fallback.
 
-Preview: [../index.html#ux-picked-up-feedback](../index.html#ux-picked-up-feedback)
-Live: [../mock/index.html?redline=ux-picked-up-feedback](../mock/index.html?redline=ux-picked-up-feedback)
+Preview: [../index.html#05-ux-picked-up-feedback](../index.html#05-ux-picked-up-feedback)
+Live: [../mock/index.html?redline=05-ux-picked-up-feedback](../mock/index.html?redline=05-ux-picked-up-feedback)
