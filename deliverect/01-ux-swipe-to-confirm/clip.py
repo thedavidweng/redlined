@@ -1,7 +1,7 @@
 # Storyboard for 01-ux-swipe-to-confirm. `d` is the Director from _tools/record.py.
 async def run(d):
     await d.intro()
-    b = await d.box('before', '.action-button', 'Rohan')
+    b = await d.box('before', '.manage-row:has-text("Rohan") .action-button')
     await d.glide(*d.center(b), 0.9)
     await d.wait(0.25)
     await d.tap()
@@ -9,12 +9,12 @@ async def run(d):
     await d.wait(1.6)
 
     await d.focus('after')
-    k = await d.box('after', '.p-swipe button', 'Rohan')
+    k = await d.box('after', '.manage-row:has-text("Rohan") .p-swipe button')
     await d.glide(*d.center(k), 1.0)
     await d.wait(0.25)
     await d.tap()
     await d.wait(1.3)
-    track = await d.box('after', '.p-swipe', 'Rohan')
+    track = await d.box('after', '.manage-row:has-text("Rohan") .p-swipe')
     await d.js('stage.press(true)')
     await d.page.mouse.down()
     await d.wait(0.12)

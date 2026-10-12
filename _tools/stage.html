@@ -28,12 +28,16 @@
   .after .tag { color: var(--ink); }
   .window { position: relative; flex: 1; border-radius: 18px; overflow: hidden; background: white;
     box-shadow: 0 0 0 1px #ffffff1f, 0 30px 80px -24px #000000e6, 0 0 0 9px #ffffff08; }
+  /* Portrait phone products (stage.json has "device"): two phones at device size, scaled down only if they don't fit, centred. */
+  body.device .panels { grid-template-columns: repeat(2, max-content); justify-content: center; column-gap: 220px; }
+  body.device .window { flex: none; width: var(--win-w); height: var(--win-h); border-radius: var(--win-r); }
   .window iframe { position: absolute; top: 0; left: 0; width: 1000px; height: 1000px; border: 0; transform-origin: 0 0; }
   .receipt { position: absolute; right: 26px; bottom: 26px; width: 238px; padding: 18px 18px 26px; background: #fdfdfb; color: #111;
     font: 500 14px/1.45 ui-monospace, "SF Mono", Menlo, monospace; text-align: center; transform: translateY(140%) rotate(3deg);
     transition: transform .7s var(--ease); filter: drop-shadow(0 14px 24px #0003);
     -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom/14px 51% repeat-x, linear-gradient(#000 0 0) top/100% calc(100% - 7px) no-repeat; }
   .receipt.on { transform: translateY(0) rotate(-2deg); }
+  .receipt:empty { visibility: hidden; }  /* an empty receipt is only 44px tall, so translateY(140%) leaves its top edge peeking in at the window bottom */
   .receipt .cap { font-size: 11px; letter-spacing: .14em; color: #888; margin-bottom: 10px; }
   .receipt .big { font-size: 26px; font-weight: 700; letter-spacing: .08em; margin: 4px 0 2px; }
   .receipt svg { width: 58px; height: 58px; display: block; margin: 6px auto 4px; }
@@ -44,6 +48,8 @@
   .finger.on { opacity: 1; } .finger.down { scale: .84; background: #141414a8; }
   .ripple { position: absolute; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; border: 2px solid #1414148c;
     pointer-events: none; z-index: 9; animation: ripple .55s var(--ease) forwards; }
+  .credit { position: absolute; right: 72px; bottom: 18px; font-size: 13px; color: var(--muted); opacity: .7; z-index: 1; }
+  .credit a { color: inherit; text-decoration: none; }
   @keyframes ripple { from { opacity: .9; scale: .7; } to { opacity: 0; scale: 1.9; } }
 </style>
 </head>
@@ -62,13 +68,19 @@
       <div class="window"><iframe></iframe><div class="receipt"></div></div>
     </section>
   </div>
+  <div class="credit" id="credit"></div>
   <div class="finger" id="finger"></div>
 <script>
   const params = new URLSearchParams(location.search);
   let product = params.get('product'), redline = null, config = null, frameCss = '', redlines = [];
   const ready = product && fetch(`/${product}/_shared/stage.json`).then(r => r.json()).then(async c => {
     config = c;
-    frameCss = await fetch(`/${c.frame_css}`).then(r => r.text());
+    if (c.frame_css) frameCss = await fetch(`/${c.frame_css}`).then(r => r.text());
+    if (c.device) {
+      const s = Math.min(1, 864 / c.device.height);  // 864 = panel height below the 52px label
+      document.body.classList.add('device');
+      for (const [name, value] of [['w', c.device.width], ['h', c.device.height], ['r', c.device.radius]]) document.body.style.setProperty(`--win-${name}`, `${value * s}px`);
+    }
     redlines = await new Promise((resolve, reject) => document.head.append(Object.assign(document.createElement('script'), {
       src: `/${product}/_shared/redlines.js`, onload: () => resolve(REDLINED.redlines), onerror: reject })));
     // "Deliverect Pickup Manager": the product in full weight, the surface after it. No separator glyph.
@@ -78,19 +90,22 @@
   function load(side) {
     const frame = document.querySelector(`#${side} iframe`);
     const box = frame.parentElement.getBoundingClientRect();
-    const scale = box.width / 1000;
+    const scale = config.device ? box.width / config.device.width : box.width / 1000;
     frame.style.transform = `scale(${scale})`;
+    if (config.device) frame.style.width = `${config.device.width}px`;
     frame.style.height = `${box.height / scale}px`;
     return new Promise(resolve => {
       frame.onload = () => {
-        const style = frame.contentDocument.createElement('style');
-        style.textContent = frameCss;
-        frame.contentDocument.head.append(style);
+        if (frameCss) {
+          const style = frame.contentDocument.createElement('style');
+          style.textContent = frameCss;
+          frame.contentDocument.head.append(style);
+        }
         // Retry any image that failed under the burst of parallel requests.
         for (const img of frame.contentDocument.images) if (img.complete && !img.naturalWidth) img.src = img.src.split('?')[0] + '?r=' + Date.now();
         setTimeout(resolve, 400);
       };
-      frame.src = `/${config.mock}&redline=${redline}&side=${side}&t=${Date.now()}`;
+      frame.src = `/${config.mock}${config.mock.includes('?') ? '&' : '?'}redline=${redline}&side=${side}&t=${Date.now()}`;
     });
   }
   window.stage = {
@@ -134,6 +149,8 @@
         setTimeout(() => r.remove(), 600);
       }
     },
+    // Data credits a mock must show but the real app doesn't (map tiles): IosDevice.credit() hands them up here.
+    credit(html) { document.querySelector('#credit').innerHTML = html; },
     // Fades only the panels, so the brand and backdrop hold still across the loop seam.
     curtain(on) { document.body.classList.toggle('curtain', on); },
   };

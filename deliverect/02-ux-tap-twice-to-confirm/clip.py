@@ -1,7 +1,7 @@
 # Storyboard for 02-ux-tap-twice-to-confirm. `d` is the Director from _tools/record.py.
 async def run(d):
     await d.intro()
-    b = await d.box('before', '.action-button', 'Ronan')
+    b = await d.box('before', '.manage-row:has-text("Ronan") .action-button')
     await d.glide(*d.center(b), 0.9)
     await d.wait(0.25)
     await d.tap()
@@ -9,7 +9,7 @@ async def run(d):
     await d.wait(1.6)
 
     await d.focus('after')
-    a = await d.box('after', '.action-button', 'Ronan')
+    a = await d.box('after', '.manage-row:has-text("Ronan") .action-button')
     await d.glide(*d.center(a), 1.0)
     await d.wait(0.25)
     await d.tap(0.05)

@@ -1,0 +1,46 @@
+/* Shared iPhone frame (see device.js). The frame draws the status bar, notch or Dynamic Island and Home indicator; the app
+   reads --safe-top/-bottom/-left/-right and leaves those areas clear. Modes: stage (iframe in the recording stage:
+   exact device size, no shell), desktop (phone window in the page), fullscreen (phone browser, real status bar). */
+html.ios, html.ios body { margin: 0; height: 100%; overflow: hidden; }
+html.ios body { background: #111; }
+
+.ios-device { --ios-w: 393px; --ios-h: 852px; --ios-radius: 55px;
+  --safe-top: var(--ios-safe-top, 59px); --safe-bottom: var(--ios-safe-bottom, 34px); --safe-left: 0px; --safe-right: 0px;
+  position: relative; width: var(--ios-w); height: var(--ios-h); border-radius: var(--ios-radius); overflow: hidden; background: #fff; }
+.ios-screen { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; isolation: isolate; }
+.ios-app { position: absolute; inset: 0; overflow: hidden; }
+
+.ios-desktop .ios-device { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(var(--ios-scale, 1));
+  box-shadow: 0 0 0 10px #050506, 0 0 0 11px #4a4b4f, 0 40px 100px -30px #000; }
+.ios-stage .ios-device { width: 100vw; height: 100vh; border-radius: 0; }
+.ios-fullscreen .ios-device { width: 100vw; height: 100dvh; border-radius: 0;
+  --safe-top: env(safe-area-inset-top, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px); --safe-right: env(safe-area-inset-right, 0px); }
+
+.ios-status, .ios-home { position: absolute; z-index: 100; pointer-events: none; color: var(--status-ink, #000); }
+.ios-status { left: 0; right: 0; top: 0; height: var(--safe-top); display: grid; grid-template-columns: 1fr 126px 1fr; align-items: center;
+  font: 600 17px/22px -apple-system, "SF Pro Text", system-ui, sans-serif; letter-spacing: -.01em; }
+.ios-status .time { justify-self: center; padding-top: 4px; font-variant-numeric: tabular-nums; }
+.ios-status .cutout { align-self: start; background: #000; }
+.cutout-island .cutout { margin-top: 11px; height: 37px; border-radius: 19px; }
+/* Notch (iPhone X to 16e): time in the left ear, icons in the right, a black tab with flared top corners between. */
+.cutout-notch .ios-status { grid-template-columns: 1fr 162px 1fr; }
+.cutout-notch .ios-status .time, .cutout-notch .ios-status .icons { padding-top: 6px; }
+.cutout-notch .ios-status .icons { margin-right: 14px; }
+.cutout-notch .cutout { position: relative; height: 30px; border-radius: 0 0 20px 20px; }
+.cutout-notch .cutout::before, .cutout-notch .cutout::after { content: ""; position: absolute; top: 0; width: 10px; height: 10px; }
+.cutout-notch .cutout::before { left: -10px; background: radial-gradient(circle at 0 100%, #0000 9.5px, #000 10px); }
+.cutout-notch .cutout::after { right: -10px; background: radial-gradient(circle at 100% 100%, #0000 9.5px, #000 10px); }
+.no-cutout .cutout, .no-cutout .cutout::before, .no-cutout .cutout::after { background: none; }
+.ios-status .icons { justify-self: center; display: flex; align-items: center; gap: 7px; padding-top: 4px; }
+.ios-status svg { display: block; fill: currentColor; }
+.ios-home { left: 50%; bottom: 8px; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: var(--home-ink, #000); }
+.ios-fullscreen .ios-status, .ios-fullscreen .ios-home { display: none; }
+
+/* Data credits (IosDevice.credit): outside the phone on desktop; on a phone, over the app briefly, then gone. */
+.ios-credit { position: fixed; right: 16px; bottom: 12px; z-index: 200; max-width: calc(100vw - 32px); color: #8a8a8e;
+  font: 400 11px/1.4 -apple-system, system-ui, sans-serif; text-align: right; transition: opacity .6s ease; }
+.ios-credit a { color: inherit; }
+.ios-fullscreen .ios-credit { left: 0; right: 0; bottom: 0; max-width: none; padding: 4px 8px calc(env(safe-area-inset-bottom, 0px) + 4px);
+  background: #ffffffd9; color: #3c3c43; text-align: center; }
+.ios-credit.gone { opacity: 0; pointer-events: none; }

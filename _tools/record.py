@@ -22,11 +22,25 @@ class Director:
         return await (await self.page.query_selector(f'#{side} iframe')).content_frame()
 
     async def box(self, side, selector, has_text=None):
+        # Bounding box of the first element matching the selector (and, if given, containing the text), in page coordinates.
         frame = await self.frame(side)
-        loc = frame.locator(selector)
-        if has_text:
-            loc = frame.locator('.manage-row', has_text=has_text).locator(selector) if selector != '.manage-row' else frame.locator('.manage-row', has_text=has_text)
-        return await loc.first.bounding_box()
+        return await frame.locator(selector, has_text=has_text).first.bounding_box()
+
+    async def to_stage(self, side, x, y):
+        # A point in the mock's own viewport (e.g. from a map's project()) to page coordinates: the iframe is offset and scaled.
+        iframe = await self.page.query_selector(f'#{side} iframe')
+        b = await iframe.bounding_box()
+        k = b['width'] / await (await iframe.content_frame()).evaluate('innerWidth')
+        return b['x'] + x * k, b['y'] + y * k
+
+    async def drag(self, x0, y0, x1, y1, dur=0.6):
+        # Press at (x0, y0), pull to (x1, y1) with the finger hint following, release.
+        await self.glide(x0, y0, 0.5)
+        await self.page.evaluate('stage.press(true)')
+        await self.page.mouse.down()
+        await self.glide(x1, y1, dur)
+        await self.page.mouse.up()
+        await self.page.evaluate('stage.press(false)')
 
     async def glide(self, x, y, dur=0.7, on=True):
         # Time-based, so recording overhead can't stretch the motion.
