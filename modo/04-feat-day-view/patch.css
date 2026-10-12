@@ -1,0 +1,50 @@
+/* Day view (structure in patch.js). The mock's own strip stays in the DOM (03 measures it) but is out of sight and out of the layout flow. */
+.trip-strip { position: relative; }
+.trip-strip [data-strip] { position: absolute; left: 0; right: 0; top: 0; visibility: hidden; pointer-events: none; }
+.dv { position: relative; margin: 6px 0 4px; user-select: none; -webkit-user-select: none; }
+.dv-row { display: flex; align-items: center; height: 28px; }
+.dv-day { flex: none; width: 46px; font: 400 12px/16px Roboto, sans-serif; color: #8a8a8a; white-space: nowrap; }
+.dv-row:first-child .dv-day { color: #222; font-weight: 500; }
+.dv-bar { position: relative; flex: 1; height: 14px; }
+.dv-bg { position: absolute; inset: 0; overflow: hidden; border-radius: 3px; background: #8fbdd761; }
+.dv-bg::after { content: ""; position: absolute; inset: 0; pointer-events: none;  /* ticks at 6, 12 and 18 */
+  background: linear-gradient(90deg, transparent calc(25% - .5px), #26505e47 calc(25% - .5px) calc(25% + .5px), transparent calc(25% + .5px) calc(50% - .5px), #26505e47 calc(50% - .5px) calc(50% + .5px),
+    transparent calc(50% + .5px) calc(75% - .5px), #26505e47 calc(75% - .5px) calc(75% + .5px), transparent calc(75% + .5px)); }
+.dv-busy, .dv-past { position: absolute; top: 0; bottom: 0; }
+.dv-busy { background: repeating-linear-gradient(135deg, #a9aeb2 0 1px, #eceeef 1px 4px); }
+.dv-past { background: #ffffffa6; }
+.dv-now { position: absolute; z-index: 1; top: 0; bottom: 0; width: 1.5px; margin-left: -.75px; background: #26505e; pointer-events: none; }  /* under the capsule, bar height only */
+.dv-now[hidden] { display: none; }
+.dv-axis { position: relative; height: 12px; margin: -2px 0 2px 46px; font: 400 10px/12px Roboto, sans-serif; color: #444; }
+.dv-axis span { position: absolute; top: 0; }
+.dv-axis span:nth-child(1) { left: 0; } .dv-axis span:nth-child(2) { left: 25%; } .dv-axis span:nth-child(3) { left: 50%; } .dv-axis span:nth-child(4) { left: 75%; }
+.dv-axis span::before { content: ""; position: absolute; left: 0; top: -4px; width: 1px; height: 3px; background: #26505e47; }
+.dv-axis span { padding-left: 2px; }
+/* The booking: navy as the mock's "yours" dots; it keeps square edges where it continues in the next or previous row. Taller than the bar, never narrower than 14 px (patch.js). */
+.dv-cap, .dv-hit { position: absolute; z-index: 2; top: -2px; height: 18px; box-sizing: border-box; }
+.dv-cap[hidden], .dv-hit[hidden] { display: none; }
+.dv-cap { background: #476470; box-shadow: 0 1px 2px #00000026; pointer-events: none; border-radius: 0;
+  transition: left .22s var(--ease), width .22s var(--ease), background-color .2s var(--ease), box-shadow .2s var(--ease); }
+.dv-cap.first { border-top-left-radius: 9px; border-bottom-left-radius: 9px; }
+.dv-cap.last { border-top-right-radius: 9px; border-bottom-right-radius: 9px; }
+.dv-cap.on { background: #304f5c; box-shadow: 0 2px 7px #304f5c59; transition-property: background-color, box-shadow; }
+.dv-hit { cursor: grab; touch-action: none; transition: left .22s var(--ease), width .22s var(--ease); }
+.dv-hit::before { content: ""; position: absolute; inset: -5px 0; }  /* the whole row is the capsule's hit area */
+.dv-hit.on { cursor: grabbing; transition: none; }
+/* Grips: 26 px hit areas, 22 px outside the capsule end and 4 px inside it (never overlapping at 14 px); a pill just outside the end. Absent where the capsule continues into the next row. */
+.dv-h { position: absolute; top: -5px; bottom: -5px; width: 26px; cursor: ew-resize; touch-action: none; display: none; }
+.dv-hit.first .dv-h.l, .dv-hit.last .dv-h.r { display: block; }
+.dv-h.l { left: -22px; }
+.dv-h.r { right: -22px; }
+.dv-h::before { content: ""; position: absolute; top: 8px; bottom: 8px; width: 5px; border-radius: 2.5px; box-sizing: border-box; background: #fff; border: 1.5px solid #476470;
+  box-shadow: 0 1px 2px #0000002e; transition: border-color .2s var(--ease); }
+.dv-h.l::before { left: 17px; }
+.dv-h.r::before { left: 4px; }
+.dv-hit.on .dv-h::before { border-color: #304f5c; }
+.dv-hit.open .dv-h.r { display: none !important; }  /* an open return has no end to pull */
+/* Time over the edge being dragged. */
+.dv-tip { position: absolute; z-index: 5; height: 18px; padding: 0 8px; transform: translateX(-50%); border-radius: 9px; background: #fff; color: #26505e; box-shadow: 0 1px 4px #00000040;
+  font: 500 12px/18px Roboto, sans-serif; white-space: nowrap; pointer-events: none; animation: dv-tip .15s var(--ease); }
+.dv-tip[hidden] { display: none; }
+@keyframes dv-tip { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .dv-cap, .dv-hit, .dv-h::before { transition: none; } .dv-tip { animation: none; } }

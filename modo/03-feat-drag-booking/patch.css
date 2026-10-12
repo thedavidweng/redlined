@@ -1,0 +1,21 @@
+/* Drag the booking (structure in patch.js). The capsule sits inside the scrolling strip: .drag-cap behind the dots (z-index -1), .drag-hit above them. Navy as the mock's "yours" dots. */
+.trip-strip .strip { position: relative; isolation: isolate; }
+.drag-cap, .drag-hit { position: absolute; height: 20px; border-radius: 10px; box-sizing: border-box; }
+.drag-cap[hidden], .drag-hit[hidden] { display: none; }
+.drag-cap { z-index: -1; background: #476470; box-shadow: 0 1px 2px #00000026; pointer-events: none;
+  transition: left .22s var(--ease), width .22s var(--ease), background-color .2s var(--ease), box-shadow .2s var(--ease); }
+.drag-cap.on { background: #304f5c; box-shadow: 0 2px 7px #304f5c59; }
+.drag-hit { z-index: 2; cursor: grab; touch-action: none; transition: left .22s var(--ease), width .22s var(--ease); }
+.drag-hit.on { cursor: grabbing; }
+/* Grips: 20 px wide hit areas that reach 16 px outside the capsule, 4 px inside it (so a one-quarter capsule keeps a middle to grab); the pill is centred on the capsule's end. */
+.drag-h { position: absolute; top: -6px; bottom: -6px; width: 20px; cursor: ew-resize; touch-action: none; }
+.drag-h.l { left: -16px; }
+.drag-h.r { right: -16px; }
+.drag-h::before { content: ""; position: absolute; top: 9px; bottom: 9px; width: 5px; border-radius: 2.5px; box-sizing: border-box; background: #fff; border: 1.5px solid #476470;
+  box-shadow: 0 1px 2px #0000002e; transition: border-color .2s var(--ease); }
+.drag-h.l::before { left: 13.5px; }
+.drag-h.r::before { left: 1.5px; }
+.drag-hit.on .drag-h::before { border-color: #304f5c; }
+.drag-hit.open .drag-h.r { display: none; }  /* an open return has no end to pull */
+.trip-strip .strip .hour.bridge::after { opacity: 0; }  /* the hour divider would cut through the capsule */
+@media (prefers-reduced-motion: reduce) { .drag-cap, .drag-hit, .drag-h::before { transition: none; } }

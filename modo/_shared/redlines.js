@@ -4,6 +4,56 @@ globalThis.REDLINED = {
   "name": "Modo",
   "label": "Modo · Map",
   "about": "Modo is a car-share co-operative in Vancouver, Canada: members book shared cars and bikes by the hour from a map in its iOS app.",
-  "cover": null,
-  "redlines": []
+  "cover": "modo/01-ux-one-time-entry/media/cover.webp",
+  "redlines": [
+    {
+      "n": 1,
+      "folder": "01-ux-one-time-entry",
+      "title": "One entry for the trip time",
+      "caption": "Return type and time lived in two places, and you chose the type blind. Now one tap on the trip opens one sheet: pick up, return, SET or OPEN. A live line shows how many cars are free for it. On a car's page, the same sheet changes the return type in place.",
+      "clip": true
+    },
+    {
+      "n": 2,
+      "folder": "02-ux-trip-times-together",
+      "title": "Trip times together",
+      "caption": "Four places on one page show your trip's times, split by a button, BOOK and a row of numbers. To change the time you scroll past all of it. Now the strip, pick up, return and free window sit in one block, and each time opens its editor.",
+      "clip": true
+    },
+    {
+      "n": 3,
+      "folder": "03-feat-drag-booking",
+      "title": "Drag the booking",
+      "caption": "Your booking already shows as dark dots on the strip, but changing it sends you through a sheet of wheels, twice. Now the dots are one block: drag it to move the trip, drag an end to change pick up or return. It snaps to 15 minutes and stops at unavailable times.",
+      "clip": true
+    },
+    {
+      "n": 4,
+      "folder": "04-feat-day-view",
+      "title": "Day view",
+      "caption": "A 12-hour open return runs off the edge of the hourly strip, and you can't see the free window at all. Now each day is one row, so the whole booking and everything free around it fit on screen. Drag it across midnight and it carries on in the next row.",
+      "clip": true
+    },
+    {
+      "n": 5,
+      "folder": "05-ux-filter-live-count",
+      "title": "Live count on Filters",
+      "caption": "Filters give no feedback. You toggle chips, tap APPLY, check the map, reopen, change, close, check again. Now the button counts as you tap: SUV, \"SHOW 4 CARS\"; add all-wheel drive, \"SHOW 3 CARS\". Tap it and the map shows just those cars.",
+      "clip": true
+    },
+    {
+      "n": 6,
+      "folder": "06-feat-walk-and-directions",
+      "title": "Walk and directions",
+      "caption": "Select a Modo car and it never says how far it is. Now: \"4 min · 280 m\", plus the walking route on the map. The vehicle page also lets you copy the address or open walking directions in Apple Maps or Google Maps. No more guessing the walk.",
+      "clip": true
+    },
+    {
+      "n": 7,
+      "folder": "07-feat-filter-from-chips",
+      "title": "Filter from chips",
+      "caption": "The nearest SUV is taken. The \"SUV\" chip on its card does nothing, so you open Filters, pick the class, apply, then scan the map. Now the chips are buttons: tap SUV and the map keeps only SUVs, with a toast, and the sheet jumps to the next-nearest one.",
+      "clip": true
+    }
+  ]
 };

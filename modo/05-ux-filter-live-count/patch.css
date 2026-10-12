@@ -1,0 +1,11 @@
+/* Live count on the Filters button and the Filter pill. Colours and type are the mock's own (--navy, Roboto). */
+.apply { transition: background-color .2s var(--ease), box-shadow .2s var(--ease), opacity .12s; }
+.lc-n { display: inline-grid; }
+.lc-n > span { grid-area: 1 / 1; white-space: nowrap; }
+/* No cars match: the button stays but reads as unavailable. */
+.apply:disabled { background: #a9b7bc; box-shadow: none; cursor: default; }
+/* The pill grows around its centre to make room for the count badge. */
+.filter { transition: opacity .12s, left .2s var(--ease), width .2s var(--ease); }
+.filter.lc-on { left: 140px; width: 110px; }
+.lc-pill { width: 18px; height: 18px; margin-left: -2px; border-radius: 50%; background: var(--navy); color: #fff; display: grid; place-items: center; font: 500 12px/1 Roboto, sans-serif; }
+@media (prefers-reduced-motion: reduce) { .apply, .filter { transition: none; } }

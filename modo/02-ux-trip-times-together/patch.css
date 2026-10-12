@@ -1,0 +1,19 @@
+/* Trip times block (structure in patch.js). The mock's own rules for the moved nodes (.strip, .full) stay; only the rows are restyled, from the old .rows. */
+.page .avail, .page [data-change] { display: none; }
+.rows + .action, .avail + .action { margin-top: 3px; }
+.trip-rows { margin-top: 2px; }
+.trip-row { display: flex; align-items: center; height: 43px; font: 400 16px/20px Roboto, sans-serif; color: #222; cursor: pointer; }
+.trip-row[hidden] { display: none; }
+.trip-row dt { flex: none; }
+.trip-row dd { flex: 1; min-width: 0; text-align: right; padding-right: 12px; white-space: nowrap; }
+.trip-row .trip-go { flex: none; color: #6b6b6b; }
+.trip-row em { display: none; font-style: normal; color: var(--navy); margin-right: 12px; }
+.trip-row.empty dd { display: none; }  /* the mock's "Please set a time" stays in the DOM; the block shows only the cue */
+.trip-row.empty em { display: block; margin-left: auto; }
+.trip-row:active { opacity: .6; }
+.trip-free { margin: 2px 0 8px; font: 400 14px/20px Roboto, sans-serif; color: #2d4f5d; animation: trip-in .3s cubic-bezier(.32, .72, 0, 1); }
+.trip-free[hidden] { display: none; }
+.trip-more { margin-top: 8px; }
+.trip-more .full { margin-top: 0; }
+@keyframes trip-in { from { opacity: 0; transform: translateY(-3px); } }
+@media (prefers-reduced-motion: reduce) { .trip-free { animation: none; } }

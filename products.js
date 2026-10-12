@@ -37,7 +37,7 @@ globalThis.REDLINED_PRODUCTS = [
     "name": "Modo",
     "label": "Modo · Map",
     "about": "Modo is a car-share co-operative in Vancouver, Canada: members book shared cars and bikes by the hour from a map in its iOS app.",
-    "cover": null,
-    "count": 0
+    "cover": "modo/01-ux-one-time-entry/media/cover.webp",
+    "count": 7
   }
 ];
