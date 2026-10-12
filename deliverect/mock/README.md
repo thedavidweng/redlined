@@ -30,6 +30,7 @@ All scripts are classic (no ES modules), so the mock also runs from `file://`.
 - `manage.js`: management rows and local status buttons.
 - `model.js`: separate frozen observations for both tabs, channels, location fixtures, filtering/search, status updates.
 - `assets/`: local copies of the visible logos, SVG icons, and Proxima Nova font assets.
+- `../_shared/icon.png`: the icon of the "Deliverect: online order hub" iOS app (com.deliverect.Deliverect), 256 px from the App Store artwork URL (iTunes Search API). Deliverect has no IPA here; the series home shows it on the product card.
 - `preview.png`: the local baseline at the same viewport size.
 
 No build step, dependencies, credentials, API calls, or remote resources at runtime.

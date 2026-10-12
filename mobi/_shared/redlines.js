@@ -5,5 +5,6 @@ globalThis.REDLINED = {
   "label": "Mobi by Rogers · Map",
   "about": "Mobi by Rogers is Vancouver's public bike share, sponsored by Rogers.",
   "cover": null,
+  "icon": "mobi/_shared/icon.png",
   "redlines": []
 };

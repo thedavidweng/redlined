@@ -5,6 +5,7 @@ globalThis.REDLINED = {
   "label": "Deliverect · Pickup Manager",
   "about": "Deliverect is a SaaS platform for restaurants and food businesses.",
   "cover": "deliverect/01-ux-swipe-to-confirm/media/cover.webp",
+  "icon": "deliverect/_shared/icon.png",
   "redlines": [
     {
       "n": 1,

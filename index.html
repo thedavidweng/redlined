@@ -21,10 +21,17 @@
     font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr)); gap: 28px; }
   .card { display: block; color: inherit; text-decoration: none; border-radius: 16px; outline-offset: 6px; }
+  .art { position: relative; }
   .cover { position: relative; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; background: var(--bg-raise);
     box-shadow: 0 0 0 1px #ffffff1f, 0 24px 60px -30px #000, 0 0 0 6px #ffffff08; transition: transform .5s var(--ease), box-shadow .5s var(--ease); }
   .cover img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .card:hover .cover { transform: translateY(-3px); box-shadow: 0 0 0 1px #ffffff33, 0 32px 70px -30px #000, 0 0 0 6px #ffffff0d; }
+  /* App icon: a sticker tucked on the cover's top-right corner, overhanging it (inside the grid gap and page gutter). */
+  .icon { --tilt: 7deg; position: absolute; z-index: 1; top: -14px; right: -12px; width: 60px; aspect-ratio: 1; border-radius: 22.5%; rotate: var(--tilt); background: var(--bg-raise);
+    box-shadow: 0 0 0 1px #0000008c, 0 14px 22px -8px #000d, 0 3px 7px #0009; transition: rotate .5s var(--ease), translate .5s var(--ease), box-shadow .5s var(--ease); pointer-events: none; }
+  .icon img { display: block; width: 100%; height: 100%; border-radius: inherit; }
+  .icon::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px #ffffff2e, inset 0 1px 0 #ffffff40; }
+  .card:hover .icon { rotate: 0deg; translate: 0 -6px; box-shadow: 0 0 0 1px #0000008c, 0 22px 28px -10px #000d, 0 4px 9px #0009; }
   .meta { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-top: 18px; }
   .meta h3 { margin: 0; font-size: 20px; font-weight: 650; letter-spacing: -.015em; }
   .meta h3 span { color: var(--muted); font-weight: 500; }
@@ -33,6 +40,7 @@
   .card p { margin: 6px 0 0; font-size: 14px; line-height: 1.5; color: var(--ink-2); }
   footer { margin-top: 72px; font-size: 13px; color: var(--muted); }
   a:focus-visible { outline: 2px solid var(--accent); }
+  @media (max-width: 480px) { .icon { width: 44px; top: -10px; right: -8px; } }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 </head>
@@ -50,11 +58,15 @@
 <script src="products.js"></script>
 <script>
   // Classic script so the page also works from file://.
+  const TILTS = [7, -6, 8, -7, 6];  // degrees, by card index: a few degrees off square, never the same twice in a row
   const esc = text => String(text).replace(/[&<>"]/g, c => `&#${c.charCodeAt(0)};`);
-  document.querySelector('#grid').innerHTML = REDLINED_PRODUCTS.map(({ product, name, label, about, cover, count }) => {
+  document.querySelector('#grid').innerHTML = REDLINED_PRODUCTS.map(({ product, name, label, about, cover, icon, count }, i) => {
     const surface = label.split(' · ').slice(1).join(' · ');
     return `<a class="card" href="${product}/index.html">
-      <div class="cover">${cover ? `<img src="${cover}" alt="" width="1280" height="720" decoding="async">` : ''}</div>
+      <div class="art">
+        <div class="cover${cover ? '' : ' brand-placeholder'}">${cover ? `<img src="${cover}" alt="" width="1280" height="720" decoding="async">` : ''}</div>
+        ${icon ? `<span class="icon" style="--tilt: ${TILTS[i % TILTS.length]}deg"><img src="${icon}" alt="" width="256" height="256" decoding="async"></span>` : ''}
+      </div>
       <div class="meta"><h3>${esc(name)}${surface ? ` <span>${esc(surface)}</span>` : ''}</h3><span class="count">${count} redline${count === 1 ? '' : 's'} →</span></div>
       ${about ? `<p>${esc(about)}</p>` : ''}
     </a>`;

@@ -5,6 +5,7 @@ globalThis.REDLINED = {
   "label": "Modo · Map",
   "about": "Modo is a car-share co-operative in Vancouver, Canada: members book shared cars and bikes by the hour from a map in its iOS app.",
   "cover": "modo/01-ux-one-time-entry/media/cover.webp",
+  "icon": "modo/_shared/icon.png",
   "redlines": [
     {
       "n": 1,
@@ -45,7 +46,7 @@ globalThis.REDLINED = {
       "n": 6,
       "folder": "06-feat-walk-and-directions",
       "title": "Walk and directions",
-      "caption": "Select a Modo car and it never says how far it is. Now: \"4 min · 280 m\", plus the walking route on the map. The vehicle page also lets you copy the address or open walking directions in Apple Maps or Google Maps. No more guessing the walk.",
+      "caption": "Select a Modo car and it never says how far it is. Now: \"4 min · 280 m\" under the station. Tap it and the sheet drops away to show the whole walking route, with Directions in Apple Maps or Google Maps. No more guessing the walk.",
       "clip": true
     },
     {

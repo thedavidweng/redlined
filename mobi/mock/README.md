@@ -23,6 +23,7 @@ Without query params the mock is plain. `?redline=<folder>&side=before|after` (d
 - `Urbanist.ttf` + `OFL.txt`: Urbanist variable font (SIL OFL), from github.com/google/fonts (`ofl/urbanist`). It is listed in the app's UIAppFonts and matches the screenshots. Sizes were set by eye from text widths.
 - `assets/*.png` and `assets.js` (the same glyphs as data URIs, because WebGL and CSS masks cannot read file:// images) are exported from the IPA asset catalog (`Assets` and `DesignSystemLibrary_DesignSystemLibrary_bundle_Assets`, @3x): `icon_available_bikes_in_station`, `icon_available_electric_bikes_in_station`, `icon_remaining_places_in_station`, `icon_diapason`, `icon_distance_station`, `icon_estimate_time_station`, `icon_estimate`, `icon_search`, `icon-24x24-cross-circle`, `fav_icon_home_dark`, `fav_icon_work_dark`, `fav_icon_default_dark`, `iconHamburger`, `iconChatQuestion`, `iconBtnRecenter`, `iconbtn_reorient`. Dock, route, search and the chip bikes are template glyphs recoloured with CSS masks. The station pin, rider dot and zone hatching are drawn in code (the catalog has no pin; `zoneForbidden` is a pin icon, not the hatch).
 - No fonts or other IPA files are committed.
+- `../_shared/icon.png`: the app icon (256 px), from the IPA asset catalog (`AppIconMobi`, 1024 px). The series home shows it on the product card.
 
 ## Known differences and gaps
 

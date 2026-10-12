@@ -6,6 +6,7 @@ globalThis.REDLINED_PRODUCTS = [
     "label": "Deliverect · Pickup Manager",
     "about": "Deliverect is a SaaS platform for restaurants and food businesses.",
     "cover": "deliverect/01-ux-swipe-to-confirm/media/cover.webp",
+    "icon": "deliverect/_shared/icon.png",
     "count": 6
   },
   {
@@ -14,6 +15,7 @@ globalThis.REDLINED_PRODUCTS = [
     "label": "Evo · Map",
     "about": "Evo is a car-sharing service in Vancouver: members find a Prius on a map in the iOS app and book it for the minute, the hour or the day.",
     "cover": null,
+    "icon": "evo/_shared/icon.png",
     "count": 0
   },
   {
@@ -22,6 +24,7 @@ globalThis.REDLINED_PRODUCTS = [
     "label": "Lime · Map",
     "about": "Lime is a micro-mobility company that rents shared electric scooters and bikes in cities around the world.",
     "cover": "lime/01-fix-range-in-km/media/cover.webp",
+    "icon": "lime/_shared/icon.png",
     "count": 1
   },
   {
@@ -30,6 +33,7 @@ globalThis.REDLINED_PRODUCTS = [
     "label": "Mobi by Rogers · Map",
     "about": "Mobi by Rogers is Vancouver's public bike share, sponsored by Rogers.",
     "cover": null,
+    "icon": "mobi/_shared/icon.png",
     "count": 0
   },
   {
@@ -38,6 +42,7 @@ globalThis.REDLINED_PRODUCTS = [
     "label": "Modo · Map",
     "about": "Modo is a car-share co-operative in Vancouver, Canada: members book shared cars and bikes by the hour from a map in its iOS app.",
     "cover": "modo/01-ux-one-time-entry/media/cover.webp",
+    "icon": "modo/_shared/icon.png",
     "count": 7
   }
 ];

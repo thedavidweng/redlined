@@ -17,6 +17,7 @@ OpenFreeMap Bright re-tinted toward Mapbox Streets by `style.js` (light-blue wat
 - The text font is the system font (San Francisco). The real app's face looks more humanist and narrower, so font sizes were set from measured text widths, not from the real values.
 - The IPA's `car_*`, `parking_*` and `charging_station_*` PNGs (flutter_assets/resources/builds/flutter/assets/png/) are a fallback set (Evo logo on the pin, bike parking), not what the live app shows, so no IPA file is used. Pins, signs, plug, rider dot and every icon are drawn in code (canvas and inline SVG). The app's icon font is reference only and is not committed.
 - The Prius photo is a drawn SVG, not a photo.
+- `../_shared/icon.png`: the app icon (256 px), from the IPA asset catalog (`AppIcon`, 1024 px). The series home shows it on the product card.
 
 ## Remaining deviations and gaps
 

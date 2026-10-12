@@ -5,6 +5,7 @@ globalThis.REDLINED = {
   "label": "Lime · Map",
   "about": "Lime is a micro-mobility company that rents shared electric scooters and bikes in cities around the world.",
   "cover": "lime/01-fix-range-in-km/media/cover.webp",
+  "icon": "lime/_shared/icon.png",
   "redlines": [
     {
       "n": 1,
