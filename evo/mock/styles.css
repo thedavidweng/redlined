@@ -1,0 +1,96 @@
+/* Home chrome, sized from the reference screenshots (pt). Text is the system font; the real app's face is not known, see README. */
+* { box-sizing: border-box; }
+body { font-family: -apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', sans-serif; -webkit-font-smoothing: antialiased; }
+#app { background: #e4e4e0; container-type: size; -webkit-tap-highlight-color: transparent; color: #000;
+  --cyan: #00bce2; --cyan-ink: #00a9d2; --cyan-wash: #e5f4f8; --grey: #a3a6ab; --ease: cubic-bezier(.32, .72, 0, 1); }
+#map { position: absolute; inset: 0; }
+button { padding: 0; border: 0; font: inherit; cursor: pointer; background: none; color: inherit; }
+svg { display: block; }
+p, h2, h3 { margin: 0; }
+.ios-status { transition: color .3s; }
+
+/* The tab bar's top edge fades the map out a little, as the real one does. */
+.shade { position: absolute; left: 0; right: 0; bottom: calc(60px + var(--safe-bottom)); height: 40px; pointer-events: none; background: linear-gradient(#0000, #0000000d); }
+
+/* Evo / Evo Return. */
+.mode { position: absolute; z-index: 5; left: 80px; top: var(--safe-top); width: 214px; height: 48px; padding: 4px; display: flex; border-radius: 24px; background: #fff; box-shadow: 0 2px 10px #0000002e; }
+.mode button { width: 103px; height: 40px; border-radius: 20px; font-size: 13.5px; line-height: 40px; letter-spacing: -.01em; }
+.mode .on { background: var(--cyan); color: #fff; }
+
+/* The round buttons on the right edge: 48 pt, 32 pt apart. */
+.rail { position: absolute; z-index: 5; right: 16px; top: var(--safe-top); width: 48px; pointer-events: none; }
+.round { position: relative; display: grid; place-items: center; width: 48px; height: 48px; margin-bottom: 32px; border-radius: 50%; background: #fff; box-shadow: 0 2px 10px #0000002e; pointer-events: auto; transition: opacity .3s; }
+.round svg { width: 24px; height: 24px; }
+.round:active { opacity: .7; }
+.badge { position: absolute; left: 37px; top: 1px; width: 11px; height: 11px; border-radius: 50%; background: #a0cbfa; }
+.is-selected .qr { opacity: 0; pointer-events: none; }
+
+/* Bottom tab bar. */
+.tabs { position: absolute; z-index: 6; left: 0; right: 0; bottom: 0; height: calc(60px + var(--safe-bottom)); display: grid; grid-template-columns: repeat(4, 1fr); padding-top: 11px; background: #fff; box-shadow: 0 -1px 0 #0000000f, 0 -3px 14px #0000000a; }
+.tabs button { display: flex; flex-direction: column; align-items: center; height: 40px; color: var(--grey); font-size: 11px; line-height: 16px; letter-spacing: -.01em; }
+.tabs svg { width: 26px; height: 26px; margin-bottom: -1px; }
+.tabs .on { color: var(--cyan); }
+
+/* Compact sheet: moved by transform only (sheet.js). It runs under the tab bar so nothing shows below it while it slides. */
+.sheet { position: absolute; z-index: 4; left: 0; right: 0; bottom: 0; height: calc(296px + var(--safe-bottom)); visibility: hidden; border-radius: 24px 24px 0 0; background: #fff; box-shadow: 0 -2px 16px #00000024;
+  transform: translate3d(0, 100%, 0); will-change: transform; contain: layout; touch-action: none; user-select: none; -webkit-user-select: none; }
+.sheet.dragging { cursor: grabbing; }
+.sheet > * { position: absolute; }
+.expand { left: 185px; top: 6px; width: 20px; height: 20px; border-radius: 50%; background: #8f9396; color: #fff; display: grid; place-items: center; }
+.expand svg { width: 20px; height: 20px; }
+.expand:active { background: #7b7f82; }
+.model { font-size: 17.5px; line-height: 28px; font-weight: 700; letter-spacing: -.01em; white-space: nowrap; }
+.sheet .model { left: 20px; top: 27px; }
+.plate { height: 27px; padding: 0 9px; border: 1.2px solid #d6d6d6; border-radius: 2px; background: #f6f6f6; font-size: 11.5px; line-height: 24px; white-space: nowrap; }
+.sheet .plate { left: 20px; top: 65px; }
+.photo { width: 139px; height: 61.5px; pointer-events: none; }
+.sheet .photo { left: 230px; top: 37px; }
+.stat { display: flex; align-items: center; height: 24px; gap: 4px; font-size: 13.5px; line-height: 24px; letter-spacing: -.01em; white-space: nowrap; }
+.stat svg { width: 17px; height: 20px; color: var(--cyan); }
+.walk svg { width: 14px; }
+.rate { display: grid; place-items: center; width: 92px; height: 24px; border-radius: 8px; background: var(--cyan-wash); color: var(--cyan-ink); font-size: 13.5px; font-weight: 600; letter-spacing: -.01em; }
+.sheet .fuel { left: 23px; top: 115px; }
+.sheet .walk { left: 86px; top: 115px; }
+.sheet .rate { left: 278px; top: 116px; }
+.book { height: 52px; border-radius: 8px; background: var(--cyan); color: #fff; font-size: 13px; letter-spacing: .01em; box-shadow: 0 3px 8px #00000047; }
+.book:active { background: #00a8cc; }
+.sheet .book { left: 22px; top: 170px; width: 346px; }
+
+/* Expanded: the sheet's full-screen card. A black top, a white card and the prices; it fades in over the map and the tab bar. */
+.full { position: absolute; z-index: 8; inset: 0; visibility: hidden; opacity: 0; background: #000; transition: opacity .3s var(--ease), visibility 0s .3s; }
+.is-expanded .full { visibility: visible; opacity: 1; transition: opacity .3s var(--ease); }
+.page { position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain; padding: 103px 0 112px; background: linear-gradient(#000 229px, #fff 229px) local; scrollbar-width: none; }
+.page::-webkit-scrollbar { display: none; }
+.card { position: relative; height: 206px; margin: 0 16px; border-radius: 16px; background: #fff; box-shadow: 0 4px 14px #00000029; transform: translateY(48px); transition: transform .45s var(--ease); }
+.is-expanded .card { transform: none; }
+.card > * { position: absolute; }
+.card .model { left: 16px; top: 24px; }
+.card .plate { left: 16px; top: 60px; }
+.card .photo { left: 212px; top: 33px; width: 130px; height: 57.5px; }
+.card .fuel { left: 20px; top: 106px; }
+.card .walk { left: 81px; top: 106px; }
+.card .rate { left: 250px; top: 107px; }
+.where { left: 21px; top: 155px; display: flex; align-items: center; gap: 5px; height: 24px; font-size: 12.5px; line-height: 24px; white-space: nowrap; }
+.where svg { width: 20px; height: 20px; color: var(--cyan); }
+.directions { left: 294px; top: 142px; width: 48px; height: 48px; border-radius: 12px; background: var(--cyan); color: #fff; display: grid; place-items: center; box-shadow: 0 4px 10px #00bce259; }
+.directions svg { width: 24px; height: 24px; }
+.directions:active { background: #00a8cc; }
+.pricing { padding: 14px 32px 0; }
+.pricing h3 { display: flex; align-items: center; gap: 8px; font-size: 15.5px; line-height: 26px; font-weight: 700; letter-spacing: -.01em; }
+.fees svg { width: 21px; height: 21px; }
+.line { display: flex; justify-content: space-between; align-items: center; font-size: 14.5px; line-height: 24px; letter-spacing: -.01em; }
+.line b { font-weight: 600; }
+.access { margin-top: 21px; font-weight: 600; }
+.rates { margin-top: 20px; height: 22px; line-height: 22px; }
+.rate-row { display: flex; justify-content: space-between; align-items: center; height: 44px; font-size: 12.5px; letter-spacing: -.01em; border-bottom: 1px solid #e3e3e5; }
+.rate-row:last-child { border-bottom: 0; }
+.rate-row b { font-weight: 600; font-size: 14px; }
+.foot { width: 262px; white-space: nowrap; margin-top: 9px; padding: 8px 8px 9px; border-radius: 6px; background: #f4f4f5; color: #8e8e93; font-size: 11.5px; line-height: 15px; }
+.top { position: absolute; z-index: 1; left: 0; right: 0; top: 0; height: 99px; background: #000; pointer-events: none; }
+.collapse { position: absolute; left: 4px; top: calc(var(--safe-top) + 4px); width: 48px; height: 48px; display: grid; place-items: center; color: #fff; pointer-events: auto; }
+.collapse svg { width: 26px; height: 26px; }
+.collapse:active { opacity: .6; }
+.bar { position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; height: calc(62px + var(--safe-bottom)); background: #fff; box-shadow: 0 -1px 0 #0000000d; }
+.bar .book { position: absolute; left: 18px; right: 18px; top: 14px; }
+
+@media (prefers-reduced-motion: reduce) { .full, .card, .round, .ios-status { transition: none; } .card { transform: none; } }

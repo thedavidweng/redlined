@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <title>Evo – Map Mock</title>
+  <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
+  <script>
+    // Start the map's first requests while MapLibre downloads and parses; it asks for them one after another (style, tile index, then label fonts once tiles are parsed). The style URL is IosMapStyle.BRIGHT.
+    for (const path of ['styles/bright', 'planet', 'fonts/Noto%20Sans%20Regular/0-255.pbf']) fetch(`https://tiles.openfreemap.org/${path}`).catch(() => {});
+  </script>
+  <link rel="stylesheet" href="../../_ios/maplibre/maplibre-gl.css">
+  <link rel="stylesheet" href="../../_ios/device.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Every glyph is an inline SVG drawn for this mock (the real app's icon font stays out of the repo). -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-more" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="4.5" cy="12" r="2.1"/><circle cx="12" cy="12" r="2.1"/><circle cx="19.5" cy="12" r="2.1"/></g></symbol>
+      <symbol id="i-filters" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3.5 6.5h5M13.5 6.5h7M3.5 12h8M16.5 12h4M3.5 17.5h4M12.5 17.5h8"/><circle cx="11" cy="6.5" r="2.4"/><circle cx="14" cy="12" r="2.4"/><circle cx="10" cy="17.5" r="2.4"/></g></symbol>
+      <symbol id="i-locate" viewBox="0 0 24 24"><path d="M21 3 3.5 10.3c-.7.3-.6 1.3.1 1.5l6.6 2 2 6.6c.2.7 1.2.8 1.5.1L21 3z" fill="currentColor" transform="rotate(-8 12 12)"/></symbol>
+      <symbol id="i-qr" viewBox="0 0 24 24"><g fill="currentColor"><path fill-rule="evenodd" d="M2 2h8v8H2zm2 2v4h4V4zM14 2h8v8h-8zm2 2v4h4V4zM2 14h8v8H2zm2 2v4h4v-4z"/><path d="M5 5h2v2H5zM17 5h2v2h-2zM5 17h2v2H5zM14 14h2.5v2.5H14zM18 14h4v2h-4zM14 18h2v4h-2zM18 18h2v2h-2zM20 20h2v2h-2z"/></g></symbol>
+      <symbol id="i-search" viewBox="0 0 28 28"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="7.5"/><path d="m17.8 17.8 6 6"/></g></symbol>
+      <symbol id="i-calendar" viewBox="0 0 28 28"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="21" height="19" rx="3"/><path d="M3.5 11h21M9 2.5v5M19 2.5v5"/></g><g fill="currentColor"><circle cx="9" cy="15" r="1.1"/><circle cx="14" cy="15" r="1.1"/><circle cx="19" cy="15" r="1.1"/><circle cx="9" cy="19.5" r="1.1"/><circle cx="14" cy="19.5" r="1.1"/><circle cx="19" cy="19.5" r="1.1"/></g></symbol>
+      <symbol id="i-star" viewBox="0 0 28 28"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="14" cy="14" r="11.5"/><path d="m14 6.8 2.1 4.4 4.8.6-3.5 3.3.9 4.8-4.3-2.3-4.3 2.3.9-4.8-3.5-3.3 4.8-.6z"/></g></symbol>
+      <symbol id="i-menu" viewBox="0 0 28 28"><path d="M4 7h20M4 14h20M4 21h20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></symbol>
+      <symbol id="i-fuel" viewBox="0 0 20 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22V4.5C2 3.1 3.1 2 4.5 2h5C10.9 2 12 3.1 12 4.5V22M1 22h12"/><path d="M12 9h2.2c1.2 0 2 .8 2 2v6.2c0 .9.7 1.6 1.6 1.6s1.6-.7 1.6-1.6V8.5L16.5 5.5"/></g><rect x="4.5" y="5" width="5" height="5" rx="1" fill="currentColor"/></symbol>
+      <symbol id="i-walk" viewBox="0 0 20 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8.2 5 10.6 4.4 14.2M8.4 8.5l1.9 3.4 3.4 1.7M10.3 11.9 9 16.8 6 22M10.3 12.4l2.4 3.4.3 5.8"/></g><circle cx="9.6" cy="3.6" r="2.2" fill="currentColor"/></symbol>
+      <symbol id="i-up" viewBox="0 0 24 24"><path d="m6.5 14.5 5.5-5.5 5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-down" viewBox="0 0 24 24"><path d="m5.5 9 6.5 6.5L18.5 9" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c-4-4.6-7-8.4-7-12.2C5 5.8 8 3 12 3s7 2.800 7 6.800c0 3.800-3 7.600-7 12.200z" stroke-linejoin="round"/><circle cx="12" cy="9.800" r="2.800"/></g></symbol>
+      <symbol id="i-tag" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 3h8.600c.5 0 1 .2 1.400.6l8 8c.8.8.8 2 0 2.800l-6.600 6.600c-.8.8-2 .8-2.800 0l-8-8C3.200 13.600 3 13.100 3 12.600z"/><circle cx="7.500" cy="7.500" r="1.400" fill="currentColor" stroke="none"/></g></symbol>
+      <symbol id="i-turn" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.600" stroke-linecap="round" stroke-linejoin="round"><path d="M6 19v-6.500c0-1.700 1.300-3 3-3h10"/><path d="m15.500 5.500 3.500 4-3.500 4"/></g></symbol>
+      <!-- The car in the sheet: a drawn side view of a black hatchback with the roof rack and the cyan stripe of the livery. -->
+      <symbol id="i-car" viewBox="0 0 280 124">
+        <ellipse cx="142" cy="108" rx="122" ry="7" fill="#000" opacity=".16"/>
+        <rect x="88" y="14" width="96" height="4" rx="2" fill="#17b4d8"/><rect x="100" y="18" width="3" height="10" fill="#222"/><rect x="170" y="18" width="3" height="10" fill="#222"/>
+        <path d="M10 84c0-9 6-14 18-17l44-9c10-9 22-21 40-25 12-3 30-3 50-1 12 1 22 6 31 16l23 11c14 4 27 8 34 14 5 4 6 9 6 14v6c0 5-3 8-9 8H22c-8 0-12-4-12-9z" fill="#14171a"/>
+        <path d="M82 58c10-8 20-19 34-22 14-2 28-1 42-1 6 0 10 2 14 7l12 17z" fill="#2f363c"/>
+        <path d="M126 36v22M170 36l12 22" stroke="#14171a" stroke-width="3"/>
+        <path d="M118 84h124" stroke="#17b4d8" stroke-width="2.600" stroke-linecap="round"/>
+        <path d="M30 70c20-4 60-5 90-5" stroke="#ffffff" stroke-opacity=".12" stroke-width="2" fill="none"/>
+        <g><circle cx="72" cy="96" r="19" fill="#0b0c0d"/><circle cx="72" cy="96" r="11.500" fill="#9aa1a6"/><circle cx="72" cy="96" r="5" fill="#40464b"/></g>
+        <g><circle cx="214" cy="96" r="19" fill="#0b0c0d"/><circle cx="214" cy="96" r="11.500" fill="#9aa1a6"/><circle cx="214" cy="96" r="5" fill="#40464b"/></g>
+      </symbol>
+    </defs>
+  </svg>
+  <div id="app">
+    <div id="map"></div>
+    <div class="shade"></div>
+
+    <div class="mode" role="tablist">
+      <button class="on" role="tab" aria-selected="true">Evo</button><button role="tab" aria-selected="false">Evo Return</button>
+    </div>
+    <div class="rail">
+      <button class="round" aria-label="More" title="Outside this mock"><svg><use href="#i-more"/></svg></button>
+      <button class="round" aria-label="Filters" title="Outside this mock"><svg><use href="#i-filters"/></svg><i class="badge"></i></button>
+      <button class="round locate" aria-label="My location"><svg><use href="#i-locate"/></svg></button>
+      <button class="round qr" aria-label="Scan to unlock" title="Outside this mock"><svg><use href="#i-qr"/></svg></button>
+    </div>
+
+    <div class="sheet" role="dialog" aria-label="Car details">
+      <button class="expand" aria-label="Show more"><svg><use href="#i-up"/></svg></button>
+      <h2 class="model" data-model></h2>
+      <span class="plate" data-plate></span>
+      <svg class="photo"><use href="#i-car"/></svg>
+      <p class="stat fuel"><svg><use href="#i-fuel"/></svg><span><span data-fuel></span> %</span></p>
+      <p class="stat walk"><svg><use href="#i-walk"/></svg><span><span data-walk></span> km • <span data-minutes></span> min</span></p>
+      <span class="rate">$0.49/min</span>
+      <button class="book" title="Outside this mock">BOOK NOW</button>
+    </div>
+
+    <nav class="tabs">
+      <button class="on"><svg><use href="#i-search"/></svg>Find a ride</button>
+      <button title="Outside this mock"><svg><use href="#i-calendar"/></svg>My bookings</button>
+      <button title="Outside this mock"><svg><use href="#i-star"/></svg>Evo Extras</button>
+      <button title="Outside this mock"><svg><use href="#i-menu"/></svg>Menu</button>
+    </nav>
+
+    <section class="full" aria-label="Car details" aria-hidden="true">
+      <div class="page">
+        <div class="card">
+          <h2 class="model" data-model></h2>
+          <span class="plate" data-plate></span>
+          <svg class="photo"><use href="#i-car"/></svg>
+          <p class="stat fuel"><svg><use href="#i-fuel"/></svg><span><span data-fuel></span> %</span></p>
+          <p class="stat walk"><svg><use href="#i-walk"/></svg><span><span data-walk-short></span> km • <span data-minutes></span> min</span></p>
+          <span class="rate">$0.49/min</span>
+          <p class="where"><svg><use href="#i-pin"/></svg><span data-address></span></p>
+          <button class="directions" aria-label="Directions" title="Outside this mock"><svg><use href="#i-turn"/></svg></button>
+        </div>
+        <div class="pricing">
+          <h3 class="fees"><svg><use href="#i-tag"/></svg>Fees</h3>
+          <p class="line access"><span>All Access Fee</span><b data-access></b></p>
+          <h3 class="rates">Rates</h3>
+          <div data-rates></div>
+          <p class="foot">All rates and fees are subject to GST and PST</p>
+        </div>
+      </div>
+      <div class="top"><button class="collapse" aria-label="Collapse"><svg><use href="#i-down"/></svg></button></div>
+      <div class="bar"><button class="book" title="Outside this mock">BOOK NOW</button></div>
+    </section>
+  </div>
+  <script src="../../_ios/maplibre/maplibre-gl.js"></script>
+  <script src="../../_ios/device.js"></script>
+  <script src="../../_ios/map-perf.js"></script>
+  <script src="../../_ios/devices.js"></script>
+  <script src="../../_ios/map-images.js"></script>
+  <script src="../../_ios/map-style.js"></script>
+  <script src="../../_ios/sheet.js"></script>
+  <script src="../../_ios/state.js"></script>
+  <script src="../_shared/vehicles.js"></script>
+  <script src="style.js"></script>
+  <script src="markers.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
