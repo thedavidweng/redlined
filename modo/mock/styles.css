@@ -111,6 +111,43 @@ svg { display: block; flex: none; }
 .page .chips { margin-top: 12px; flex-wrap: wrap; }
 .label { margin-top: 18px; font: 500 17px/22px Roboto, sans-serif; color: #222; }
 
+/* Filters sheet: opens from the Filter pill over everything but the status bar, tab bar included. Positions are measured from the reference (pt, from the sheet's top). */
+.backdrop { position: absolute; z-index: 20; inset: 0; background: #000; opacity: 0; visibility: hidden; }
+.fsheet { position: absolute; z-index: 21; left: 0; right: 0; top: 100px; bottom: 0; visibility: hidden; transform: translate3d(0, 100%, 0); will-change: transform;
+  contain: layout; overflow: hidden; background: #eef0f2; border-radius: 16px 16px 0 0; color: #252525; user-select: none; -webkit-user-select: none; }
+.fsheet.dragging { cursor: grabbing; }
+.fgrab { position: absolute; z-index: 1; left: 0; right: 0; top: 0; height: 30px; touch-action: none; cursor: grab; }
+.fgrab i { position: absolute; left: 50%; top: 10px; width: 30px; height: 4px; margin-left: -15px; border-radius: 2px; background: #3c3c3d; }
+.fscroll { position: absolute; left: 0; right: 0; top: 0; height: 640px; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; touch-action: pan-y; padding-bottom: 16px; scrollbar-width: none; }
+.fscroll::-webkit-scrollbar { display: none; }
+.fhead { position: relative; height: 82px; border-bottom: 1px solid #d1d3d5; touch-action: none; cursor: grab; }
+.fhead h2 { position: absolute; left: 0; right: 0; top: 41px; text-align: center; font: 500 18.5px/24px Roboto, sans-serif; }
+.fclear { position: absolute; right: 24px; top: 43px; font: 400 14px/22px Roboto, sans-serif; }
+.fclear:active, .row:active { opacity: .6; }
+.fsheet hr { margin: 0 24px; height: 1px; border: 0; background: #d1d3d5; }
+.fsec { padding: 0 24px; }
+.fsec h3 { font: 500 18px/25px Poppins, sans-serif; }
+.cat h3 { padding-top: 15.5px; }
+.cat .row { margin-top: 7.5px; }
+.cat + hr { margin-top: 25px; }
+.cls h3 { padding-top: 22.5px; }
+.cls .grid { margin-top: 17.5px; row-gap: 17px; padding-bottom: 24px; }
+.seats h3 { padding-top: 22.5px; }
+.seats .grid { margin-top: 13.5px; row-gap: 11px; padding-bottom: 34px; }
+.feat h3 { padding-top: 23.5px; }
+.feat .row:first-of-type { margin-top: 6.5px; }
+.grid { display: grid; }
+.two { grid-template-columns: 1fr 1fr; column-gap: 14px; }
+.three { grid-template-columns: 1fr 1fr 1fr; column-gap: 17px; }
+.fchip { height: 40px; border-radius: 5px; box-shadow: inset 0 0 0 1px #6d7175; text-align: center; font: 400 14px/40px Roboto, sans-serif; letter-spacing: .5px; }
+.fchip[aria-pressed=true] { background: var(--navy); box-shadow: inset 0 0 0 1px var(--navy); color: #fff; }
+.row { display: flex; align-items: center; justify-content: space-between; width: 100%; height: 36px; padding-right: 9px; font: 400 16px/22px Roboto, sans-serif; }
+.box { width: 17px; height: 17px; margin-top: 2px; border-radius: 2px; box-shadow: inset 0 0 0 1.5px #818283; display: grid; place-items: center; color: transparent; }
+.row[aria-pressed=true] .box { background: var(--navy); box-shadow: none; color: #fff; }
+.ffoot { position: absolute; left: 0; right: 0; top: 640px; bottom: 0; border-top: 1px solid #ddd; }
+.apply { position: absolute; left: 24px; right: 24px; top: 16px; height: 35px; border-radius: 4px; background: var(--navy); box-shadow: 0 2px 3px #0000002e; color: #fff; text-align: center; font: 500 14px/35px Roboto, sans-serif; letter-spacing: 1px; }
+.apply:active { opacity: .85; }
+
 /* Tab bar, static. */
 .tabs { position: absolute; z-index: 8; left: 0; right: 0; bottom: 0; height: var(--tab); background: #111d2c; display: flex; padding: 0; }
 .tabs button { width: 130px; height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 4px; padding-top: 8px; color: #8a929b; font: 400 13px/15px Roboto, sans-serif; }

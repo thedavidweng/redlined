@@ -14,21 +14,19 @@
   if (patch) document.head.append(Object.assign(document.createElement('link'), { rel: 'stylesheet', href: `../${redline}/patch.css` }));
 
   // STATE SEAM (extends the one above; inert without ?state=): ?state=<name> opens straight into that state, for calibration.
-  // selected opens on the nearest pin, vehicle on its Vehicle Information page. An unknown state falls back to home (IosState.pick).
+  // selected opens on the nearest pin, vehicle on its Vehicle Information page, filter on the open Filters sheet. An unknown state falls back to home (IosState.pick).
   const PIN = [80, 238];  // where the selected pin's tip sits: in the map strip between the header and the sheet, left of the Filter pill
-  const STATES = { home: {}, selected: { select: ModoData.near }, vehicle: { select: ModoData.near, page: true } };
+  const STATES = { home: {}, selected: { select: ModoData.near }, vehicle: { select: ModoData.near, page: true }, filter: { filters: true } };
   const first = IosState.pick(STATES).state, where = n => ModoData.pins.features[n].geometry.coordinates;
   const start = first.select == null ? camera.center : ModoData.frame(where(first.select), PIN);
 
   // Exposed for the test and calibration scripts (centre, zoom, idle), like LimeMap.
-  const map = globalThis.ModoMap = new maplibregl.Map({
+  const map = globalThis.ModoMap = new maplibregl.Map(IosMapPerf.options({
     container: 'map',
     center: start,
     zoom: camera.zoom,
     bearing: camera.bearing,
-    fadeDuration: 0,  // symbol fades repaint at full pixel ratio; without them a tap costs one render, not three
-    attributionControl: false,
-  });
+  }));
   map.setStyle(IosMapStyle.BRIGHT, { transformStyle: ModoStyle.transform });
   IosMapPerf.attach(map);
   // The real app shows no OpenFreeMap credit, so it sits outside the mock: the device frame puts it in the page corner.
@@ -62,6 +60,24 @@
   });
   // The scrolling content is not a drag handle: only the grabber and the "1 option" line are.
   $('.scroll').addEventListener('pointerdown', e => e.stopPropagation());
+
+  // Filters: the Filter pill opens a modal sheet over the whole screen. Dragging the grabber or header down, the backdrop and APPLY close it.
+  // APPLY only closes (the pins are not filtered); chips and checkboxes just toggle.
+  const backdrop = $('.backdrop'), fsheetEl = $('.fsheet'), fscroll = $('.fscroll');
+  const fsheet = IosSheet.create(fsheetEl, {
+    detents: { open: () => 0, hidden: () => fsheetEl.offsetHeight },
+    snaps: ['open', 'hidden'],
+    shown: 'open',
+    // The backdrop dims in step with the sheet's position and is out of the way once it is gone.
+    onMove(y, { hidden }) { backdrop.style.opacity = .5 * Math.max(0, 1 - y / hidden); backdrop.style.visibility = y >= hidden ? '' : 'visible'; },
+  });
+  // The content scrolls on its own; only the grabber and, while scrolled to the top, the header drag the sheet.
+  fscroll.addEventListener('pointerdown', e => { if (!(e.target.closest('.fhead') && fscroll.scrollTop <= 0)) e.stopPropagation(); });
+  $('.filter').addEventListener('click', () => { fscroll.scrollTop = 0; fsheet.show(); });
+  backdrop.addEventListener('click', () => fsheet.hide());
+  $('.apply').addEventListener('click', () => fsheet.hide());
+  $$('.fchip, .fsheet .row').forEach(b => b.addEventListener('click', () => b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') !== 'true')));
+  $('.fclear').addEventListener('click', () => $$('.fsheet [aria-pressed]').forEach(b => b.setAttribute('aria-pressed', 'false')));
 
   let markers, selected = null, home = null, pushed = false;
   const ease = t => 1 - (1 - t) ** 3;
@@ -106,6 +122,7 @@
   cardEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); push(); } });
   $('.back').addEventListener('click', pop);
 
+  if (first.filters) fsheet.snap('open', false);
   if (first.select != null) {
     fill(first.select);
     sheet.snap('open', false);
