@@ -18,10 +18,10 @@
   <div id="app">
     <div id="map"></div>
 
-    <header class="head" title="Outside this mock">
+    <header class="head">
       <div class="seg">
-        <button class="on">SET RETURN</button>
-        <button>OPEN RETURN</button>
+        <button class="on" aria-pressed="true">SET RETURN</button>
+        <button aria-pressed="false">OPEN RETURN</button>
         <svg class="help" width="26" height="26" viewBox="0 0 26 26" aria-label="Help"><circle cx="13" cy="13" r="11" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M9.6 10.2a3.5 3.5 0 1 1 5 3.2c-1.1.6-1.6 1.2-1.6 2.4M13 18.6v1.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
       </div>
       <div class="times">
@@ -81,9 +81,9 @@
         <button class="book" disabled>BOOK VEHICLE</button>
         <p class="note">This Vehicle is not available to book at the selected time</p>
         <dl class="rows">
-          <div><dt>Return Type</dt><dd>Set Return</dd></div>
-          <div><dt>Pick up at</dt><dd>Please set a time</dd></div>
-          <div><dt>Return by</dt><dd>Please set a time</dd></div>
+          <div><dt>Return Type</dt><dd data-rtype>Set Return</dd></div>
+          <div><dt>Pick up at</dt><dd data-pickup>Please set a time</dd></div>
+          <div data-retrow><dt>Return by</dt><dd data-retby>Please set a time</dd></div>
           <div><dt>Membership</dt><dd data-member></dd></div>
         </dl>
         <button class="action" title="Outside this mock"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17.2V21h3.8L18 9.8 14.2 6zM20.7 7a1 1 0 0 0 0-1.4l-2.3-2.3a1 1 0 0 0-1.4 0l-1.8 1.8L19 8.8z" fill="currentColor"/></svg><span>Change Time</span><svg class="go" width="10" height="16" viewBox="0 0 10 16" aria-hidden="true"><path d="m2 2 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
@@ -136,6 +136,16 @@
         </section>
       </div>
       <div class="ffoot"><button class="apply">APPLY</button></div>
+    </div>
+
+    <div class="pbd" aria-hidden="true"></div>
+    <div class="psheet" role="dialog" aria-label="Pick a time">
+      <div class="fgrab"><i></i></div>
+      <h2 class="ptitle">When do you want to start your trip?</h2>
+      <p class="psub" hidden>Open Returns have no fixed end time, but you must return the vehicle within 12 hours.</p>
+      <div class="wheels"><i class="band"></i><div class="pcol pdate"></div><div class="pcol phour"></div><div class="pcol pmin"></div><div class="pcol pap"></div></div>
+      <button class="pclose">CLOSE</button>
+      <button class="psave">SAVE</button>
     </div>
 
     <nav class="tabs" title="Outside this mock">

@@ -17,14 +17,20 @@ svg { display: block; flex: none; }
   border-radius: 0 0 16px 16px; box-shadow: 0 3px 8px #0000002e; }
 .seg { position: relative; display: flex; height: 40px; margin-top: -1px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; }
 .seg > button { width: 168px; height: 40px; padding-top: 1px; text-align: center; font: 500 12px/35px Roboto, sans-serif; letter-spacing: 1.5px; color: #1d1d1d; }
+.seg > button { transition: background-color .15s ease, box-shadow .15s ease, color .15s ease; }
 .seg > button.on { background: #f0f7fa; box-shadow: inset 0 0 0 2px var(--navy); color: var(--navy); }
 .seg > button:nth-child(2) { width: 160px; }
 .help { position: absolute; right: 14px; top: 7px; color: #6b6b6b; }
-.times { position: relative; height: 40px; }
-.when { position: absolute; top: 10px; height: 20px; display: flex; align-items: center; gap: 8px; font: 400 14px/20px Roboto, sans-serif; color: #7a7a7a; }
+/* Flex row so a longer time label pushes the arrow and End Time along instead of overlapping them. The placeholder state lands on the old absolute positions (42 / 160 / 213). */
+.times { position: relative; height: 40px; display: flex; align-items: center; padding-left: 42px; }
+.when { flex: none; height: 20px; white-space: nowrap; display: flex; align-items: center; gap: 8px; font: 400 14px/20px Roboto, sans-serif; color: #7a7a7a; }
 .when svg { color: var(--navy); }
-.when:nth-of-type(1) { left: 42px; } .when:nth-of-type(2) { left: 213px; }
-.to { position: absolute; left: 160px; top: 14px; color: var(--navy); }
+.when.set { color: #222; }
+.when:nth-of-type(1) { min-width: 114px; } .when:nth-of-type(2) { margin-left: 35px; }
+.to { margin-left: 4px; color: var(--navy); }
+/* Open return has no end time: the arrow and End Time fade out, then drop out of reach (visibility after the fade). */
+.to, .when:nth-of-type(2) { transition: opacity .15s ease, visibility 0s; }
+.times.open .to, .times.open .when:nth-of-type(2) { opacity: 0; visibility: hidden; transition: opacity .15s ease, visibility 0s .15s; }
 .clear { position: absolute; right: 21px; top: 11px; color: var(--navy); }
 
 /* Filter and locate float above the sheet: they ride its top edge (app.js) and sit 17 pt over the map's bottom edge at home. */
@@ -98,6 +104,7 @@ svg { display: block; flex: none; }
 .rows { margin-top: 12.5px; }
 .rows div { display: flex; justify-content: space-between; height: 43px; align-items: center; font: 400 16px/20px Roboto, sans-serif; color: #222; }
 .rows dd { text-align: right; }
+.rows div[hidden] { display: none; }
 .action { position: relative; display: flex; align-items: center; width: 100%; height: 64px; padding-left: 34px; border-top: 1px solid #e6e6e6; font: 400 17px/22px Roboto, sans-serif; color: var(--navy); }
 .rows + .action { margin-top: 3px; }
 .action > svg:first-child { position: absolute; left: 1px; top: 20px; color: #6b6b6b; }
@@ -139,14 +146,35 @@ svg { display: block; flex: none; }
 .grid { display: grid; }
 .two { grid-template-columns: 1fr 1fr; column-gap: 14px; }
 .three { grid-template-columns: 1fr 1fr 1fr; column-gap: 17px; }
-.fchip { height: 40px; border-radius: 5px; box-shadow: inset 0 0 0 1px #6d7175; text-align: center; font: 400 14px/40px Roboto, sans-serif; letter-spacing: .5px; }
+.fchip { transition: background-color .18s ease, box-shadow .18s ease, color .18s ease, transform .12s var(--ease); height: 40px; border-radius: 5px; box-shadow: inset 0 0 0 1px #6d7175; text-align: center; font: 400 14px/40px Roboto, sans-serif; letter-spacing: .5px; }
+.fchip:active { transform: scale(.97); }
 .fchip[aria-pressed=true] { background: var(--navy); box-shadow: inset 0 0 0 1px var(--navy); color: #fff; }
 .row { display: flex; align-items: center; justify-content: space-between; width: 100%; height: 36px; padding-right: 9px; font: 400 16px/22px Roboto, sans-serif; }
-.box { width: 17px; height: 17px; margin-top: 2px; border-radius: 2px; box-shadow: inset 0 0 0 1.5px #818283; display: grid; place-items: center; color: transparent; }
-.row[aria-pressed=true] .box { background: var(--navy); box-shadow: none; color: #fff; }
+.box { width: 17px; height: 17px; margin-top: 2px; border-radius: 2px; box-shadow: inset 0 0 0 1.5px #818283; display: grid; place-items: center; color: #fff; transition: background-color .15s ease, box-shadow .15s ease; }
+.box svg { opacity: 0; transform: scale(.5); transition: opacity .2s var(--ease), transform .2s var(--ease); }
+.row[aria-pressed=true] .box { background: var(--navy); box-shadow: inset 0 0 0 1.5px var(--navy); }  /* same ring colour as the fill, so the shadow can interpolate */
+.row[aria-pressed=true] .box svg { opacity: 1; transform: none; }
 .ffoot { position: absolute; left: 0; right: 0; top: 640px; bottom: 0; border-top: 1px solid #ddd; }
 .apply { position: absolute; left: 24px; right: 24px; top: 16px; height: 35px; border-radius: 4px; background: var(--navy); box-shadow: 0 2px 3px #0000002e; color: #fff; text-align: center; font: 500 14px/35px Roboto, sans-serif; letter-spacing: 1px; }
 .apply:active { opacity: .85; }
+
+/* Time picker: an in-app white sheet like Filters (same IosSheet), with an inline iOS wheel (UIDatePicker datetime). Positions are measured from the reference (pt, from the sheet's top at 422). */
+.pbd { position: absolute; z-index: 20; inset: 0; background: #000; opacity: 0; visibility: hidden; }
+.psheet { position: absolute; z-index: 21; left: 0; right: 0; top: 422px; bottom: 0; visibility: hidden; transform: translate3d(0, 100%, 0); will-change: transform;
+  contain: layout; overflow: hidden; background: #fff; border-radius: 16px 16px 0 0; color: #252525; user-select: none; -webkit-user-select: none; }
+.psheet.dragging { cursor: grabbing; }
+.ptitle { position: absolute; left: 0; right: 0; top: 22px; text-align: center; font: 400 16px/24px Roboto, sans-serif; }
+.psub { position: absolute; left: 24px; right: 24px; top: 44px; text-align: center; font: 400 14.5px/19.5px Roboto, sans-serif; color: #7a7a7a; }
+.wheels { position: absolute; left: 0; right: 0; top: 91px; height: 216px; }
+.band { position: absolute; left: 49px; right: 49px; top: 91px; height: 34px; border-radius: 17px; background: #f4f4f5; pointer-events: none; }
+.pcol { position: absolute; top: 0; height: 216px; overflow-y: auto; scroll-snap-type: y mandatory; overscroll-behavior: contain; touch-action: pan-y; scrollbar-width: none;
+  padding: 92px 0; perspective: 600px; cursor: pointer; text-align: center; }
+.pcol::-webkit-scrollbar { display: none; }
+.pdate { left: 0; width: 169px; text-align: right; } .phour { left: 178px; width: 50px; } .pmin { left: 232px; width: 60px; } .pap { left: 287px; width: 60px; }
+.pi { height: 32px; scroll-snap-align: center; scroll-snap-stop: always; font: 400 21.5px/32px -apple-system, system-ui, sans-serif; color: #000; white-space: nowrap; opacity: 0; }
+.pclose { position: absolute; left: 40px; top: 340px; height: 34px; font: 500 15px/34px Roboto, sans-serif; letter-spacing: 1.5px; color: var(--navy); }
+.psave { position: absolute; left: 295px; top: 340px; width: 71px; height: 34px; border-radius: 4px; background: var(--navy); box-shadow: 0 2px 3px #0000002e; color: #fff; text-align: center; font: 500 15px/34px Roboto, sans-serif; letter-spacing: 1.5px; }
+.pclose:active, .psave:active { opacity: .85; }
 
 /* Tab bar, static. */
 .tabs { position: absolute; z-index: 8; left: 0; right: 0; bottom: 0; height: var(--tab); background: #111d2c; display: flex; padding: 0; }
@@ -158,4 +186,7 @@ svg { display: block; flex: none; }
 
 .filter, .locate, .back, .action { transition: opacity .12s; }
 
-@media (prefers-reduced-motion: reduce) { .page, .page.in { transition: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .page, .page.in, .seg > button, .to, .when, .times.open .to, .times.open .when:nth-of-type(2), .fchip, .box, .box svg { transition: none; }
+  .fchip:active { transform: none; }
+}
