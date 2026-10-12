@@ -22,3 +22,5 @@ uv run --with playwright --with pillow python _tools/calibrate.py lime home
 `Director.ring(side, selector, tone)` (`stage.ring` in the stage) draws a stage-side outline around any element of the mock, tracking it while it moves; `tone` is `'hl'`, `'bad'` or `'good'`, and `None` removes it.
 
 `Director.to_stage(side, x, y)` turns a point in the mock's own viewport into stage coordinates (the iframe is offset and scaled). Use it for things that are not DOM, such as map markers: project their coordinates inside the iframe, then convert. See `lime/01-fix-range-in-km/clip.py`. Wait for the map to be loaded and idle before `d.intro()`.
+
+`walk_routes.py`: precomputes foot routes from one point to many (public OSRM foot router, sequential) into a classic script, so a mock draws real walking routes without a runtime fetch: `uv run python _tools/walk_routes.py <in.json> <out.js> <GlobalName>`, with `in.json` = `{"from": [lng, lat], "to": [[lng, lat], ...]}`.
