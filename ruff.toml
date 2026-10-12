@@ -1,0 +1,8 @@
+# Lint only; ruff format is not used (the code is single-quoted and compact on purpose).
+line-length = 160
+target-version = "py312"
+
+[lint]
+select = ["E", "F", "B"]
+# House style: several imports and short statements on one line, long prose/f-string lines, small lambdas.
+ignore = ["E401", "E501", "E701", "E702", "E703", "E731"]

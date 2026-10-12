@@ -32,7 +32,7 @@
 
   function apply({ board, entering }) {
     let index = 0;
-    for (const row of board.querySelectorAll('.manage-row')) symbol(row, symbolById.get(row.dataset.orderId), entering ? index : -1), index++;
+    for (const row of board.querySelectorAll('.manage-row')) { symbol(row, symbolById.get(row.dataset.orderId), entering ? index : -1); index++; }
   }
 
   // On first view the symbols settle in, row by row.

@@ -1,3 +1,7 @@
+# /// script
+# requires-python = ">=3.12"
+# dependencies = ["playwright", "pillow"]
+# ///
 # Calibration: screenshots one state of a product's mock at the reference device size and compares it with the real
 # app's reference screenshot. Writes to .scratch/<product>/calibration/<state>/ (local, not in git):
 #   side-by-side.png (reference | mock), overlay.png (50% blend), diff.png (heat map), mock.png, report.md.
@@ -5,7 +9,7 @@
 # No server needed (the mock opens from file://, the tiles need network). The mock runs inside an iframe, like the
 # stage, so the device frame draws the status bar exactly as it does in a clip (but not the notch, which iOS screenshots never show: ?cutout=none). Pixel difference only shows where to
 # look; it is not an acceptance test. Judge by eye on overlay.png.
-#   uv run --with playwright --with pillow python _tools/calibrate.py lime home
+#   uv run _tools/calibrate.py lime home
 import asyncio, io, os, pathlib, re, sys
 from PIL import Image, ImageChops, ImageDraw, ImageOps, ImageStat
 from playwright.async_api import async_playwright

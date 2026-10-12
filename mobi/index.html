@@ -159,7 +159,7 @@
       play();
     } else {
       video.removeAttribute('src');
-      empty.innerHTML = `No clip yet. Record it with<br><code>uv run --with playwright python _tools/record.py ${product}/${entry.folder}</code><br>or try the change live.`;
+      empty.innerHTML = `No clip yet. Record it with<br><code>uv run _tools/record.py ${product}/${entry.folder}</code><br>or try the change live.`;
     }
   }
   const step = n => redlines.length && go(redlines[(redlines.findIndex(r => r.folder === current) + n + redlines.length) % redlines.length].folder);

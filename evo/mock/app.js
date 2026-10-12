@@ -74,7 +74,7 @@
   $('.expand').addEventListener('click', expand);
   $('.collapse').addEventListener('click', collapse);
   $('.locate').addEventListener('click', () => map.easeTo({ center: EvoData.user.coordinates, zoom: Math.max(14, Math.min(map.getZoom(), 15)), duration: 700 }));
-  addEventListener('keydown', e => { if (e.key === 'Escape') app.classList.contains('is-expanded') ? collapse() : deselect(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape') { if (app.classList.contains('is-expanded')) collapse(); else deselect(); } });
 
   if (first.select != null) {
     fill(first.select);

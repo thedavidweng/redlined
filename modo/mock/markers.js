@@ -34,7 +34,6 @@ globalThis.ModoMarkers = (() => {
     map.addSource('modo-user', { type: 'geojson', data: { type: 'Feature', properties: {}, geometry: { type: 'Point', coordinates: data.user.coordinates } } });
     // The IPA pin's tip sits 11 pt above the bottom of its image (shadow room), hence the offset.
     const pinLayout = { 'icon-allow-overlap': true, 'icon-ignore-placement': true, 'icon-anchor': 'bottom', 'icon-offset': [0, 11] };
-    const shown = (on = 1, off = 0) => ['case', ['boolean', ['feature-state', 'selected'], false], on, off];
     map.addLayer({ id: 'modo-user', type: 'symbol', source: 'modo-user', layout: { ...pinLayout, 'icon-anchor': 'center', 'icon-offset': [0, 0], 'icon-image': 'modo-user' } });
     map.addLayer({ id: 'clusters', type: 'symbol', source: 'modo-clusters', maxzoom: SPLIT, layout: { ...pinLayout, 'icon-anchor': 'center', 'icon-offset': [0, 0], 'icon-image': ['get', 'image'] } });
     // Feature state is a paint input only (not layout), so the grey pin is a twin layer whose opacity the state drives; pins that are neither selected nor busy show the red one.

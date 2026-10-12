@@ -1,7 +1,11 @@
+# /// script
+# requires-python = ">=3.12"
+# dependencies = ["playwright"]
+# ///
 # Generic recorder: plays <path>/clip.py on _tools/stage.html and writes <path>/media/clip.{mp4,gif} and cover.webp.
 # Needs the server on :4173 (python3 ~/Development/redlined/_tools/serve.py). Run from anywhere:
-#   uv run --with playwright python ~/Development/redlined/_tools/record.py deliverect/01-ux-swipe-to-confirm [more paths...]
-import asyncio, base64, importlib.util, json, pathlib, shutil, subprocess, sys, time
+#   uv run ~/Development/redlined/_tools/record.py deliverect/01-ux-swipe-to-confirm [more paths...]
+import asyncio, base64, importlib.util, pathlib, shutil, subprocess, sys, time
 from playwright.async_api import async_playwright
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))

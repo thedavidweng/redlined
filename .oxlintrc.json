@@ -1,0 +1,70 @@
+{
+  "env": {
+    "browser": true
+  },
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "no-undef": "error"
+  },
+  "ignorePatterns": [
+    "_ios/maplibre/**",
+    "_site/**",
+    ".scratch/**",
+    ".cache/**",
+    "**/assets.js",
+    "modo/05-feat-walk-and-directions/routes.js",
+    "lime/_shared/walks.js",
+    "mobi/_shared/routes.js",
+    "products.js",
+    "**/_shared/redlines.js"
+  ],
+  "globals": {
+    "maplibregl": "readonly",
+    "RedlineMotion": "readonly",
+    "RedlineFixtures": "readonly",
+    "redlinePatch": "readonly",
+    "IosState": "readonly",
+    "IosSheet": "readonly",
+    "IosMapStyle": "readonly",
+    "IosMapPerf": "readonly",
+    "IosMapImages": "readonly",
+    "IosDevices": "readonly",
+    "IosDevice": "readonly",
+    "ModoStyle": "readonly",
+    "ModoRoutes": "readonly",
+    "ModoMarkers": "readonly",
+    "ModoMap": "readonly",
+    "ModoData": "readonly",
+    "ModoAssets": "readonly",
+    "MobiStyle": "readonly",
+    "MobiRoutes": "readonly",
+    "MobiMarkers": "readonly",
+    "MobiMap": "readonly",
+    "MobiData": "readonly",
+    "MobiAssets": "readonly",
+    "LimeWalks": "readonly",
+    "LimeStyle": "readonly",
+    "LimeMarkers": "readonly",
+    "LimeMap": "readonly",
+    "LimeData": "readonly",
+    "LimeAssets": "readonly",
+    "EvoStyle": "readonly",
+    "EvoMarkers": "readonly",
+    "EvoMap": "readonly",
+    "EvoData": "readonly",
+    "DeliverectModel": "readonly",
+    "DeliverectManage": "readonly"
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/*.mjs"
+      ],
+      "env": {
+        "node": true
+      }
+    }
+  ]
+}

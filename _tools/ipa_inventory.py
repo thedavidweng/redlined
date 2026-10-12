@@ -1,8 +1,12 @@
+# /// script
+# requires-python = ">=3.12"
+# dependencies = ["fonttools"]
+# ///
 # Unpacks an iOS .ipa into .scratch/<product>/ipa/ and writes inventory.md: Info.plist facts, tech stack guess
 # (with evidence), Asset Catalog dump + PNG export, loose images/PDF/SVG, Lottie JSON, fonts, colours, brand/map candidates.
 # Local reference only: output stays in .scratch/ (gitignored), never published. Run by hand (macOS: needs
 # otool, nm, xcrun assetutil, swiftc; fontTools is the only package):
-#   uv run --with fonttools python _tools/ipa_inventory.py .scratch/IPA/com.limebike-3.285.0.ipa lime
+#   uv run _tools/ipa_inventory.py .scratch/IPA/com.limebike-3.285.0.ipa lime
 # Output: ipa/raw/ (unzipped IPA), ipa/assetcatalog/<car>/ (info.json, index.csv, png/), ipa/inventory.md.
 # PNG export goes through the private CoreUI framework (assetutil can only dump metadata); vectors and
 # named gradients can't be exported that way and are listed with that reason.
@@ -248,7 +252,7 @@ def main():
     try:
         from fontTools.ttLib import TTFont
     except ImportError:
-        sys.exit('needs fontTools: uv run --with fonttools python _tools/ipa_inventory.py <ipa> <product>')
+        sys.exit('needs fontTools: uv run _tools/ipa_inventory.py <ipa> <product>')
     out = ROOT / '.scratch' / product / 'ipa'
     if out.exists():
         shutil.rmtree(out)

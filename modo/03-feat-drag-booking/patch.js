@@ -39,7 +39,6 @@
   }
   const rubber = o => 6 * Math.tanh(Math.abs(o) / 30) * Math.sign(o);  // the pull-back felt at a limit, px
   const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 
   function drag(root) {
     const $ = q => root.querySelector(q);

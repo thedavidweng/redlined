@@ -15,7 +15,6 @@
     document.head.append(Object.assign(document.createElement('script'), { src: from06 + 'patch.js', onload: () => { base = globalThis.redlinePatch; globalThis.redlinePatch = mine; done(); }, onerror: done }));
   }) : Promise.resolve();
 
-  const still = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
   const PLURAL = { CAR: ['car', 'cars'], SUV: ['SUV', 'SUVs'], VAN: ['van', 'vans'], CARGO: ['cargo van', 'cargo vans'] };
   const FUEL = { 'Electric': 'electric vehicle', 'Hybrid': 'hybrid', 'Plug-in Hybrid': 'plug-in hybrid' };  // Gas: no option
 

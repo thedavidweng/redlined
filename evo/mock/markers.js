@@ -14,7 +14,7 @@ globalThis.EvoMarkers = (() => {
     if (rack) { g.beginPath(); g.moveTo(7.500, 0); g.lineTo(14, 0); g.moveTo(8.500, 0); g.lineTo(8.500, 1.200); g.moveTo(13, 0); g.lineTo(13, 1.200); g.stroke(); }
     g.restore();
   }
-  function balloon(g, fill, ink, outline) {
+  function balloon(g, fill, ink) {
     g.beginPath(); g.moveTo(17, 42); g.bezierCurveTo(17, 42, 1.200, 28, 1.200, 17); g.arc(17, 17, 15.800, Math.PI, 0); g.bezierCurveTo(32.800, 28, 17, 42, 17, 42); g.closePath();
     g.fillStyle = fill; g.fill(); g.lineWidth = 1; g.strokeStyle = '#000'; g.stroke();
     car(g, 6.500, 12.500, 1.050, ink);
@@ -37,7 +37,7 @@ globalThis.EvoMarkers = (() => {
 
 
   async function add(map, data) {
-    for (const [id, w, h, paint] of [['evo-car', 34, 42.5, g => balloon(g, '#000', '#00b9e3', 1)], ['evo-car-selected', 34, 42.5, g => balloon(g, '#00b5e6', '#000', 1)],
+    for (const [id, w, h, paint] of [['evo-car', 34, 42.5, g => balloon(g, '#000', '#00b9e3')], ['evo-car-selected', 34, 42.5, g => balloon(g, '#00b5e6', '#000')],
       ['evo-parking', 26, 40, parking], ['evo-charging', 26, 36, charging]]) draw(map, id, w, h, paint);
     // The rider: Mapbox's puck, a blue dot with a white edge and a soft shadow, no heading cone.
     draw(map, 'evo-user', 32, 32, g => {
