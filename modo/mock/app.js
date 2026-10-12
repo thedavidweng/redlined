@@ -14,9 +14,9 @@
   if (patch) document.head.append(Object.assign(document.createElement('link'), { rel: 'stylesheet', href: `../${redline}/patch.css` }));
 
   // STATE SEAM (extends the one above; inert without ?state=): ?state=<name> opens straight into that state, for calibration.
-  // selected opens on the nearest pin, vehicle on its Vehicle Information page, filter on the open Filters sheet. An unknown state falls back to home (IosState.pick).
+  // selected opens on the nearest pin, vehicle on its Vehicle Information page, filter on the open Filters sheet, booked on that page with 12:15-12:45 set (this hour). An unknown state falls back to home (IosState.pick).
   const PIN = [80, 238];  // where the selected pin's tip sits: in the map strip between the header and the sheet, left of the Filter pill
-  const STATES = { home: {}, selected: { select: ModoData.near }, vehicle: { select: ModoData.near, page: true }, filter: { filters: true }, time: { picker: 'start', open: true } };
+  const STATES = { home: {}, selected: { select: ModoData.near }, vehicle: { select: ModoData.near, page: true }, filter: { filters: true }, time: { picker: 'start', open: true }, booked: { select: ModoData.near, page: true, book: true } };
   const first = IosState.pick(STATES).state, where = n => ModoData.pins.features[n].geometry.coordinates;
   const start = first.select == null ? camera.center : ModoData.frame(where(first.select), PIN);
 
@@ -33,22 +33,41 @@
   IosDevice.credit('<a href="https://openfreemap.org">OpenFreeMap</a> © <a href="https://www.openmaptiles.org/">OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>');
   const app = document.querySelector('#app'), $ = q => app.querySelector(q), $$ = q => app.querySelectorAll(q);
 
-  // Text the data supplies (the car is the same on every pin; station and plate change).
-  const car = ModoData.car;
-  $$('.name').forEach(e => e.textContent = car.name);
-  $$('[data-plan]').forEach(e => e.textContent = car.plan);
-  $$('[data-type]').forEach(e => e.textContent = car.type);
-  $$('[data-seats]').forEach(e => e.textContent = car.seats);
-  $$('[data-fuel]').forEach(e => e.textContent = car.fuel);
-  $('[data-chips]').replaceChildren(...$('.card .chips').cloneNode(true).children);  // the page shows the same chips
+  // Text the data supplies. The car follows the selected pin (fill); station and plate are per pin too.
+  function showCar(car) {
+    $$('.name').forEach(e => e.textContent = car.name);
+    $$('[data-plan]').forEach(e => e.textContent = car.plan);
+    $$('[data-type]').forEach(e => e.textContent = car.type);
+    $$('[data-seats]').forEach(e => e.textContent = car.seats);
+    $$('[data-fuel]').forEach(e => e.textContent = car.fuel);
+    $('[data-chips]').replaceChildren(...$('.card .chips').cloneNode(true).children);  // the page shows the same chips
+  }
+  showCar(ModoData.cars[ModoData.near]);
   $$('[data-member]').forEach(e => e.textContent = ModoData.member);
   $$('[data-parking]').forEach(e => e.textContent = ModoData.parking);
   $$('[data-address]').forEach(e => e.textContent = ModoData.address);
 
-  // Availability: 24 hourly groups of four dots, every one unavailable (the reference was taken when the car was out).
+  // Availability strip: 24 hourly groups of four quarter-hour dots from the start of the current hour (ModoData.availability). Dot looks: available (light blue),
+  // yours (navy, the chosen start..end) and unavailable (crossed grey). Redrawn by render() and fill(). Inline SVG (CSS masks are blocked from file://).
+  const NOW = new Date(), HOUR0 = new Date(NOW).setMinutes(0, 0, 0), Q = 9e5;
   const DOT = '<svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M2.2 7.8 7.8 2.2" stroke="currentColor" stroke-width="1.6"/></svg>';
-  const hours = Array.from({ length: 24 }, (_, h) => `<div class="hour"><div class="dots">${DOT.repeat(4)}</div><time>${h % 12 || 12} ${h < 12 ? 'AM' : 'PM'}</time></div>`).join('');
-  $$('[data-strip]').forEach(e => e.innerHTML = hours);
+  const ring = c => `<svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="5" fill="${c}"/><circle cx="5" cy="5" r="4.4" fill="#fff"/><circle cx="5" cy="5" r="3.4" fill="${c}"/></svg>`;
+  const FREE = ring('#8fbdd7'), MINE = ring('#476470');
+  let selected = null;
+  // The chosen range: an open return is marked for 12 h from the start (assumption: nothing in the reference shows it).
+  const range = () => times.start && (openReturn ? [times.start, new Date(+times.start + 432e5)] : times.end && [times.start, times.end]);
+  function drawStrip() {
+    const busy = ModoData.availability(selected ?? ModoData.near, NOW), mine = range();
+    const hours = Array.from({ length: 24 }, (_, i) => {
+      const dots = Array.from({ length: 4 }, (_, k) => {
+        const t = HOUR0 + (i * 4 + k) * Q;
+        return busy.some(([a, b]) => t < b && t + Q > a) ? DOT : mine && t >= mine[0] && t < mine[1] ? MINE : FREE;
+      }).join('');
+      const h = (new Date(HOUR0).getHours() + i) % 24;
+      return `<div class="hour"><div class="dots">${dots}</div><time>${h % 12 || 12} ${h < 12 ? 'AM' : 'PM'}</time></div>`;
+    }).join('');
+    $$('[data-strip]').forEach(e => e.innerHTML = hours);
+  }
 
   const sheetEl = $('.sheet'), float = $('.float'), cardEl = $('.card'), page = $('.page');
   const sheet = IosSheet.create(sheetEl, {
@@ -85,14 +104,22 @@
   let openReturn = false;
   const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], DAY = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const fmt = d => `${MON[d.getMonth()]} ${d.getDate()}, ${d.getHours() % 12 || 12}:${String(d.getMinutes()).padStart(2, '0')} ${d.getHours() < 12 ? 'AM' : 'PM'}`;
+  const clock = d => `${d.getHours() % 12 || 12}:${String(d.getMinutes()).padStart(2, '0')} ${d.getHours() < 12 ? 'AM' : 'PM'}`;
+  const pageDate = d => `${DAY[d.getDay()]}, ${d.getDate()} ${MON[d.getMonth()]} ${d.getFullYear()}, ${clock(d)}`;  // the page's own format, not the header's
+  const atDate = d => `${d.getDate()} ${MON[d.getMonth()]} ${d.getFullYear()} at ${clock(d)}`;
   function render() {
     segs.forEach((b, i) => { b.classList.toggle('on', !!i === openReturn); b.setAttribute('aria-pressed', !!i === openReturn); });
     timesEl.classList.toggle('open', openReturn);
     whens.forEach((b, i) => { const d = times[i ? 'end' : 'start']; b.lastChild.nodeValue = d ? fmt(d) : PLACEHOLDER[i]; b.classList.toggle('set', !!d); });
     $('[data-rtype]').textContent = openReturn ? 'Open Return' : 'Set Return';
-    $('[data-pickup]').textContent = times.start ? fmt(times.start) : 'Please set a time';
-    $('[data-retby]').textContent = times.end ? fmt(times.end) : 'Please set a time';
+    $('[data-pickup]').textContent = times.start ? pageDate(times.start) : 'Please set a time';
+    $('[data-retby]').textContent = times.end ? pageDate(times.end) : 'Please set a time';
     $('[data-retrow]').hidden = openReturn;
+    // BOOK VEHICLE and the Earliest/Latest box need a chosen range that is free on this car; otherwise the disabled look and the note stay. Booking itself is never done.
+    const mine = range(), free = mine && ModoData.window(selected ?? ModoData.near, mine[0], mine[1], NOW);
+    $('.book').disabled = !free; $('.note').hidden = !!free; $('.avail').hidden = !free;
+    if (free) { $('[data-earliest]').textContent = `${atDate(free.earliest)}→`; $('[data-latest]').textContent = free.latest ? atDate(free.latest) : 'No limit'; }
+    drawStrip();
   }
   segs.forEach((b, i) => b.addEventListener('click', () => { openReturn = !!i; render(); }));
   $('.clear').addEventListener('click', () => { times.start = times.end = null; render(); });
@@ -154,6 +181,7 @@
     if (animate) psheet.show(); else psheet.snap('open', false);
     cols.forEach(c => c.paint());  // the sheet was hidden when the wheels were set; paint again once it has a size
   }
+  $('[data-change]').addEventListener('click', () => openPicker('start'));  // assumption: the real Change Time was never tapped; it opens the start time sheet
   $('.psave').addEventListener('click', () => {
     const [day, hr, mi, ap] = cols.map(c => Math.round(c.scrollTop / ROW));
     const d = new Date(today); d.setDate(d.getDate() + day - PAST); d.setHours((hr % 12 + 1) % 12 + ap * 12, mi % 4 * 15);
@@ -165,14 +193,14 @@
   whens.forEach((b, i) => b.addEventListener('click', () => openPicker(i ? 'end' : 'start')));
   render();
 
-  let markers, selected = null, home = null, pushed = false;
+  let markers, home = null, pushed = false;
   const ease = t => 1 - (1 - t) ** 3;
 
   function fill(n) {
     const p = ModoData.pins.features[n].properties;
     $$('[data-station]').forEach(e => e.textContent = p.station);
     $$('[data-plate]').forEach(e => e.textContent = p.plate);
-    selected = n;
+    showCar(ModoData.cars[n]); selected = n; render();
   }
   function select(n) {
     if (n === selected) return;
@@ -208,6 +236,7 @@
   cardEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); push(); } });
   $('.back').addEventListener('click', pop);
 
+  if (first.book) { times.start = new Date(HOUR0 + 15 * 6e4); times.end = new Date(HOUR0 + 45 * 6e4); }
   if (first.filters) fsheet.snap('open', false);
   if (first.picker) { openReturn = !!first.open; render(); openPicker(first.picker, false); }  // the reference was taken with OPEN RETURN selected
   if (first.select != null) {

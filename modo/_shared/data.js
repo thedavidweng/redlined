@@ -40,14 +40,61 @@ globalThis.ModoData = (() => {
   });
   const near = 0;
 
+  // One car per pin (index = pin n), invented. `class` and `features` use the Filters sheet's vocabulary (class: CAR/SUV/VAN/CARGO; features: its lowercase rows), `seats` is a number
+  // (the sheet's "N +" chips mean at least N), so a redline can count matches with `match`. Pin 0 is the car every earlier state shows. The photo is still the one Corolla asset.
+  const C = (name, type, seats, fuel, cls, ...features) => ({ name, type, seats, fuel, plan: 'Daily Drives', class: cls, features });
+  const cars = [
+    C('Toyota Corolla Hatchback', '4-door Hatchback', 5, 'Gas', 'CAR', 'audio: apple carplay'),
+    C('Toyota RAV4', 'SUV', 5, 'Gas', 'SUV', 'all-wheel drive', 'roof rack'),
+    C('Toyota Prius Prime PHEV', '4-door Hatchback', 5, 'Plug-in Hybrid', 'CAR', 'plug-in hybrid', 'hybrid', 'audio: apple carplay'),
+    C('Hyundai Kona Electric', 'SUV', 5, 'Electric', 'SUV', 'electric vehicle', 'audio: android auto'),
+    C('Honda Civic Sedan', '4-door Sedan', 5, 'Gas', 'CAR', 'audio: apple carplay', 'audio: android auto'),
+    C('Chrysler Grand Caravan', 'Minivan', 7, 'Gas', 'VAN', 'child seat'),
+    C('Ford Transit Cargo', 'Cargo Van', 2, 'Gas', 'CARGO', 'dolly: hand truck'),
+    C('Mazda3 Hatchback', '4-door Hatchback', 5, 'Gas', 'CAR', 'audio: android auto'),
+    C('Toyota Prius', '4-door Hatchback', 5, 'Hybrid', 'CAR', 'hybrid'),
+    C('Subaru Outback', 'Wagon', 5, 'Gas', 'SUV', 'all-wheel drive', 'roof rack', 'winter tires'),
+    C('Kia Soul', '4-door Hatchback', 5, 'Gas', 'CAR', 'bike rack - holds 2 bikes'),
+    C('Nissan Leaf', '4-door Hatchback', 5, 'Electric', 'CAR', 'electric vehicle'),
+    C('Honda CR-V Hybrid', 'SUV', 5, 'Hybrid', 'SUV', 'all-wheel drive', 'hybrid'),
+    C('Toyota Sienna Hybrid', 'Minivan', 8, 'Hybrid', 'VAN', 'hybrid', 'child seat'),
+    C('Mazda MX-5 Convertible', '2-door Convertible', 2, 'Gas', 'CAR', 'convertible'),
+    C('Ford Ranger', 'Pickup Truck', 5, 'Gas', 'CARGO', 'pickup truck'),
+    C('Toyota Corolla Hatchback', '4-door Hatchback', 5, 'Gas', 'CAR'),
+    C('Hyundai Elantra', '4-door Sedan', 5, 'Gas', 'CAR', 'audio: apple carplay'),
+    C('Tesla Model 3', '4-door Sedan', 5, 'Electric', 'CAR', 'electric vehicle'),
+    C('Volkswagen Golf', '4-door Hatchback', 5, 'Gas', 'CAR', 'ski/snowboard rack', 'winter tires'),
+  ];
+  // Pin numbers whose car matches a filter choice: { classes: ['SUV'], seats: 5 (at least), features: ['hybrid'] (all of them) }; every key is optional. A redline counts with `.length`.
+  const match = ({ classes = [], seats = 0, features = [] } = {}) => cars.flatMap((c, n) => (!classes.length || classes.includes(c.class)) && c.seats >= seats && features.every(f => c.features.includes(f)) ? [n] : []);
+
+  // Availability (invented; the reference only shows the near car free from now). Busy windows are [start, end) in quarter hours from the START OF THE CURRENT HOUR, so
+  // every recording looks the same apart from the clock labels. Pin 0 is free from now until +68.5 h (Latest Availability: 8:30 AM three days on, as in the booked reference, whose strip is free for the whole visible afternoon), busy after.
+  const Q = 9e5, FAR = 4000;
+  const busy = n => {
+    if (n === 0) return [[274, FAR]];
+    const a = (n * 11) % 24 - 8, b = a + 8 + (n * 5) % 16 + 12 + (n * 7) % 60, c = b + 8 + (n * 3) % 20 + 40 + (n * 17) % 100;
+    return [[a, a + 8 + (n * 5) % 16], [b, c], [c + 30, FAR]];
+  };
+  const floorHour = (now = new Date()) => new Date(now).setMinutes(0, 0, 0);
+  // Busy intervals of pin n as [Date, Date] pairs, ordered, anchored to the hour of `now`.
+  const availability = (n, now = new Date()) => busy(n).map(([a, b]) => [new Date(floorHour(now) + a * Q), new Date(floorHour(now) + b * Q)]);
+  // The free window containing [start, end]: { earliest, latest } (Dates; earliest is never before the current hour, latest is the next busy start), or null if it overlaps a busy interval.
+  const window = (n, start, end, now = new Date()) => {
+    const iv = availability(n, now);
+    if (iv.some(([a, b]) => start < b && end > a)) return null;
+    const before = iv.filter(([, b]) => b <= start).pop(), next = iv.find(([a]) => a >= end);
+    return { earliest: new Date(Math.max(floorHour(now), before ? +before[1] : 0)), latest: next ? next[0] : null };
+  };
+
   return {
-    device, camera, frame, near, at,
+    device, camera, frame, near, at, availability, window, cars, match,
     pins: { type: 'FeatureCollection', features: pins },
     clusters: { type: 'FeatureCollection', features: clusterFeatures },
     user: { coordinates: at([195, 404]) },
-    // The member on the vehicle page (made up).
-    member: 'PM-2817 Alex Rivera',
-    car: { name: 'Toyota Corolla Hatchback', type: '4-door Hatchback', seats: 5, fuel: 'Gas', plan: 'Daily Drives' },
+    // The member on the vehicle page: the author's name, by choice, with a made-up number (not the real member number).
+    member: '114514 David Weng',
+    car: cars[near],
     parking: 'Level P2, stalls 14 and 15 in the Hemlock Street entrance. Take the ramp on the lane side of the building and keep right. Return the car to the same stall.',
     address: '1500 W 8th Avenue, Vancouver, BC',
   };
