@@ -1,7 +1,7 @@
 # Generic recorder: plays <path>/clip.py on _tools/stage.html and writes <path>/media/clip.{mp4,gif} and cover.webp.
 # Needs the server on :4173 (python3 ~/Development/redlined/_tools/serve.py). Run from anywhere:
 #   uv run --with playwright python ~/Development/redlined/_tools/record.py deliverect/01-ux-swipe-to-confirm [more paths...]
-import asyncio, base64, importlib.util, json, pathlib, shutil, subprocess, sys
+import asyncio, base64, importlib.util, json, pathlib, shutil, subprocess, sys, time
 from playwright.async_api import async_playwright
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
@@ -14,6 +14,7 @@ STAGE = 'http://127.0.0.1:4173/_tools/stage.html'
 class Director:
     def __init__(self, page):
         self.page, self.x, self.y = page, 960, 1180
+        self.started = None  # wall time the curtain lifted; everything before it (loading under the curtain) is cut
 
     async def wait(self, s):
         await asyncio.sleep(s)
@@ -83,6 +84,7 @@ class Director:
         return b['x'] + b['width'] / 2 + dx, b['y'] + b['height'] / 2
 
     async def intro(self, side='before'):
+        self.started = time.time()
         await self.js('stage.curtain(false)')
         await self.wait(0.9)
         await self.focus(side)
@@ -132,9 +134,16 @@ async def record(rel):
         cdp.on('Page.screencastFrame', lambda params: asyncio.ensure_future(on_frame(params)))
         await cdp.send('Page.startScreencast', {'format': 'jpeg', 'quality': 95, 'everyNthFrame': 1})
         await asyncio.sleep(0.3)
-        await clip.run(Director(page))
+        director = Director(page)
+        await clip.run(director)
         await cdp.send('Page.stopScreencast')
         await browser.close()
+
+    # Waiting for maps or a state reload happens under the curtain; keep only LEAD seconds of it, so every clip starts at once.
+    LEAD = 0.3
+    if director.started:
+        kept = [f for f in frames if f[0] >= director.started - LEAD]
+        frames = kept or frames
 
     lines = []
     for i, (ts, data) in enumerate(frames):
