@@ -6,11 +6,11 @@
 
 **Caption**
 
-> Filters give no feedback. You toggle chips, tap APPLY, check the map, reopen, change, close, check again. Now the button counts as you tap: SUV, "SHOW 4 CARS"; add all-wheel drive, "SHOW 3 CARS". Tap it and the map shows just those cars.
+> Filters give no feedback. You toggle chips, tap APPLY, check the map, reopen, change, close, check again. Now the button counts as you tap: SUV, "SHOW 9 CARS"; add all-wheel drive, "SHOW 3 CARS". Tap it and the map shows just those cars.
 
 ![Live count on Filters](media/clip.gif)
 
 Upload `media/clip.mp4` to X. `clip.gif` is a fallback.
 
-Preview: [../index.html#05-ux-filter-live-count](../index.html#05-ux-filter-live-count)
-Live: [../mock/index.html?redline=05-ux-filter-live-count](../mock/index.html?redline=05-ux-filter-live-count)
+Preview: [../index.html#06-ux-filter-live-count](../index.html#06-ux-filter-live-count)
+Live: [../mock/index.html?redline=06-ux-filter-live-count](../mock/index.html?redline=06-ux-filter-live-count)

@@ -37,6 +37,8 @@
       const opt = { duration: 260, easing: EASE, fill: 'both' };
       prev.animate([{ transform: 'none', opacity: 1 }, { transform: `translateY(${-8 * dir}px)`, opacity: 0 }], opt).finished.then(() => prev.remove());
       next.animate([{ transform: `translateY(${8 * dir}px)`, opacity: 0 }, { transform: 'none', opacity: 1 }], opt);
+      // A small swell of the whole button, so the change is caught from the corner of the eye while tapping options above it.
+      button.animate([{ transform: 'none' }, { transform: 'scale(1.04)' }, { transform: 'none' }], { duration: 360, easing: EASE });
     }
 
     function pillLabel() {
@@ -49,7 +51,7 @@
     // ---- Map filter (kept small: redline 07 reuses it) -------------------------------------------------------------------------------------
     // Show only the cars in `keep` (an array of pin numbers n), or everything when `keep` is null.
     // Pins: each layer's own filter AND n in keep. Clusters: the source is re-fed with the count of kept members; an empty cluster is filtered out.
-    const LAYERS = ['pins', 'pins-grouped'];  // the selected pin stays visible: its sheet is open
+    const LAYERS = ['pins', 'pins-grouped', 'pins-busy', 'pins-grouped-busy'];  // the selected pin stays visible: its sheet is open
     const original = Object.fromEntries(LAYERS.map(id => [id, map.getFilter(id)]));
     const disc = count => {  // the mock only drew discs for its own counts (2, 3); a filtered cluster can drop to 1
       const id = `modo-cluster-${count}`;

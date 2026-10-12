@@ -1,8 +1,8 @@
 # Storyboard for 07-feat-filter-from-chips. `d` is the Director from _tools/record.py.
 # Both sides: tap the RAV4's pin, then its "SUV" chip. Before: the chip is a label (the tap falls through to the card and opens the page), so the map is unchanged.
-# After: the map keeps only SUVs, a toast says how many, and the sheet jumps to the nearest other one (the Kona).
+# After: the map keeps only SUVs, a toast says how many, and the sheet jumps to the nearest other one (the Ford Escape).
 # Pins are map layers: project() gives mock pixels, to_stage() the page.
-PIN = 1  # the RAV4, an SUV south-west of the user
+PIN = 1  # the RAV4 Hybrid, an SUV south-west of the user
 PROJECT = '''n => { const p = ModoMap.project(ModoData.pins.features[n].geometry.coordinates), r = ModoMap.getContainer().getBoundingClientRect();
   return [r.left + p.x, r.top + p.y - 22]; }'''  # pins hang above their tip: tap the head
 SETTLED = "typeof ModoMap !== 'undefined' && ModoMap.loaded() && !ModoMap.isMoving() && !!ModoMap.getLayer('pins') && location.search.includes('now=')"
@@ -47,6 +47,6 @@ async def run(d):
     await select(d, 'after')
     await d.wait(0.3)
     await tap_box(d, 'after', CHIP, -6)
-    await d.wait(2.6)  # toast "SUV · 4 cars", camera and sheet on the Kona, other cars gone
+    await d.wait(2.6)  # toast "9 SUVs", camera and sheet on the Escape, other cars gone
     await d.focus(None)
     await d.outro()

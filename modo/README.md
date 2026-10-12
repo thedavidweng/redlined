@@ -10,8 +10,8 @@ These redlines cover booking a car: choosing a time, the Vehicle Information pag
 | 2 | [`02-ux-trip-times-together`](02-ux-trip-times-together/) | ux | The vehicle page scatters the trip's times between the button, rows and a box. |
 | 3 | [`03-feat-drag-booking`](03-feat-drag-booking/) | feat | Changing the booked range means leaving the strip for a separate sheet. |
 | 4 | [`04-feat-day-view`](04-feat-day-view/) | feat | The hourly strip can't show a long booking or the whole free window. |
-| 5 | [`05-ux-filter-live-count`](05-ux-filter-live-count/) | ux | Filters only show their effect after closing the sheet. |
-| 6 | [`06-feat-walk-and-directions`](06-feat-walk-and-directions/) | feat | No walking distance, no way to copy the address or open it in a maps app. |
+| 5 | [`05-feat-walk-and-directions`](05-feat-walk-and-directions/) | feat | No walking distance, no way to copy the address or open it in a maps app. |
+| 6 | [`06-ux-filter-live-count`](06-ux-filter-live-count/) | ux | Filters only show their effect after closing the sheet. |
 | 7 | [`07-feat-filter-from-chips`](07-feat-filter-from-chips/) | feat | A car's features can't be used to find similar cars. |
 
 Preview: double-click `index.html`, or http://127.0.0.1:4173/modo/ with `python3 _tools/serve.py`. The map tiles need a network connection.

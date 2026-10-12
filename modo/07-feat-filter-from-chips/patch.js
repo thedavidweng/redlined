@@ -1,18 +1,18 @@
 // Filter from chips. Tapping a car's attribute chip (class, seats, electric/hybrid) filters the map to cars that share it and jumps to the nearest other one.
-// Composition: 07 = 05 + chips. This file loads 05's patch.js and patch.css (paths resolve against this script, since the mock page loads it from ../<folder>/),
-// takes 05's `redlinePatch` for itself and sets its own, and apply() runs 05's apply first. 05 is never edited and its internals are not reached into:
+// Composition: 07 = 06 + chips. This file loads 06's patch.js and patch.css (paths resolve against this script, since the mock page loads it from ../<folder>/),
+// takes 06's `redlinePatch` for itself and sets its own, and apply() runs 06's apply first. 06 is never edited and its internals are not reached into:
 // 07 drives it through the DOM it already reacts to. It sets the chip or row in the Filters sheet (aria-pressed), then presses the sheet's APPLY button,
-// so the live count, the Filter pill badge, the map filter and Clear All all stay 05's.
+// so the live count, the Filter pill badge, the map filter and Clear All all stay 06's.
 // Selecting the next car: the mock selects on a map click on a pin and the pin may be off screen, so 07 fires the map's own 'click' at the projected pin point
 // and, for that one synchronous call, lets queryRenderedFeatures answer with the target pin (an off-screen pin cannot be hit-tested). The mock's own handler does the rest.
 // "Nearest" is straight-line distance from ModoData.user, not walking distance. Gas has no matching Filters option, so the Gas chip stays a plain label.
 (() => {
   const here = document.currentScript?.src;
-  const from05 = here ? new URL('../05-ux-filter-live-count/', here).href : null;
-  let base = null;  // 05's redlinePatch
-  const baseLoaded = from05 ? new Promise(done => {
-    document.head.append(Object.assign(document.createElement('link'), { rel: 'stylesheet', href: from05 + 'patch.css' }));
-    document.head.append(Object.assign(document.createElement('script'), { src: from05 + 'patch.js', onload: () => { base = globalThis.redlinePatch; globalThis.redlinePatch = mine; done(); }, onerror: done }));
+  const from06 = here ? new URL('../06-ux-filter-live-count/', here).href : null;
+  let base = null;  // 06's redlinePatch
+  const baseLoaded = from06 ? new Promise(done => {
+    document.head.append(Object.assign(document.createElement('link'), { rel: 'stylesheet', href: from06 + 'patch.css' }));
+    document.head.append(Object.assign(document.createElement('script'), { src: from06 + 'patch.js', onload: () => { base = globalThis.redlinePatch; globalThis.redlinePatch = mine; done(); }, onerror: done }));
   }) : Promise.resolve();
 
   const still = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -85,14 +85,14 @@
       if (n == null) return;
       const opt = option(kind, data.cars[n]);
       if (!opt) return;
-      // One filter at a time: clear the sheet, set this option, press APPLY (05 filters the map and updates the badge).
+      // One filter at a time: clear the sheet, set this option, press APPLY (06 filters the map and updates the badge).
       $$('.fsheet [aria-pressed]').forEach(b => b.setAttribute('aria-pressed', 'false'));
       opt.chip.setAttribute('aria-pressed', 'true');
       const q = { classes: [], seats: 0, features: [] };
       if (kind === 'type') q.classes = [data.cars[n].class]; else if (kind === 'seats') q.seats = parseInt(opt.chip.textContent); else q.features = [opt.chip.firstChild.textContent.trim()];
       const keep = data.match(q);
       $('.apply').click();
-      // The sheet was not open, so the mock's hide() changes nothing on the backdrop and 05 would still think it was just applied; nudge it.
+      // The sheet was not open, so the mock's hide() changes nothing on the backdrop and 06 would still think it was just applied; nudge it.
       backdrop.setAttribute('style', backdrop.getAttribute('style') ?? '');
 
       const next = keep.filter(m => m !== n).sort((a, b) => metres(data.pins.features[a].geometry.coordinates) - metres(data.pins.features[b].geometry.coordinates))[0];
