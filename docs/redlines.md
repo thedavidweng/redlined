@@ -35,6 +35,18 @@ Create `<product>/` containing:
 
 `sync.py` then lists it in `products.js` (home page) and the root README. Pushing to main publishes it to GitHub Pages.
 
+## Add an iOS product
+
+Same layout as above, plus the device frame and a map. The `lime/` product is the worked example.
+
+1. **Assets.** `uv run --with fonttools python _tools/ipa_inventory.py .scratch/IPA/<app>.ipa <product>` unpacks the IPA into `.scratch/<product>/ipa/` and writes `inventory.md`: Info.plist facts, tech stack, asset catalog PNGs, fonts, colours. It recovers assets, not layout. Nothing from it is committed except the few glyphs the mock needs; fonts are never committed (use an open lookalike). List sources in `<product>/mock/README.md`.
+2. **Reference.** Capture each screen of the flow with mobile-mcp into `.scratch/<product>/reference/<state>/`: `screen.png` (native pixels) and `notes.md` (device model, `logical W×H @Nx`, accessibility elements with frames, notes). On a real phone never tap a button that acts on the real world (Reserve, Ring, Pay). Privacy: the mock uses neither the real location nor real names; move the camera to another district and invent plates, names and accounts.
+3. **Frame and map.** The shared frame is `_ios/` (`device.js`, `device.css`, vendored MapLibre). Put the device size in `<product>/_shared/stage.json` under `device` (that switches the stage to two portrait phones) and mirror it in the data script, since classic scripts cannot read JSON. The mock mounts its root with `IosDevice.mount`, draws the map with MapLibre and OpenFreeMap tiles, and renders vehicles as layers. Data lives in a global (`LimeData`), not `.json`.
+4. **Calibrate.** Give the mock a `?state=<name>` per reference state (see `docs/design.md`), then loop on `calibrate.py <product> <state>`: change the mock, rerun, look at `overlay.png`. List what still differs and which states have no evidence; never claim 1:1.
+5. **Redline.** As in "Add a redline". The patch receives `{ root, map, data }`. Prove before and after with Playwright at the device size: with `?redline=<folder>&side=before` the screenshot must equal the plain mock pixel for pixel, and `side=after` must differ only where intended.
+6. **Clip.** Map markers are layers, not DOM, so `d.box` cannot find them. Project the coordinates in the iframe (`LimeMap.project`), add the map container's offset, and convert with `d.to_stage(side, x, y)`, which applies the iframe's offset and scale. Wait until the map has loaded and stopped moving before the first frame, or tiles are blank. Keep the finger off what the clip is about (`d.lift()`).
+7. **Record and publish.** `record.py` as usual (30 fps: two WebGL maps stay near 28 fps in headless Chromium, so 60 is not reachable). Then "Verify before reporting done", plus `python3 _tools/build.py` and `python3 -m http.server` in `_site/`: no 404s, tiles load, the credit shows, no API key in any request. Check the previewer and "Try it live" at 1440x900 and 390x844.
+
 ## Verify before reporting done
 
 - No errors or 404s.
