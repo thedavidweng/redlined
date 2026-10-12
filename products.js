@@ -9,11 +9,35 @@ globalThis.REDLINED_PRODUCTS = [
     "count": 6
   },
   {
+    "product": "evo",
+    "name": "Evo",
+    "label": "Evo · Map",
+    "about": "Evo is a car-sharing service in Vancouver: members find a Prius on a map in the iOS app and book it for the minute, the hour or the day.",
+    "cover": null,
+    "count": 0
+  },
+  {
     "product": "lime",
     "name": "Lime",
     "label": "Lime · Map",
     "about": "Lime is a micro-mobility company that rents shared electric scooters and bikes in cities around the world.",
     "cover": "lime/01-fix-range-in-km/media/cover.webp",
     "count": 1
+  },
+  {
+    "product": "mobi",
+    "name": "Mobi by Rogers",
+    "label": "Mobi by Rogers · Map",
+    "about": "Mobi by Rogers is Vancouver's public bike share, sponsored by Rogers.",
+    "cover": null,
+    "count": 0
+  },
+  {
+    "product": "modo",
+    "name": "Modo",
+    "label": "Modo · Map",
+    "about": "Modo is a car-share co-operative in Vancouver, Canada: members book shared cars and bikes by the hour from a map in its iOS app.",
+    "cover": null,
+    "count": 0
   }
 ];
