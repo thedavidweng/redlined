@@ -1,9 +1,20 @@
-// Keeps a MapLibre map smooth on weak GPUs. At rest the map renders at the screen's full pixel ratio; while the camera
+// Keeps a MapLibre map smooth on weak GPUs.
+//   new maplibregl.Map(IosMapPerf.options({ container: 'map', ... }))   shared Map options (see options() below)
+//   IosMapPerf.attach(map)                                              pixel ratio and label fades while the camera moves
+// Pixel ratio: at rest the map renders at the screen's full pixel ratio; while the camera
 // moves it steps down (3 -> 2 -> 1.5 -> 1) only if frames run slow, and sharpens again once it settles. Capable
 // devices never step down, and a 1x screen (the recording stage) is left alone. Classic script, works from file://.
 //   IosMapPerf.attach(map)
 // Pixel ratio follows the phone's real size on screen: desktop mode scales the phone down (IosDevice.scale()).
 globalThis.IosMapPerf = (() => {
+  // Symbol fades. fadeDuration 0 forces a full label placement on every rendered frame (MapLibre Style._updatePlacement), which is
+  // what costs frames while the finger pans, pinches or rotates; the default 300 ms reuses a placement and spreads new ones over frames.
+  // But after a programmatic flyTo/easeTo (a tap) those fades repaint at full pixel ratio and cost more than they save, so the camera
+  // moves without fades there. attach() switches between the two: FADE for a user gesture, 0 for a move the app started (and it stays 0 until the next gesture, so nothing fades in after a tap).
+  const FADE = 300;
+  // Defaults every iOS mock's Map shares; the product's own options win. antialias stays off (MapLibre default, stated for the record).
+  const options = o => ({ fadeDuration: FADE, antialias: false, attributionControl: false, ...o });
+
   const SLOW = 18, BUDGET = 14, WINDOW = 5, SETTLE = 160;  // ms: mean frame time that steps down, frame time aimed for, frames averaged, rest before sharpening
 
   function attach(map) {
@@ -38,6 +49,8 @@ globalThis.IosMapPerf = (() => {
       apply(steps[level = Math.max(level + 1, fit < 0 ? steps.length - 1 : fit)]);
     }
 
+    // e.originalEvent is set when the user's finger, wheel or key started the move, absent for easeTo/flyTo/jumpTo from the app.
+    map.on('movestart', e => { if ('_fadeDuration' in map) map._fadeDuration = e.originalEvent ? FADE : 0; });
     map.on('movestart', () => {
       if (steps.length === 1 && steps[0] === rest) return;  // 1x screen: nothing to give up
       clearTimeout(settle);
@@ -58,5 +71,5 @@ globalThis.IosMapPerf = (() => {
     apply(rest);
   }
 
-  return { attach };
+  return { attach, options };
 })();

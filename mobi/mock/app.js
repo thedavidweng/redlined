@@ -26,14 +26,12 @@
   const start = first.select == null ? camera : MobiData.frame(first.select);
 
   // Exposed for the test and calibration scripts (centre, zoom, idle), like DeliverectModel.
-  const map = globalThis.MobiMap = new maplibregl.Map({
+  const map = globalThis.MobiMap = new maplibregl.Map(IosMapPerf.options({
     container: 'map',
     center: start.center,
     zoom: start.zoom,
     bearing: camera.bearing,
-    fadeDuration: 0,  // symbol fades repaint at full pixel ratio; without them a tap costs one render, not three
-    attributionControl: false,
-  });
+  }));
   map.setStyle(IosMapStyle.BRIGHT, { transformStyle: MobiStyle.transform });
   IosMapPerf.attach(map);
   // The real app shows no OpenFreeMap credit, so it sits outside the mock: the device frame puts it in the page corner.

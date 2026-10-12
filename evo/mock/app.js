@@ -21,13 +21,11 @@
   const start = first.select == null ? { center: camera.center, zoom: camera.zoom } : { center: EvoData.frame(where(first.select)), zoom: EvoData.SELECTED_ZOOM };
 
   // Exposed for the test and calibration scripts (centre, zoom, idle), like DeliverectModel.
-  const map = globalThis.EvoMap = new maplibregl.Map({
+  const map = globalThis.EvoMap = new maplibregl.Map(IosMapPerf.options({
     container: 'map',
     ...start,
     bearing: camera.bearing,
-    fadeDuration: 0,  // symbol fades repaint at full pixel ratio; without them a tap costs one render, not three
-    attributionControl: false,
-  });
+  }));
   map.setStyle(IosMapStyle.BRIGHT, { transformStyle: EvoStyle.transform });
   IosMapPerf.attach(map);
   // The real app shows no OpenFreeMap credit (nor Mapbox's wordmark, which this mock does not imitate), so the credit sits outside the mock: the device frame puts it in the page corner.

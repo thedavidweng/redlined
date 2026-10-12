@@ -21,14 +21,12 @@
   const start = first.select == null ? camera.center : LimeData.frame(where(first.select), PIN);
 
   // Exposed for the test and calibration scripts (centre, zoom, idle), like DeliverectModel.
-  const map = globalThis.LimeMap = new maplibregl.Map({
+  const map = globalThis.LimeMap = new maplibregl.Map(IosMapPerf.options({
     container: 'map',
     center: start,
     zoom: camera.zoom,
     bearing: camera.bearing,
-    fadeDuration: 0,  // symbol fades repaint at full pixel ratio; without them a tap costs one render, not three
-    attributionControl: false,
-  });
+  }));
   map.setStyle(IosMapStyle.BRIGHT, { transformStyle: LimeStyle.transform });
   IosMapPerf.attach(map);
   // The real app shows no OpenFreeMap credit, so it sits outside the mock: the device frame puts it in the page corner.
