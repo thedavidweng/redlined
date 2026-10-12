@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <title>Modo – Map Mock</title>
+  <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
+  <script>
+    // Start the map's first requests while MapLibre downloads and parses; it asks for them one after another (style, tile index, then label fonts once tiles are parsed). The style URL is IosMapStyle.BRIGHT.
+    for (const path of ['styles/bright', 'planet', 'fonts/Noto%20Sans%20Regular/0-255.pbf', 'fonts/Noto%20Sans%20Italic/0-255.pbf']) fetch(`https://tiles.openfreemap.org/${path}`).catch(() => {});
+  </script>
+  <link rel="stylesheet" href="../../_ios/maplibre/maplibre-gl.css">
+  <link rel="stylesheet" href="../../_ios/device.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <div id="map"></div>
+
+    <header class="head" title="Outside this mock">
+      <div class="seg">
+        <button class="on">SET RETURN</button>
+        <button>OPEN RETURN</button>
+        <svg class="help" width="26" height="26" viewBox="0 0 26 26" aria-label="Help"><circle cx="13" cy="13" r="11" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M9.6 10.2a3.5 3.5 0 1 1 5 3.2c-1.1.6-1.6 1.2-1.6 2.4M13 18.6v1.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+      </div>
+      <div class="times">
+        <button class="when"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 3.5h11v10h-11zM2.5 6.2h11M5 1.5v3M11 1.5v3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>Start Time</button>
+        <svg class="to" width="18" height="12" viewBox="0 0 18 12" aria-hidden="true"><path d="M0 6h16M11.5 1.5 16.5 6l-5 4.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+        <button class="when"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 3.5h11v10h-11zM2.5 6.2h11M5 1.5v3M11 1.5v3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>End Time</button>
+        <button class="clear" aria-label="Clear"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 2l14 14M16 2 2 16" fill="none" stroke="currentColor" stroke-width="2.1"/></svg></button>
+      </div>
+    </header>
+
+    <div class="float" title="Outside this mock">
+      <button class="filter"><svg width="22" height="20" viewBox="0 0 22 20" aria-hidden="true"><path d="M1 4h9M14 4h7M1 10h4M9 10h12M1 16h11M16 16h5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 1.5v5M5 7.5v5M12 13.5v5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>Filter</button>
+      <button class="locate" aria-label="My location"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="8.2" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="13" cy="13" r="3.6" fill="currentColor"/><path d="M13 .8v4.2M13 21v4.2M.8 13H5M21 13h4.2" stroke="currentColor" stroke-width="2.2"/></svg></button>
+    </div>
+
+    <div class="sheet" role="dialog" aria-label="Vehicle options">
+      <div class="grab"><i></i><p class="count">1 option</p></div>
+      <div class="scroll">
+        <div class="card" role="button" tabindex="0" aria-label="Vehicle details">
+          <img class="photo" src="assets/car@3x.png" alt="">
+          <div class="strip" data-strip></div>
+          <h2 class="name"></h2>
+          <p class="where" data-station></p>
+          <p class="plan"><svg width="20" height="16" viewBox="0 0 20 16" aria-hidden="true"><path d="M3.6 1.5h12.8l1.9 5.2c.9.3 1.5 1.2 1.5 2.1v3.9h-2.3v1.8H15v-1.8H5v1.8H2.8v-1.8H.5V8.8c0-.9.6-1.8 1.5-2.1zm.1 5.2h12.6L15.4 3.6H4.6zM3.6 8.2a1.3 1.3 0 1 0 0 2.6 1.3 1.3 0 0 0 0-2.6zm12.8 0a1.3 1.3 0 1 0 0 2.6 1.3 1.3 0 0 0 0-2.6z" fill="currentColor"/></svg><span data-plan></span></p>
+          <div class="chips">
+            <span class="chip" data-type></span>
+            <span class="chip"><svg width="22" height="14" viewBox="0 0 22 14" aria-hidden="true"><circle cx="11" cy="3.6" r="2.6" fill="currentColor"/><circle cx="4" cy="4.6" r="2" fill="currentColor"/><circle cx="18" cy="4.6" r="2" fill="currentColor"/><path d="M5.8 13v-1.4c0-2 2.4-3.4 5.2-3.4s5.2 1.4 5.2 3.4V13zM0 11.8c0-1.4 1.4-2.4 3.2-2.6-.8.8-1.2 1.7-1.2 2.7V13H0zM22 11.8c0-1.4-1.4-2.4-3.2-2.6.8.8 1.2 1.7 1.2 2.7V13h2z" fill="currentColor"/></svg><span data-seats></span></span>
+            <span class="chip"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 16.5V3.3c0-.9.7-1.6 1.6-1.6h5.8c.9 0 1.6.7 1.6 1.6v13.2h1.2V9.4h-1.3V7.6h1.3c.9 0 1.5.7 1.5 1.5v6.2h1.1V6.4l-1.9-1.9 1-1 3.1 3.1v7.7c0 1-.8 1.8-1.8 1.8v.8zM4.2 3.6v4.2h4.7V3.6z" fill="currentColor" transform="translate(-1 0) scale(.95)"/></svg><span data-fuel></span></span>
+          </div>
+        </div>
+        <div class="feedback">
+          <h3>Location Feedback</h3>
+          <p>Suggest EVs at existing locations to let us know where the demand is!</p>
+          <button class="outline">Suggest EVs</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="page" aria-label="Vehicle Information" aria-hidden="true">
+      <div class="bar">
+        <button class="back" aria-label="Go Back"><svg width="14" height="22" viewBox="0 0 14 22" aria-hidden="true"><path d="M11.5 2 3 11l8.5 9" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <h1>Vehicle Information</h1>
+      </div>
+      <div class="body">
+        <div class="id">
+          <div class="id-text">
+            <h2 class="name"></h2>
+            <p class="where" data-station></p>
+            <p class="where" data-plate></p>
+          </div>
+          <img class="photo" src="assets/car@3x.png" alt="">
+        </div>
+        <hr>
+        <div class="strip" data-strip></div>
+        <button class="full">View Full Availability<svg width="10" height="16" viewBox="0 0 10 16" aria-hidden="true"><path d="m2 2 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
+        <hr class="thin">
+        <button class="book" disabled>BOOK VEHICLE</button>
+        <p class="note">This Vehicle is not available to book at the selected time</p>
+        <dl class="rows">
+          <div><dt>Return Type</dt><dd>Set Return</dd></div>
+          <div><dt>Pick up at</dt><dd>Please set a time</dd></div>
+          <div><dt>Return by</dt><dd>Please set a time</dd></div>
+          <div><dt>Membership</dt><dd data-member></dd></div>
+        </dl>
+        <button class="action" title="Outside this mock"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17.2V21h3.8L18 9.8 14.2 6zM20.7 7a1 1 0 0 0 0-1.4l-2.3-2.3a1 1 0 0 0-1.4 0l-1.8 1.8L19 8.8z" fill="currentColor"/></svg><span>Change Time</span><svg class="go" width="10" height="16" viewBox="0 0 10 16" aria-hidden="true"><path d="m2 2 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
+        <button class="action" title="Outside this mock"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z" fill="currentColor"/></svg><span>Contact Modo</span><svg class="go" width="10" height="16" viewBox="0 0 10 16" aria-hidden="true"><path d="m2 2 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
+        <h3 class="section">Home Location</h3>
+        <p class="home-name" data-station></p>
+        <p class="home-addr" data-address></p>
+        <p class="home-text" data-parking></p>
+        <h3 class="section">Vehicle Details</h3>
+        <div class="chips" data-chips></div>
+        <h4 class="label">Licence Plate</h4>
+        <p class="home-addr" data-plate></p>
+      </div>
+    </section>
+
+    <nav class="tabs" title="Outside this mock">
+      <button class="on"><svg width="24" height="20" viewBox="0 0 28 24" aria-hidden="true"><path d="M5.5 1.5h17c1 0 1.8.6 2.1 1.5l1.6 4.6c1 .4 1.8 1.4 1.8 2.6v8.3h-3.2V21h-3.6v-2.5H6.8V21H3.2v-2.5H0V10.2c0-1.2.8-2.2 1.8-2.6L3.4 3c.3-.9 1.1-1.5 2.1-1.5zm.4 6.1h16.2L21 4H7zM5.5 10.6a1.9 1.9 0 1 0 0 3.8 1.9 1.9 0 0 0 0-3.8zm17 0a1.9 1.9 0 1 0 0 3.8 1.9 1.9 0 0 0 0-3.8z" fill="currentColor" transform="translate(0 -.5)"/></svg><span>Book</span></button>
+      <button><svg width="26" height="24" viewBox="0 0 26 24" aria-hidden="true"><path d="M2 3.5h22V22H2zM2 8.5h22M7 .8v5M19 .8v5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/></svg><span>Trips</span></button>
+      <button><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M13 0a13 13 0 1 0 0 26 13 13 0 0 0 0-26zm0 4.6a4.4 4.4 0 1 1 0 8.8 4.4 4.4 0 0 1 0-8.8zm0 18.1a10.4 10.4 0 0 1-8.2-4c.1-2.7 5.5-4.2 8.2-4.2s8.1 1.5 8.2 4.2a10.4 10.4 0 0 1-8.2 4z" fill="currentColor"/></svg><span>Account</span></button>
+    </nav>
+  </div>
+  <script src="../../_ios/maplibre/maplibre-gl.js"></script>
+  <script src="../../_ios/device.js"></script>
+  <script src="../../_ios/map-perf.js"></script>
+  <script src="../../_ios/devices.js"></script>
+  <script src="../../_ios/map-images.js"></script>
+  <script src="../../_ios/map-style.js"></script>
+  <script src="../../_ios/sheet.js"></script>
+  <script src="../../_ios/state.js"></script>
+  <script src="../_shared/data.js"></script>
+  <script src="assets.js"></script>
+  <script src="style.js"></script>
+  <script src="markers.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
