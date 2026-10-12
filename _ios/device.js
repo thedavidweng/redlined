@@ -6,7 +6,7 @@
 //   ?cutout=none in the page URL hides the cutout (the status bar stays): calibration only, because iOS screenshots never show the notch.
 //   IosDevice.scale()  →  how much desktop mode shrinks the phone (1 elsewhere), so a map can render at the size it is shown
 //   IosDevice.credit(html)  →  data credits (map tiles) shown outside the app, never inside it: the page corner on
-//   desktop, the stage corner in the stage (and so in the clip), a brief fade-out on a phone where there is no outside.
+//   desktop, the stage corner in the stage (and so in the clip), a thin strip under the top edge that fades out on a phone, where there is no outside.
 // Modes: 'stage' (inside an iframe, as in _tools/stage.html: exact device size, no shell), 'fullscreen' (narrow
 // viewport such as a phone browser: fills the screen, real status bar and env(safe-area-inset-*)), 'desktop' (phone
 // window centred in the page, scaled down to fit).
