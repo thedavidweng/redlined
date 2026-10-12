@@ -15,6 +15,13 @@
   background-position: 0 0, calc(var(--pattern-size, 132px) / 2) calc(var(--pattern-size, 132px) / 2); background-repeat: repeat; }
 .brand-bg::after { content: ''; position: absolute; inset: 0; background: radial-gradient(90% 70% at 50% 45%, transparent 40%, #000a 100%); }
 
+/* Placeholder: wherever a cover or clip would show and none exists yet. The mark, faint and centred, on a soft lift of the raised surface.
+   Never a blank box, a stand-in screenshot or the product's own logo. The element must be positioned. Add .with-text when it holds text. */
+.brand-placeholder { isolation: isolate; background: radial-gradient(120% 120% at 20% 0%, #1c1c1c, var(--bg-raise) 70%); }
+.brand-placeholder::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--mark) 50% var(--placeholder-y, 50%) / 22% no-repeat; opacity: .07; pointer-events: none; }
+/* With text inside, the mark rises and the text sits under it, never across it. */
+.brand-placeholder.with-text { --placeholder-y: 40%; padding-top: 16%; }
+
 /* Wordmark: the mark, then "Redlined" with a short red rule, the editor's redline. */
 .brand { display: inline-flex; align-items: center; gap: .32em; color: var(--ink); font-size: var(--brand-size, 30px); line-height: 1; white-space: nowrap; }
 .brand-mark { width: 1.4em; height: 1.4em; flex-shrink: 0; background: currentColor;

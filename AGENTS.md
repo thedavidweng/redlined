@@ -5,7 +5,7 @@ No build step locally; pages open from disk. Pushing to main deploys to GitHub P
 Read only what your task needs:
 - Designing or changing a redline: [docs/design.md](docs/design.md)
 - Adding a redline or product, naming, verifying: [docs/redlines.md](docs/redlines.md)
-- Recording clips, tweet format, media specs: [docs/presentation.md](docs/presentation.md)
+- Recording clips, tweet format, media specs, placeholders: [docs/presentation.md](docs/presentation.md)
 - Writing READMEs or captions: [docs/writing.md](docs/writing.md)
 
 Commit only when asked.

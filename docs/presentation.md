@@ -17,3 +17,8 @@
 
 - `clip.mp4` is the file to upload: 1920×1080, H.264, yuv420p, tv range, 30fps, CRF 16 or lower, faststart.
 - `clip.gif` must stay under 15 MB.
+
+## Placeholder
+
+- Wherever a cover or clip would show and none exists yet (a product card on the home page, a previewer without a clip or without redlines), show the brand placeholder: `.brand-placeholder` in `_tools/brand.css`, the Redlined mark at 7% opacity, centred at 22% of the width, on a soft radial lift of `--bg-raise`.
+- Never a blank box, a stand-in screenshot or the product's own logo. The element must be positioned; when it holds text (such as "No clip yet"), add `.with-text` so the mark rises and the text sits under it.
