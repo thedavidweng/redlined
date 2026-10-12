@@ -39,10 +39,11 @@ async def shoot(product, state, w, h, scale, out):
         page = await browser.new_page(viewport={'width': w, 'height': h}, device_scale_factor=scale, reduced_motion='reduce')
         await page.goto(harness.as_uri())
         frame = page.frames[1]
-        await frame.wait_for_function('globalThis.LimeMap')  # the product's map handle; see lime/mock/app.js
+        handle = f'globalThis.{product.capitalize()}Map'  # the product's map handle: LimeMap, ModoMap, ... (see lime/mock/app.js)
+        await frame.wait_for_function(handle)
         await frame.evaluate('document.fonts.ready')
         # Style loaded, camera still, nothing fading: MapLibre's own "idle".
-        await frame.evaluate('new Promise(r => { const go = () => LimeMap.loaded() && !LimeMap.isMoving() ? r() : LimeMap.once("idle", go); go(); })')
+        await frame.evaluate(f'(M => new Promise(r => {{ const go = () => M.loaded() && !M.isMoving() ? r() : M.once("idle", go); go(); }}))({handle})')
         # Screenshot until two in a row are identical (late glyphs or tiles), so a re-run gives the same pixels.
         last = None
         for _ in range(10):
