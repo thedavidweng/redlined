@@ -7,5 +7,13 @@ globalThis.REDLINED_PRODUCTS = [
     "about": "Deliverect is a SaaS platform for restaurants and food businesses.",
     "cover": "deliverect/01-ux-swipe-to-confirm/media/cover.webp",
     "count": 6
+  },
+  {
+    "product": "lime",
+    "name": "Lime",
+    "label": "Lime · Map",
+    "about": "Lime is a micro-mobility company that rents shared electric scooters and bikes in cities around the world.",
+    "cover": "lime/01-fix-range-in-km/media/cover.webp",
+    "count": 1
   }
 ];

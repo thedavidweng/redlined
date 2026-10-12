@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <title>Lime – Map Mock</title>
+  <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
+  <script>
+    // Start the map's first requests while MapLibre downloads and parses; it asks for them one after another (style, tile index, then label fonts once tiles are parsed). The style URL is the one in app.js.
+    for (const path of ['styles/bright', 'planet', 'fonts/Noto%20Sans%20Regular/0-255.pbf', 'fonts/Noto%20Sans%20Italic/0-255.pbf']) fetch(`https://tiles.openfreemap.org/${path}`).catch(() => {});
+  </script>
+  <link rel="stylesheet" href="../../_ios/maplibre/maplibre-gl.css">
+  <link rel="stylesheet" href="../../_ios/device.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <div id="map"></div>
+    <div class="shade"></div>
+    <div class="dock" title="Outside this mock">
+      <button class="avatar" aria-label="Profile"><img src="assets/user_32@3x.png" alt=""></button>
+      <button class="menu" aria-label="Menu"><img src="assets/hamburger_nav_32@3x.png" alt=""></button>
+    </div>
+    <div class="nav-title" aria-hidden="true">Scooter <span data-plate></span></div>
+    <button class="locate" aria-label="My location" title="Outside this mock"><img src="assets/map_orientation_fill_24@3x.png" alt=""></button>
+    <button class="scan" title="Outside this mock"><img src="assets/ic_qr_scan_32@3x.png" alt="">Start ride</button>
+    <div class="sheet-probe"></div>
+    <div class="sheet" role="dialog" aria-label="Scooter details">
+      <button class="strip"><img src="assets/rewards_24@3x.png" alt=""><span>Promo will apply: 25% off, up to $5</span><img class="go" src="assets/arrows_right_16@3x.png" alt=""></button>
+      <div class="panel">
+        <div class="grabber"></div>
+        <button class="close" aria-label="Close"><img src="assets/close_24@3x.png" alt=""></button>
+        <h2 class="title">Scooter <span data-plate></span></h2>
+        <p class="range"><img src="assets/battery_3_16@3x.png" alt=""><span><span data-range></span> mi range</span></p>
+        <img class="photo" src="assets/scooter_4.1@3x.png" alt="">
+        <hr>
+        <div class="promo"><img src="assets/promo_24@3x.png" alt=""><span>25% off, up to $5</span><button class="link">Details</button></div>
+        <p class="price">then CAD $0 to unlock, CAD $0.15/min</p>
+        <div class="actions">
+          <button class="pill" style="left:16px;width:93px"><img src="assets/qr_code_24@3x.png" alt="">Scan</button>
+          <button class="pill" style="left:117px;width:90px"><img src="assets/ring_24@3x.png" alt="">Ring</button>
+          <button class="pill" style="left:215px;width:144px"><img src="assets/flag_slant_24@3x.png" alt="">Report Issue</button>
+        </div>
+        <h3 class="head" style="top:288px">Payment method</h3>
+        <button class="pay"><img src="assets/apple_pay_24@3x.png" alt=""><span>Apple Pay</span><img class="caret" src="assets/caret_right_24@3x.png" alt=""></button>
+        <h3 class="head" style="top:392px">Pricing details</h3>
+        <p class="body">25% off, up to $5, then CAD $0 to unlock, CAD $0.15/min</p>
+        <p class="note">Pricing is per ride and based on total time, rounded up to the next minute. <button class="link">Learn more</button></p>
+      </div>
+    </div>
+    <div class="bar"><button class="reserve"><b>Reserve Scooter</b><span>Free to reserve for 10 minutes</span></button></div>
+  </div>
+  <script src="../../_ios/maplibre/maplibre-gl.js"></script>
+  <script src="../../_ios/device.js"></script>
+  <script src="../../_ios/map-perf.js"></script>
+  <script src="../_shared/vehicles.js"></script>
+  <script src="assets.js"></script>
+  <script src="style.js"></script>
+  <script src="markers.js"></script>
+  <script src="sheet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

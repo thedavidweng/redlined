@@ -1,0 +1,96 @@
+/* Home chrome, sized from the reference screenshot (pt). Poppins Medium is the app's UI font (OFL, see OFL.txt). */
+@font-face { font-family: Poppins; font-weight: 500; src: url(Poppins-Medium.ttf) format("truetype"); }
+* { box-sizing: border-box; }
+body { font-family: Poppins, -apple-system, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+#app { background: #f7f7f7; container-type: size; -webkit-tap-highlight-color: transparent;
+  --sf: -apple-system, system-ui, 'Helvetica Neue', sans-serif;  /* body text in the reference is the system font; Poppins is for titles and buttons */
+  --ease: cubic-bezier(.32, .72, 0, 1); --sheet-top: calc(var(--safe-top) + 145px); --sheet-collapsed: calc(350px + var(--safe-bottom)); }
+#map { position: absolute; inset: 0; }
+button { padding: 0; border: 0; font: inherit; cursor: pointer; }
+img { display: block; }
+
+/* A soft darkening under the button, where the real app's map fades out. */
+.shade { position: absolute; left: 0; right: 0; bottom: 0; height: 80px; pointer-events: none; background: linear-gradient(#0000, #0003); }
+
+.dock { position: absolute; z-index: 5; left: calc(var(--safe-left) + 16px); top: var(--safe-top); width: 80px; height: 48px;
+  display: flex; align-items: center; border-radius: 24px; background: #fff; box-shadow: 0 2px 10px #0000001f;
+  transform: translateY(calc(100cqh - var(--safe-bottom) - 126px - var(--safe-top))); transition: transform .5s var(--ease); }
+.dock .avatar { width: 32px; height: 32px; margin-left: 8px; border-radius: 50%; background: #edf2f4; display: grid; place-items: center; }
+.dock img { width: 32px; height: 32px; }
+.dock .menu { width: 24px; height: 24px; margin-left: 4px; background: none; display: grid; place-items: center; }
+.dock .menu img { width: 24px; height: 24px; }
+
+.locate { position: absolute; z-index: 5; right: calc(var(--safe-right) + 16px); bottom: calc(var(--safe-bottom) + 158px); width: 40px; height: 40px;
+  border-radius: 50%; background: #fff; display: grid; place-items: center; box-shadow: 0 2px 10px #0000001f; }
+.locate img { width: 24px; height: 24px; }
+
+.scan { position: absolute; z-index: 5; left: calc(var(--safe-left) + 16px); right: calc(var(--safe-right) + 16px); bottom: calc(var(--safe-bottom) - 2px); height: 64px;
+  display: flex; align-items: center; justify-content: center; gap: 3px; border-radius: 32px; background: #282e32; color: #fff;
+  font: 500 16px/24px Poppins, sans-serif; box-shadow: 0 4px 14px #0003; }
+.scan img { width: 26px; height: 26px; }
+
+/* Selected: the pill climbs under the status bar, Start ride makes way for the sheet and its Reserve bar. */
+.is-selected .dock { transform: none; }
+.scan, .shade { transition: transform .5s var(--ease), opacity .3s; }
+.is-selected .scan { transform: translateY(calc(100% + 60px)); }
+.is-selected .shade { opacity: 0; }
+.scan:active, .reserve:active { background: #454c52; }
+.dock button:active, .locate:active { opacity: .6; }
+
+.nav-title { position: absolute; z-index: 3; left: 68px; right: 68px; top: calc(var(--safe-top) + 22px); height: 28px; opacity: 0; pointer-events: none; transition: opacity .3s;
+  text-align: center; font: 500 20px/28px Poppins, sans-serif; white-space: nowrap; color: #000; }
+.is-selected .nav-title { opacity: 1; }
+.locate { will-change: transform; }  /* moved by app.js with the sheet */
+
+/* The sheet is one layer moved by transform only (sheet.js): the strip and panel travel together, the map is never touched. */
+.sheet-probe { position: absolute; width: 0; height: calc(100cqh - var(--sheet-top) - var(--sheet-collapsed)); visibility: hidden; pointer-events: none; }
+.sheet { position: absolute; z-index: 4; left: 0; right: 0; bottom: 0; height: calc(100cqh - var(--sheet-top) + 48px); visibility: hidden;
+  transform: translate3d(0, 100%, 0); will-change: transform; contain: layout; touch-action: none; user-select: none; -webkit-user-select: none; }
+.sheet.dragging { cursor: grabbing; }
+.strip { position: absolute; left: 0; right: 0; top: 0; height: 72px; padding: 0; border-radius: 24px 24px 0 0; background: #e6f9e6; text-align: left; color: #000;
+  font: 400 15px/50px var(--sf); }
+.strip img { position: absolute; top: 12px; left: 12px; width: 24px; height: 24px; }
+.strip span { position: absolute; left: 44px; top: 0; }
+.strip .go { left: auto; right: 12px; top: 16px; width: 16px; height: 16px; }
+.strip:active { background: #d9f3d9; }
+.panel { position: absolute; left: 0; right: 0; top: 48px; bottom: 0; border-radius: 24px 24px 0 0; background: #fff; overflow: hidden; font: 400 15px/20px var(--sf); color: #000; }
+.panel > *, .actions, .pill { position: absolute; margin: 0; }
+.grabber { left: 50%; top: 9px; width: 48px; height: 5px; margin-left: -24px; border-radius: 3px; background: #6c7176; }
+.close { right: 16px; top: 17px; width: 32px; height: 32px; border-radius: 50%; background: #ececec; display: grid; place-items: center; }
+.close img { width: 24px; height: 24px; }
+.close:active { background: #d9dadb; }
+.title { left: 16px; top: 30px; font: 500 20px/28px Poppins, sans-serif; white-space: nowrap; }
+.range { left: 16px; top: 66px; display: flex; align-items: center; gap: 4px; font-size: 14px; line-height: 17px; }
+.range img { width: 16px; height: 16px; }
+.photo { right: 40px; top: 32px; width: 86px; height: 86px; object-fit: contain; object-position: 50% 100%; pointer-events: none; }
+hr { position: absolute; left: 16px; right: 16px; top: 130px; height: 1px; margin: 0; border: 0; background: #e5e6e7; }
+.promo { left: 16px; right: 16px; top: 144px; height: 28px; }
+.promo img { position: absolute; left: 0; top: 2px; width: 24px; height: 24px; }
+.promo > span { position: absolute; left: 32px; top: 3px; color: #5233d9; font: 500 16px/22px Poppins, sans-serif; white-space: nowrap; }
+.link { position: absolute; right: 0; top: 0; height: 28px; background: none; color: #000; text-decoration: underline; font: 500 14px/28px Poppins, sans-serif; }
+.link:active { opacity: .5; }
+.price { left: 16px; top: 175px; color: #6a6f73; font-size: 14px; line-height: 17px; white-space: nowrap; }
+.actions { left: 0; top: 216px; width: 100%; height: 40px; }
+.pill { top: 0; height: 40px; display: flex; align-items: center; justify-content: center; gap: 7px; border-radius: 20px; background: none;
+  box-shadow: inset 0 0 0 1.5px #6c7176; color: #000; font: 500 15px/20px Poppins, sans-serif; white-space: nowrap; transition: background .12s; }
+.pill img { width: 24px; height: 24px; }
+.pill:active { background: #0000001a; }
+.head { left: 16px; font: 500 20px/28px Poppins, sans-serif; }
+.pay { left: 16px; right: 16px; top: 332px; height: 24px; background: none; text-align: left; font: 400 15px/24px var(--sf); }
+.pay img { position: absolute; top: 0; width: 24px; height: 24px; }
+.pay span { position: absolute; left: 31px; top: 0; }
+.pay .caret { right: 0; }
+.pay:active { opacity: .5; }
+.body { left: 16px; right: 16px; top: 432px; font-size: 15px; line-height: 19px; }
+.note { left: 16px; right: 16px; top: 483px; font-size: 14.5px; line-height: 17px; }
+.note .link { position: static; display: inline; height: auto; font: inherit; line-height: inherit; }
+
+.bar { position: absolute; z-index: 6; left: 0; right: 0; bottom: 0; height: calc(78px + var(--safe-bottom)); background: #fff; box-shadow: 0 -2px 18px #0000001a;
+  transform: translateY(100%); transition: transform .5s var(--ease); }
+.is-selected .bar { transform: none; }
+.reserve { position: absolute; left: calc(var(--safe-left) + 16px); right: calc(var(--safe-right) + 16px); bottom: calc(var(--safe-bottom) - 2px); height: 64px; border-radius: 32px;
+  background: #282e32; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.reserve b { font: 500 16px/21px Poppins, sans-serif; }
+.reserve span { font: 400 14px/19px var(--sf); }
+
+@media (prefers-reduced-motion: reduce) { .dock, .scan, .shade, .bar { transition: none; } }
