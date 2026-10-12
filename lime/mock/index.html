@@ -7,7 +7,7 @@
   <title>Lime – Map Mock</title>
   <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
   <script>
-    // Start the map's first requests while MapLibre downloads and parses; it asks for them one after another (style, tile index, then label fonts once tiles are parsed). The style URL is the one in app.js.
+    // Start the map's first requests while MapLibre downloads and parses; it asks for them one after another (style, tile index, then label fonts once tiles are parsed). The style URL is IosMapStyle.BRIGHT.
     for (const path of ['styles/bright', 'planet', 'fonts/Noto%20Sans%20Regular/0-255.pbf', 'fonts/Noto%20Sans%20Italic/0-255.pbf']) fetch(`https://tiles.openfreemap.org/${path}`).catch(() => {});
   </script>
   <link rel="stylesheet" href="../../_ios/maplibre/maplibre-gl.css">
@@ -54,11 +54,15 @@
   <script src="../../_ios/maplibre/maplibre-gl.js"></script>
   <script src="../../_ios/device.js"></script>
   <script src="../../_ios/map-perf.js"></script>
+  <script src="../../_ios/devices.js"></script>
+  <script src="../../_ios/map-images.js"></script>
+  <script src="../../_ios/map-style.js"></script>
+  <script src="../../_ios/sheet.js"></script>
+  <script src="../../_ios/state.js"></script>
   <script src="../_shared/vehicles.js"></script>
   <script src="assets.js"></script>
   <script src="style.js"></script>
   <script src="markers.js"></script>
-  <script src="sheet.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

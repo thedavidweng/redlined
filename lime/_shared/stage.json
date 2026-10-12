@@ -1,1 +1,1 @@
-{"name": "Lime", "label": "Lime · Map", "mock": "lime/mock/index.html", "device": {"width": 390, "height": 844, "radius": 47.33, "cutout": "notch", "safe": {"top": 47, "bottom": 34}}}
+{"name": "Lime", "label": "Lime · Map", "mock": "lime/mock/index.html", "device": "iphone-16e"}

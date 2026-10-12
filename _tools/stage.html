@@ -81,6 +81,11 @@
   let product = params.get('product'), redline = null, config = null, frameCss = '', redlines = [];
   const ready = product && fetch(`/${product}/_shared/stage.json`).then(r => r.json()).then(async c => {
     config = c;
+    if (typeof c.device === 'string') {  // a device name from _ios/devices.js, the one place sizes are written
+      await new Promise((resolve, reject) => document.head.append(Object.assign(document.createElement('script'), { src: '/_ios/devices.js', onload: resolve, onerror: reject })));
+      if (!IosDevices[c.device]) throw new Error(`stage.json: unknown device "${c.device}"`);
+      c.device = IosDevices[c.device];
+    }
     if (c.frame_css) frameCss = await fetch(`/${c.frame_css}`).then(r => r.text());
     if (c.device) {
       const s = Math.min(1, 864 / c.device.height);  // 864 = panel height below the 52px label

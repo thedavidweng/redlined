@@ -1,7 +1,7 @@
 // Classic script, not an ES module, so the mock also runs when opened straight from disk (file://).
 (async () => {
-  const { device, camera } = LimeData;
-  IosDevice.mount(document.querySelector('#app'), device);
+  const { camera } = LimeData;
+  IosDevice.mount(document.querySelector('#app'), IosDevices['iphone-16e']);
 
   // REDLINE SEAM (inert without ?redline=): ?redline=<folder>&side=before|after (default after) loads
   // <folder>/patch.js + patch.css and, once the map has loaded, calls redlinePatch.apply({ root, map, data }). A folder without a patch is a no-op.
@@ -14,13 +14,10 @@
   if (patch) document.head.append(Object.assign(document.createElement('link'), { rel: 'stylesheet', href: `../${redline}/patch.css` }));
 
   // STATE SEAM (extends the one above; inert without ?state=): ?state=<name> opens straight into that state, for calibration.
-  // selected and sheet-expanded open on the nearest scooter. An unknown state falls back to home.
+  // selected and sheet-expanded open on the nearest scooter. An unknown state falls back to home (IosState.pick).
   const PIN = [200, 385];  // where the selected scooter sits on screen: above the collapsed sheet
   const STATES = { home: {}, selected: { select: LimeData.nearest }, 'sheet-expanded': { select: LimeData.nearest, sheet: 'expanded' } };
-  const asked = query.get('state');
-  const state = Object.hasOwn(STATES, asked) ? asked : 'home';
-  if (asked && !Object.hasOwn(STATES, asked)) console.warn(`Unknown state "${asked}"; showing home. Known: ${Object.keys(STATES).join(', ')}`);
-  const first = STATES[state], where = n => LimeData.vehicles.features[n].geometry.coordinates;
+  const first = IosState.pick(STATES).state, where = n => LimeData.vehicles.features[n].geometry.coordinates;
   const start = first.select == null ? camera.center : LimeData.frame(where(first.select), PIN);
 
   // Exposed for the test and calibration scripts (centre, zoom, idle), like DeliverectModel.
@@ -32,7 +29,7 @@
     fadeDuration: 0,  // symbol fades repaint at full pixel ratio; without them a tap costs one render, not three
     attributionControl: false,
   });
-  map.setStyle('https://tiles.openfreemap.org/styles/bright', { transformStyle: LimeStyle.transform });
+  map.setStyle(IosMapStyle.BRIGHT, { transformStyle: LimeStyle.transform });
   IosMapPerf.attach(map);
   // The real app shows no OpenFreeMap credit, so it sits outside the mock: the device frame puts it in the page corner.
   IosDevice.credit('<a href="https://openfreemap.org">OpenFreeMap</a> © <a href="https://www.openmaptiles.org/">OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>');
@@ -40,9 +37,9 @@
   const locate = $('.locate');
   const clamp = v => Math.min(1, Math.max(0, v));
   // The locate button rides the sheet (271 pt above its home spot once the sheet has settled) and fades out as the sheet fills the screen.
-  const sheet = LimeSheet.create($('.sheet'), {
-    probe: $('.sheet-probe'),
-    onMove(y, collapsed, hidden) {
+  const sheet = IosSheet.create($('.sheet'), {
+    detents: { expanded: () => 0, collapsed: () => $('.sheet-probe').offsetHeight, hidden: () => $('.sheet').offsetHeight },
+    onMove(y, { collapsed, hidden }) {
       const lift = -271 * clamp((hidden - y) / (hidden - collapsed)) + Math.min(0, y - collapsed);
       locate.style.transform = `translateY(${lift}px)`;
       locate.style.opacity = clamp((y - collapsed * .5) / (collapsed * .4));

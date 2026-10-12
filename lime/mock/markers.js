@@ -1,24 +1,12 @@
 // Home-screen map content: scooters, parking, zones, the rider, the walk. Every marker is a symbol layer whose image is drawn
-// once to a 3x canvas (map.addImage), never a DOM node, so panning costs the UI nothing. Classic script (file://).
+// once to a 3x canvas (IosMapImages.draw), never a DOM node, so panning costs the UI nothing. Classic script (file://).
 //   LimeMarkers.add(map, LimeData)  →  Promise of { select(n), clear() }, resolves when the layers are on the map.
 //   select(n) turns scooter n into the balloon pin and points the walk at it; clear() restores the home look. Feature state only: no tiling, no layout, no DOM.
 globalThis.LimeMarkers = (() => {
-  const PR = 3, GREEN = '#00dd00', RED = '#f23a34', SLATE = '#363d42';
-  const load = src => new Promise(resolve => Object.assign(new Image(), { src, onload() { resolve(this); } }));
-  function draw(map, id, w, h, paint) {  // w, h in pt
-    const canvas = Object.assign(document.createElement('canvas'), { width: w * PR, height: h * PR });
-    const g = canvas.getContext('2d');
-    g.scale(PR, PR);
-    paint(g);
-    map.addImage(id, g.getImageData(0, 0, canvas.width, canvas.height), { pixelRatio: PR });
-  }
+  const GREEN = '#00dd00', RED = '#f23a34', SLATE = '#363d42';
+  const { load, draw, tint: tinted } = IosMapImages;
   const disc = (g, x, y, r, fill) => { g.beginPath(); g.arc(x, y, r, 0, 2 * Math.PI); g.fillStyle = fill; g.fill(); };
   const roundRect = (g, x, y, w, h, r) => { g.beginPath(); g.roundRect(x, y, w, h, r); };
-  function tinted(img, color) {  // a black glyph recoloured, so one PNG serves white and black uses
-    const c = Object.assign(document.createElement('canvas'), { width: img.width, height: img.height }), g = c.getContext('2d');
-    g.drawImage(img, 0, 0); g.globalCompositeOperation = 'source-in'; g.fillStyle = color; g.fillRect(0, 0, c.width, c.height);
-    return c;
-  }
   // flip: the IPA scooter glyph faces right; the map pins show it with the handlebar on the left.
   const glyph = (g, img, cx, cy, size, flip) => {
     g.save(); g.translate(cx, cy); if (flip) g.scale(-1, 1);

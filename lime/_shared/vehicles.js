@@ -1,10 +1,9 @@
 // Mock Lime data, shared by the mock and every redline. Everything here is fictional. Positions are written as screen points
 // (pt, 390 x 844) at the home camera and converted to coordinates, so the layout can be tuned against the reference by eye.
-// device mirrors stage.json (390 x 844, iPhone 16e: notch, no Dynamic Island); classic scripts can't read the JSON, so keep
-// both in step. The camera is the West End by the Burrard Bridge (Beach Ave, Hornby, English Bay's False Creek shore), about 1.2 km from where the reference screenshots were taken: never move it there.
+// The device is IosDevices['iphone-16e'] (_ios/devices.js, also named in stage.json): load that script first. The camera is the West End by the Burrard Bridge (Beach Ave, Hornby, English Bay's False Creek shore), about 1.2 km from where the reference screenshots were taken: never move it there.
 // Keep every scooter and parking spot out of the status bar and the top pill in the selected camera (home shifted by -16, +63): nothing may land at y 0-110 there.
 globalThis.LimeData = (() => {
-  const device = { width: 390, height: 844, radius: 47.33, cutout: 'notch', safe: { top: 47, bottom: 34 } };
+  const device = IosDevices['iphone-16e'];
   const camera = { center: [-123.1330, 49.2752], zoom: 16.7, bearing: 0 };
 
   // Screen point -> [lng, lat] at the home camera (Web Mercator, 512 px tiles; flat is accurate enough for a few hundred metres).

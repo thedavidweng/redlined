@@ -1,8 +1,8 @@
 // Turns OpenFreeMap's Bright style into the light, quiet map the real app uses: pale grey ground, white roads with a thin grey edge,
 // soft green parks, pale blue water, grey blocks, small grey POI icons with grey labels. Bright's 119 layers become 13: only what
 // shows around the demo area, and roads, street labels and POIs each merged into one layer, because every layer costs a frame on slow GPUs.
-// The tiles, sprite and glyphs stay OpenFreeMap's own. Classic script (file://).
-//   map.setStyle(url, { transformStyle: LimeStyle.transform })  →  swaps the layers before the style loads
+// The tiles, sprite and glyphs stay OpenFreeMap's own. Classic script (file://). The swap and the sprite greying are the shared ../../_ios/map-style.js.
+//   map.setStyle(IosMapStyle.BRIGHT, { transformStyle: LimeStyle.transform })  →  swaps the layers before the style loads
 //   LimeStyle.mute(map)  →  greys the sprite icons, once the style has loaded
 globalThis.LimeStyle = (() => {
   const GROUND = '#f7f7f7', PARK = '#cef8ce', WATER = '#cee4fd', BLOCK = '#e0e0e0', ROAD = '#fff', EDGE = '#e6e6e6', LABEL = '#7b8387';
@@ -49,17 +49,5 @@ globalThis.LimeStyle = (() => {
       paint: { 'icon-opacity': .8, 'text-color': LABEL, 'text-halo-color': GROUND, 'text-halo-width': 1.5 } },
   ];
 
-  const transform = (previous, next) => ({ ...next, layers: layers() });
-
-  // The sprite's icons are coloured; the real app's are grey. Desaturate them in place (alpha untouched).
-  function mute(map) {
-    for (const id of map.listImages()) {
-      const { data } = map.getImage(id) ?? {};
-      if (!data) continue;
-      const px = new Uint8ClampedArray(data.data);
-      for (let i = 0; i < px.length; i += 4) px[i] = px[i + 1] = px[i + 2] = px[i] * .3 + px[i + 1] * .59 + px[i + 2] * .11;
-      try { map.updateImage(id, { width: data.width, height: data.height, data: px }); } catch {}
-    }
-  }
-  return { transform, mute };
+  return { transform: IosMapStyle.transform(layers), mute: IosMapStyle.mute };
 })();

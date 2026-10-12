@@ -6,7 +6,7 @@ Serve the `redlined` folder (`python3 ~/Development/redlined/_tools/serve.py`) a
 
 ## States
 
-`?state=home` (default), `?state=selected` (nearest scooter as a balloon pin, camera eased to put it at x200 y385, sheet collapsed) and `?state=sheet-expanded`. Tapping a scooter selects it, the close button returns home. The sheet (`sheet.js`) is transform-only: pointer events (mouse and touch), rubber band past the detents, snap by velocity and position with a spring, `prefers-reduced-motion` jumps instead of animating. Animation durations (500 ms chrome and sheet, 600 ms camera) are estimates, there is no reference video.
+`?state=home` (default), `?state=selected` (nearest scooter as a balloon pin, camera eased to put it at x200 y385, sheet collapsed) and `?state=sheet-expanded`. Tapping a scooter selects it, the close button returns home. The sheet (`../../_ios/sheet.js`, Lime passes its own detents in `app.js`) is transform-only: pointer events (mouse and touch), rubber band past the detents, snap by velocity and position with a spring, `prefers-reduced-motion` jumps instead of animating. Animation durations (500 ms chrome and sheet, 600 ms camera) are estimates, there is no reference video.
 
 ## Redline seam
 
@@ -16,7 +16,7 @@ Without query params the mock is plain. `?redline=<folder>&side=before|after` (d
 
 - `../../_ios/device.js`, `device.css`: shared iPhone frame (status bar, safe areas, Home indicator). `?cutout=none` hides the notch, for calibration only (the references never show it).
 - `../../_ios/maplibre/`: vendored MapLibre GL JS 5.24.0 with its license.
-- `../_shared/vehicles.js`: `LimeData`: camera, scooters, parking, zones, rider, walk route, authored in screen points. Keep the device size in step with `../_shared/stage.json`.
+- `../_shared/vehicles.js`: `LimeData`: camera, scooters, parking, zones, rider, walk route, authored in screen points. The device size is `IosDevices['iphone-16e']` (`../../_ios/devices.js`), also named in `../_shared/stage.json`.
 - `app.js`: map, seam. `style.js`: re-tints OpenFreeMap Bright and cuts its 119 layers to 13 (grey ground, white roads, pale green parks, pale blue water, small grey POIs; no one-way arrows). Symbol layers cost the most while panning, keep them few. `markers.js`: marker images drawn once to canvas and added as symbol layers (no DOM markers); selection is feature state (paint opacity), so a tap triggers no tiling or `setData`, which is what keeps taps and pans smooth at 4x CPU throttle. `sheet.js`: the bottom sheet.
 - `styles.css`, `index.html`: Start ride button, account/menu capsule, locate button.
 

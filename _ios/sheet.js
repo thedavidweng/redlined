@@ -1,10 +1,16 @@
-// Bottom sheet with two detents. Classic script, works from file://.
-//   const sheet = LimeSheet.create(el, { probe, onMove(y, collapsed, hidden) })
-//   sheet.show() / sheet.hide() / sheet.snap('collapsed' | 'expanded', animate) / sheet.state
-// Position is one number, y: translateY in px from expanded (0) to collapsed (probe height) to hidden (sheet height).
+// Draggable bottom sheet with detents, a spring release and a rubber band. Classic script, works from file://.
+//   const sheet = IosSheet.create(el, { detents, snaps, shown, onMove(y, at) })
+//   sheet.show(to?) / sheet.hide(done?) / sheet.snap(name, animate = true) / sheet.state
+// detents: { name: () => px }, measured on every resize. A detent is the sheet's translateY in px: 0 is fully open and larger
+//   is lower. One detent must be named 'hidden' (the sheet's own height, so it is off screen); it is not draggable to.
+// snaps: the detent names a release can settle on, top to bottom (the rest are reached by show/hide/snap only).
+// shown: where show() goes by default (default: the last snap).
+// onMove(y, at): on every position change; at is the measured detent table, e.g. at.collapsed.
+// spring: { stiffness: 300, damping: 22 } by default (damping below critical: a small bounce on release).
 // Only the sheet's transform changes while it moves, so nothing reflows and the map never repaints.
-globalThis.LimeSheet = (() => {
-  const SPRING = { stiffness: 300, damping: 22 }, TAP = 6;  // damping below critical: a small bounce on release
+// While a finger drags, el gets the class 'dragging' (use it to switch off CSS transitions).
+globalThis.IosSheet = (() => {
+  const TAP = 6;
 
   // CSS cubic-bezier(.32, .72, 0, 1) as a function of time, to match the chrome's transitions.
   const ease = t => {
@@ -14,13 +20,16 @@ globalThis.LimeSheet = (() => {
     return bez(y1, y2, Math.min(1, Math.max(0, s)));
   };
 
-  function create(el, { probe, onMove = () => {} }) {
+  function create(el, { detents, snaps, shown, spring: tune, onMove = () => {} }) {
+    const SPRING = { stiffness: 300, damping: 22, ...tune };
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-    let collapsed = 0, hidden = 0, y = 0, state = 'hidden', frame = 0, drag = null, blockClick = false;
+    snaps ??= Object.keys(detents).filter(name => name !== 'hidden');
+    shown ??= snaps.at(-1);
+    let at = {}, y = 0, state = 'hidden', frame = 0, drag = null, blockClick = false;
 
-    const measure = () => { collapsed = probe.offsetHeight; hidden = el.offsetHeight; };
-    const place = v => { y = v; el.style.transform = `translate3d(0, ${v}px, 0)`; onMove(v, collapsed, hidden); };
-    const target = s => s === 'expanded' ? 0 : s === 'collapsed' ? collapsed : hidden;
+    const measure = () => { for (const name in detents) at[name] = detents[name](); };
+    const place = v => { y = v; el.style.transform = `translate3d(0, ${v}px, 0)`; onMove(v, at); };
+    const target = name => at[name];
     const stop = () => { cancelAnimationFrame(frame); frame = 0; };
 
     // Move to a detent: a spring when handed a finger velocity (release), the chrome's ease otherwise.
@@ -49,8 +58,11 @@ globalThis.LimeSheet = (() => {
       frame = requestAnimationFrame(tick);
     }
 
-    // Beyond the detents the sheet resists, like a rubber band.
-    const band = raw => raw < 0 ? raw * .25 : raw > collapsed ? collapsed + (raw - collapsed) * .25 : raw;
+    // Beyond the outermost snaps the sheet resists, like a rubber band.
+    const band = raw => {
+      const lo = Math.min(...snaps.map(target)), hi = Math.max(...snaps.map(target));
+      return raw < lo ? lo + (raw - lo) * .25 : raw > hi ? hi + (raw - hi) * .25 : raw;
+    };
 
     el.addEventListener('pointerdown', e => {
       if (state === 'hidden' || e.button) return;
@@ -74,10 +86,11 @@ globalThis.LimeSheet = (() => {
       el.classList.remove('dragging');
       if (!moved) return;
       blockClick = true; setTimeout(() => blockClick = false);
-      // Velocity over the last 100 ms, in pt/s; where the sheet would coast to decides the detent.
+      // Velocity over the last 100 ms, in pt/s; the snap nearest to where the sheet would coast to wins.
       const now = performance.now(), recent = samples.filter(s => now - s[0] < 100), a = recent[0] ?? samples.at(-1), b = samples.at(-1);
       const k = globalThis.IosDevice?.scale() ?? 1, v = b[0] > a[0] ? (b[1] - a[1]) / k / (b[0] - a[0]) * 1000 : 0;
-      const next = y + v * .2 < collapsed / 2 ? 'expanded' : 'collapsed';
+      const coast = y + v * .2;
+      const next = snaps.reduce((best, name) => Math.abs(target(name) - coast) <= Math.abs(target(best) - coast) ? name : best);
       go(next, { velocity: v });
     };
     el.addEventListener('pointerup', release);
@@ -85,11 +98,11 @@ globalThis.LimeSheet = (() => {
     el.addEventListener('click', e => { if (blockClick) { e.stopPropagation(); e.preventDefault(); } }, true);
 
     new ResizeObserver(() => { measure(); if (!frame && !drag) place(target(state)); }).observe(el);
-    measure(); place(hidden);
+    measure(); place(at.hidden);
 
     return {
       get state() { return state; },
-      show: (to = 'collapsed') => { measure(); if (state === 'hidden') place(hidden); go(to); },
+      show: (to = shown) => { measure(); if (state === 'hidden') place(at.hidden); go(to); },
       hide: done => go('hidden', { done }),
       snap: (to, animate = true) => animate ? go(to) : (stop(), measure(), state = to, el.style.visibility = 'visible', place(target(to))),
     };
