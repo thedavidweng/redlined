@@ -37,10 +37,10 @@ html.ios body { background: #111; }
 .ios-home { left: 50%; bottom: 8px; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: var(--home-ink, #000); }
 .ios-fullscreen .ios-status, .ios-fullscreen .ios-home { display: none; }
 
-/* Data credits (IosDevice.credit): outside the phone on desktop; on a phone, over the app briefly, then gone. */
+/* Data credits (IosDevice.credit): outside the phone on desktop; on a phone, a thin strip under the top edge (no content there) for five seconds, then gone. */
 .ios-credit { position: fixed; right: 16px; bottom: 12px; z-index: 200; max-width: calc(100vw - 32px); color: #8a8a8e;
   font: 400 11px/1.4 -apple-system, system-ui, sans-serif; text-align: right; transition: opacity .6s ease; }
 .ios-credit a { color: inherit; }
-.ios-fullscreen .ios-credit { left: 0; right: 0; bottom: 0; max-width: none; padding: 4px 8px calc(env(safe-area-inset-bottom, 0px) + 4px);
-  background: #ffffffd9; color: #3c3c43; text-align: center; }
+.ios-fullscreen .ios-credit { left: 0; right: 0; top: env(safe-area-inset-top, 0px); bottom: auto; max-width: none; padding: 2px 8px;
+  background: #ffffffd9; color: #3c3c43; font-size: 10px; line-height: 16px; text-align: center; white-space: nowrap; overflow: hidden; }
 .ios-credit.gone { opacity: 0; pointer-events: none; }

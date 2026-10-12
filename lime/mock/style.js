@@ -15,7 +15,7 @@ globalThis.LimeStyle = (() => {
   const POIS = ['restaurant', 'fast_food', 'cafe', 'bar', 'lodging', 'school', 'college', 'library', 'park', 'harbor', 'grocery', 'shop', 'dentist', 'fitness_centre'];
 
   // Width in pt at zoom z for a road class, from Bright's own two-stop curves (exponential 1.2): [zoom, width, zoom, width].
-  const FAT = 1.9;  // the real app draws streets about twice as wide as Bright does
+  const FAT = 1.15;  // the real app draws streets a little wider than Bright does
   const grow = ([z0, w0, z1, w1]) => z => FAT * (w0 + (w1 - w0) * (1.2 ** (z - z0) - 1) / (1.2 ** (z1 - z0) - 1));
   const WIDTH = { minor: [14, 2.5, 20, 11.5], secondary: [8, .5, 20, 13], primary: [9, .5, 20, 18], trunk: [7, .5, 20, 18] };
   const EDGE_WIDTH = { minor: [14, 4, 20, 15], secondary: [8, 1.5, 20, 17], primary: [9, 1.5, 20, 22], trunk: [7, 1.5, 20, 22] };
