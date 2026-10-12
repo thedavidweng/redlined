@@ -1,0 +1,100 @@
+/* Home and station-sheet chrome, sized from the reference screenshots (pt). Urbanist is the app's UI font (OFL, see OFL.txt). */
+@font-face { font-family: Urbanist; font-weight: 100 900; src: url(Urbanist.ttf) format("truetype"); }
+* { box-sizing: border-box; }
+body { font-family: Urbanist, -apple-system, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+#app { background: #f9fafb; container-type: size; -webkit-tap-highlight-color: transparent; color: #2a3039;
+  --red: #da291c; --ink: #2a3039; --ease: cubic-bezier(.32, .72, 0, 1); --top: 48px; --half: 428px; }
+#map { position: absolute; inset: 0; }
+button { padding: 0; border: 0; font: inherit; cursor: pointer; background: none; color: inherit; }
+img { display: block; }
+h2, h3, p { margin: 0; }
+i[data-mask], .bikes i { display: block; width: 24px; height: 24px; background: currentColor; -webkit-mask: var(--m) center / contain no-repeat; mask: var(--m) center / contain no-repeat; }
+
+/* Map controls: four 48 pt white discs under the status bar, and the two filter chips. They stay put while the map moves. */
+.round { position: absolute; z-index: 3; top: calc(var(--safe-top) + 20px); width: 48px; height: 48px; border-radius: 50%; background: #fff;
+  display: grid; place-items: center; box-shadow: 0 3px 10px #0000002e; }
+.round img { width: auto; height: auto; }
+.round img[data-asset=menu], .round img[data-asset=help] { width: 24px; height: 24px; }
+.round img[data-asset=locate] { width: 20px; height: 20px; }
+.round img[data-asset=compass] { width: 54px; height: 54px; }
+.chip { position: absolute; z-index: 3; top: 131px; height: 36px; padding: 0 0 0 13px; border-radius: 18px; background: #fff; box-shadow: 0 2px 8px #0000001f;
+  display: flex; align-items: center; gap: 10px; font: 600 16px/36px Urbanist, sans-serif; transition: opacity .25s; }
+.chip i { width: 30px; height: 30px; margin: 0 -5px 0 -5px; }
+.electric { color: #e4118a; }
+.classic { color: var(--red); }
+.round:active, .chip:active { opacity: .7; }
+
+.code { position: absolute; z-index: 4; left: 207px; top: 553px; width: 165px; height: 48px; border-radius: 12px; background: #fff; box-shadow: 0 2px 10px #00000026;
+  display: flex; align-items: center; gap: 15px; padding-left: 20px; white-space: nowrap; will-change: transform; }
+.code span { color: #6a737b; font: 300 13px/20px Urbanist, sans-serif; }
+.code b { font: 700 17px/26px Urbanist, sans-serif; }
+
+/* The home sheet is static: red, with the search field and the favourites. */
+.home { position: absolute; z-index: 2; left: 0; right: 0; top: 616px; bottom: 0; border-radius: 24px 24px 0 0; background: var(--red); color: #fff; overflow: hidden; }
+.home-grabber { position: absolute; left: 163px; top: 8px; width: 65px; height: 5px; border-radius: 3px; background: #ffffffd9; }
+.search { position: absolute; left: 18px; right: 18px; top: 38px; height: 53px; border-radius: 27px; background: #fff; display: block; }
+.search i { position: absolute; left: 13px; top: 14px; width: 24px; height: 24px; color: var(--red); }
+.search input { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0 0 0 50px; border: 0; background: none; outline: 0; font: 300 18.5px/53px Urbanist, sans-serif; color: var(--ink); }
+.search input::placeholder { color: #a3a8ad; opacity: 1; }
+.fav { position: absolute; top: 110px; width: 110px; height: 28px; display: flex; align-items: center; gap: 8px; text-align: left; }
+.fav s { width: 28px; height: 28px; flex: none; border-radius: 50%; background: #fff; display: grid; place-items: center; }
+.fav img { width: 16px; height: 16px; }
+.fav span { font: 600 13px/20px Urbanist, sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 74px; }
+.fav:active { opacity: .7; }
+
+/* The station sheet: one layer moved by transform only (sheet.js). --p runs from 0 (Expanded) to 1 (Half screen), set by app.js while it moves;
+   clip-path (paint only) insets it from the sides and cuts its bottom, and the content slides by a few points, as in the reference. */
+.sheet { position: absolute; z-index: 6; left: 0; right: 0; bottom: 0; height: calc(100cqh - var(--top)); visibility: hidden; --p: 0;
+  transform: translate3d(0, 100%, 0); will-change: transform; contain: layout; touch-action: none; user-select: none; -webkit-user-select: none; }
+.sheet.dragging { cursor: grabbing; }
+.panel { position: absolute; inset: 0; background: #fff; font: 400 17px/21px Urbanist, sans-serif;
+  clip-path: inset(0 calc(var(--p) * 8px) calc(var(--p) * 434px) calc(var(--p) * 8px) round 24px); }
+.grabber { position: absolute; z-index: 2; left: 50%; top: 0; width: 100px; height: 24px; margin-left: -50px; }
+.grabber i { position: absolute; left: 20px; top: 6px; width: 59px; height: 4.5px; border-radius: 3px; background: #c8cbce; }
+.in { position: absolute; left: calc(24px + var(--p) * 7px); right: calc(24px + var(--p) * 7px); top: 0; bottom: 0; }
+.in > * { position: absolute; }
+.title { left: 0; right: 52px; top: calc(27px - var(--p) * 2.5px); font: 600 24px/30px Urbanist, sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.close { right: 0; top: calc(29px - var(--p) * 2px); width: 26px; height: 26px; }
+.close img { width: 27px; height: 27px; }
+.dock-chip { left: 0; top: calc(72px - var(--p) * 4px); height: 24px; padding: 0 8px 0 9px; border-radius: 12px; background: #fde2d1; color: #a8160e;
+  display: flex; align-items: center; gap: 4px; font: 400 12.5px/24px Urbanist, sans-serif; }
+.dock-chip i { width: 18px; height: 18px; color: var(--red); }
+.card { left: 0; right: 0; top: calc(112px - var(--p) * 5.5px); height: calc(67px - var(--p) * 2px); border-radius: 8px; background: #f4f5f6; }
+.card > * { position: absolute; }
+.card img { top: 50%; width: 24px; height: 24px; margin-top: -12px; }
+.card span { top: 50%; margin-top: -11px; font: 400 14.5px/22px Urbanist, sans-serif; white-space: nowrap; }
+.i-dist { left: 16px; } .t-dist { left: 44px; } .i-walk { left: 87px; } .t-walk { left: 112px; }
+.route { right: 15px; top: 50%; width: 51px; height: 51px; margin-top: -25.5px; border-radius: 14px; background: #fff; box-shadow: 0 3px 8px #00000030; display: grid; place-items: center; }
+.route i { position: static; margin: 0; width: 20px; height: 20px; color: var(--red); }
+.route:active { opacity: .6; }
+.count { top: calc(200px - var(--p) * 13px); transform: translateX(-50%); text-align: center; white-space: nowrap; }
+.count.left { left: 20.6%; } .count.right { left: 78%; }
+.count .row { display: flex; align-items: center; justify-content: center; gap: 7px; height: 58px; }
+.count .row img { filter: brightness(0); width: calc(62px - var(--p) * 3px); height: calc(62px - var(--p) * 3px); }
+.count b { font: 700 23px/30px Urbanist, sans-serif; }
+.count p { margin-top: 7px; font: 400 16.2px/20px Urbanist, sans-serif; color: var(--ink); }
+.divider { left: calc(50% - 5px); top: calc(222px - var(--p) * 9px); width: 1px; height: 47px; background: #dcdee0; }
+
+/* Everything below the counts fades out as the sheet comes down to Half screen. */
+.lower { left: 0; right: 0; top: 329px; bottom: 0; opacity: calc(1 - var(--p) * 3); }
+.compact .lower { pointer-events: none; }
+.segment { position: absolute; left: 0; right: 0; top: 0; height: 51px; border-radius: 26px; background: #f6f7f8; display: flex; padding: 8px; }
+.segment i { position: absolute; left: 8px; top: 8px; bottom: 8px; width: calc(50% - 8px); border-radius: 22px; background: var(--red); transition: transform .25s var(--ease); }
+.segment[data-kind="mechanical"] i { transform: translateX(100%); }
+.segment button { position: relative; flex: 1; font: 400 16px/35px Urbanist, sans-serif; transition: color .2s; }
+.segment [aria-selected="true"] { color: #fff; font-weight: 700; }
+.lower h3 { position: absolute; left: 0; top: 64px; font: 600 16px/24px Urbanist, sans-serif; }
+.lower .avail { top: 120px; }
+.bikes { position: absolute; left: 0; right: 0; top: 160px; bottom: 0; margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); align-content: start; row-gap: 10px; overflow: hidden; }
+.bikes li { position: relative; height: 60px; }
+.bikes i { position: absolute; top: 0; width: 32px; height: 32px; background: #c3c6c9; }
+.bikes .d { left: 0; }
+.bikes .b { left: 49px; }
+.bikes span { position: absolute; left: 49px; width: 32px; top: 33px; text-align: center; white-space: nowrap; transform: translateX(-9px); font: 400 14px/18px Urbanist, sans-serif; color: #b3b7ba; }
+.segment button:active { opacity: .6; }
+.close:active, .grabber:active i { opacity: .6; }
+
+/* Selected: the filter chips make way for the sheet. */
+.is-selected .chip { opacity: 0; pointer-events: none; }
+
+@media (prefers-reduced-motion: reduce) { .chip, .segment i, .segment button { transition: none; } }

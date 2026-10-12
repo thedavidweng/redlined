@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <title>Mobi by Rogers – Map Mock</title>
+  <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
+  <script>
+    // Start the map's first requests while MapLibre downloads and parses (style, tile index, label fonts). The style URL is IosMapStyle.BRIGHT.
+    for (const path of ['styles/bright', 'planet', 'fonts/Noto%20Sans%20Regular/0-255.pbf']) fetch(`https://tiles.openfreemap.org/${path}`).catch(() => {});
+  </script>
+  <link rel="stylesheet" href="../../_ios/maplibre/maplibre-gl.css">
+  <link rel="stylesheet" href="../../_ios/device.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <div id="map"></div>
+    <div class="buttons" title="Outside this mock">
+      <button class="round" style="left:18px" aria-label="Menu"><img data-asset="menu" alt=""></button>
+      <button class="round" style="left:82px" aria-label="Help"><img data-asset="help" alt=""></button>
+      <button class="round" style="left:266px" aria-label="Reset north"><img data-asset="compass" alt=""></button>
+      <button class="round" style="left:324px" aria-label="My location"><img data-asset="locate" alt=""></button>
+    </div>
+    <div class="chips" title="Outside this mock">
+      <button class="chip electric" style="left:93px;width:94px"><i data-mask="ebike"></i>Electric</button>
+      <button class="chip classic" style="left:204px;width:92px"><i data-mask="bike"></i>Classic</button>
+    </div>
+    <div class="code"><span>User Code</span><b data-code></b></div>
+    <div class="home" aria-label="Find a location">
+      <div class="home-grabber"></div>
+      <label class="search"><i data-mask="search"></i><input placeholder="Find a location" aria-label="Find a location" readonly></label>
+      <button class="fav" style="left:18px"><s><img data-asset="home" alt=""></s><span>Home</span></button>
+      <button class="fav" style="left:141px"><s><img data-asset="work" alt=""></s><span>Work</span></button>
+      <button class="fav" style="left:265px"><s><img data-asset="fav" alt=""></s><span>Add favourite</span></button>
+    </div>
+    <div class="sheet" role="dialog" aria-label="Station details">
+      <div class="panel">
+        <button class="grabber" aria-label="Resize sheet"><i></i></button>
+        <div class="in">
+          <h2 class="title" data-title></h2>
+          <button class="close" aria-label="Close"><img data-asset="close" alt=""></button>
+          <div class="dock-chip"><i data-mask="dock"></i>DOCK</div>
+          <div class="card">
+            <img class="i-dist" data-asset="distance" alt=""><span class="t-dist"><span data-ft></span> ft</span>
+            <img class="i-walk" data-asset="walk" alt=""><span class="t-walk"><span data-min></span> min</span>
+            <button class="route" aria-label="Walking route"><i data-mask="route"></i></button>
+          </div>
+          <div class="count left"><div class="row"><img data-asset="bike" alt=""><b data-bikes></b></div><p>Bikes available</p></div>
+          <div class="divider"></div>
+          <div class="count right"><div class="row"><img data-asset="places" alt=""><b data-docks></b></div><p>Available places</p></div>
+          <div class="lower">
+            <div class="segment" role="tablist">
+              <i></i>
+              <button role="tab" aria-selected="true" data-kind="electric">Electric</button>
+              <button role="tab" aria-selected="false" data-kind="mechanical">Mechanical</button>
+            </div>
+            <h3>Out of Service</h3>
+            <h3 class="avail">Available bikes</h3>
+            <ul class="bikes"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="../../_ios/maplibre/maplibre-gl.js"></script>
+  <script src="../../_ios/device.js"></script>
+  <script src="../../_ios/map-perf.js"></script>
+  <script src="../../_ios/devices.js"></script>
+  <script src="../../_ios/map-images.js"></script>
+  <script src="../../_ios/map-style.js"></script>
+  <script src="../../_ios/sheet.js"></script>
+  <script src="../../_ios/state.js"></script>
+  <script src="../_shared/routes.js"></script>
+  <script src="../_shared/stations.js"></script>
+  <script src="assets.js"></script>
+  <script src="style.js"></script>
+  <script src="markers.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
