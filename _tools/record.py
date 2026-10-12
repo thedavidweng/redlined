@@ -119,7 +119,7 @@ async def record(rel):
     frames_dir.mkdir(parents=True)
     async with async_playwright() as p:
         browser = await p.chromium.launch()
-        page = await browser.new_page(viewport={'width': 1920, 'height': 1080})
+        page = await browser.new_page(viewport={'width': 1920, 'height': 1080}, device_scale_factor=1)
         await page.goto(f'{STAGE}?product={product}')
         await page.evaluate('stage.curtain(true)')
         await page.evaluate('cfg => stage.setup(cfg)', cfg)
@@ -132,7 +132,9 @@ async def record(rel):
             await cdp.send('Page.screencastFrameAck', {'sessionId': params['sessionId']})
 
         cdp.on('Page.screencastFrame', lambda params: asyncio.ensure_future(on_frame(params)))
-        await cdp.send('Page.startScreencast', {'format': 'jpeg', 'quality': 95, 'everyNthFrame': 1})
+        await cdp.send('Page.startScreencast', {
+            'format': 'jpeg', 'quality': 95, 'everyNthFrame': 1, 'maxWidth': 1920, 'maxHeight': 1080,
+        })
         await asyncio.sleep(0.3)
         director = Director(page)
         await clip.run(director)
