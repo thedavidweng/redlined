@@ -1,7 +1,7 @@
 // Home-screen map content: scooters, parking, zones, the rider, the walk. Every marker is a symbol layer whose image is drawn
 // once to a 3x canvas (IosMapImages.draw), never a DOM node, so panning costs the UI nothing. Classic script (file://).
 //   LimeMarkers.add(map, LimeData)  →  Promise of { select(n), clear() }, resolves when the layers are on the map.
-//   select(n) turns scooter n into the balloon pin and points the walk at it; clear() restores the home look. Feature state only: no tiling, no layout, no DOM.
+//   select(n) turns scooter n into the balloon pin and shows only its walk (the home walk to the nearest one hides); clear() restores the home look. Feature state only: no tiling, no layout, no DOM.
 globalThis.LimeMarkers = (() => {
   const GREEN = '#00dd00', RED = '#f23a34', SLATE = '#363d42';
   const { load, draw, tint: tinted } = IosMapImages;
@@ -74,15 +74,17 @@ globalThis.LimeMarkers = (() => {
     map.addSource('vehicles', { type: 'geojson', data: data.vehicles });
     const pin = { 'icon-allow-overlap': true, 'icon-ignore-placement': true };
     const shown = (on = 1, off = 0) => ['case', ['boolean', ['feature-state', 'selected'], false], on, off];
+    // The home route and pill (nearest scooter) show only while nothing is selected: `away` is set on that one feature whenever any scooter is selected.
+    const home = ['case', ['any', ['boolean', ['feature-state', 'selected'], false], ['boolean', ['feature-state', 'away'], false]], 0, 1];
     const dots = { 'line-width': 3.4, 'line-dasharray': [0.01, 2.4] }, round = { 'line-cap': 'round', 'line-join': 'round' };
     map.addLayer({ id: 'lime-parking', type: 'symbol', source: 'lime-parking', layout: { ...pin, 'icon-image': 'lime-parking' } });
-    map.addLayer({ id: 'route-home', type: 'line', source: 'route', filter: ['==', ['get', 'n'], near], layout: round, paint: { ...dots, 'line-color': '#5d6770', 'line-opacity': shown(0, 1) } });
+    map.addLayer({ id: 'route-home', type: 'line', source: 'route', filter: ['==', ['get', 'n'], near], layout: round, paint: { ...dots, 'line-color': '#5d6770', 'line-opacity': home } });
     map.addLayer({ id: 'route', type: 'line', source: 'route', layout: round, paint: { ...dots, 'line-color': GREEN, 'line-opacity': shown() } });
     map.addLayer({ id: 'lime-cone', type: 'symbol', source: 'lime-user', layout: { ...pin, 'icon-image': 'lime-cone', 'icon-rotate': ['get', 'heading'], 'icon-rotation-alignment': 'map' } });
     map.addLayer({ id: 'vehicles', type: 'symbol', source: 'vehicles', layout: { ...pin, 'icon-image': ['case', ['get', 'near'], 'lime-scooter-near', 'lime-scooter'] }, paint: { 'icon-opacity': shown(0, 1) } });
     map.addLayer({ id: 'lime-selected', type: 'symbol', source: 'vehicles', layout: { ...pin, 'icon-image': 'lime-pin', 'icon-anchor': 'bottom' }, paint: { 'icon-opacity': shown() } });
     map.addLayer({ id: 'lime-user', type: 'symbol', source: 'lime-user', layout: { ...pin, 'icon-image': 'lime-user' } });
-    map.addLayer({ id: 'lime-walk', type: 'symbol', source: 'lime-walks', filter: ['==', ['get', 'n'], near], layout: { ...pin, 'icon-image': ['get', 'image'], 'icon-offset': [0, -42.5] }, paint: { 'icon-opacity': shown(0, 1) } });
+    map.addLayer({ id: 'lime-walk', type: 'symbol', source: 'lime-walks', filter: ['==', ['get', 'n'], near], layout: { ...pin, 'icon-image': ['get', 'image'], 'icon-offset': [0, -42.5] }, paint: { 'icon-opacity': home } });
     map.addLayer({ id: 'lime-walk-selected', type: 'symbol', source: 'lime-walks', layout: { ...pin, 'icon-image': ['get', 'image'], 'icon-offset': [0, -67] }, paint: { 'icon-opacity': shown() } });
 
     let chosen = null;
@@ -91,6 +93,7 @@ globalThis.LimeMarkers = (() => {
         if (chosen != null) map.setFeatureState({ source, id: chosen + 1 }, { selected: false });
         if (n != null) map.setFeatureState({ source, id: n + 1 }, { selected: true });
       }
+      for (const source of ['route', 'lime-walks']) map.setFeatureState({ source, id: near + 1 }, { away: n != null });
       chosen = n;
     };
     return { select: set, clear: () => set(null) };

@@ -16,9 +16,13 @@ Without query params the mock is plain. `?redline=<folder>&side=before|after` (d
 
 - `../../_ios/device.js`, `device.css`: shared iPhone frame (status bar, safe areas, Home indicator). `?cutout=none` hides the notch, for calibration only (the references never show it).
 - `../../_ios/maplibre/`: vendored MapLibre GL JS 5.24.0 with its license.
-- `../_shared/vehicles.js`: `LimeData`: camera, scooters, parking, zones, rider, walk route, authored in screen points. The device size is `IosDevices['iphone-16e']` (`../../_ios/devices.js`), also named in `../_shared/stage.json`.
+- `../_shared/vehicles.js`: `LimeData`: camera, scooters, parking, zones, rider, authored in screen points; `walk(i)` takes its route and time from `../_shared/walks.js`. The device size is `IosDevices['iphone-16e']` (`../../_ios/devices.js`), also named in `../_shared/stage.json`.
 - `app.js`: map, seam. `style.js`: re-tints OpenFreeMap Bright and cuts its 119 layers to 13 (grey ground, white roads, pale green parks, pale blue water, small grey POIs; no one-way arrows). Symbol layers cost the most while panning, keep them few. `markers.js`: marker images drawn once to canvas and added as symbol layers (no DOM markers); selection is feature state (paint opacity), so a tap triggers no tiling or `setData`, which is what keeps taps and pans smooth at 4x CPU throttle. `sheet.js`: the bottom sheet.
 - `styles.css`, `index.html`: Start ride button, account/menu capsule, locate button.
+
+## Walking routes
+
+`../_shared/walks.js` (`LimeWalks`) holds one street walking route per scooter from the rider, precomputed with the OSM foot router (routing.openstreetmap.de, speed about 4.5 km/h; minutes are its duration rounded, at least 1) so the page needs no fetch and works from file://. Regenerate after moving the rider or a scooter: dump `LimeData.user.coordinates` and the vehicle coordinates to a JSON (`{"from": [lng, lat], "to": [...]}`), then `uv run python _tools/walk_routes.py <in.json> lime/_shared/walks.js LimeWalks`. Only the selected scooter's route and pill show; with nothing selected, the nearest one's (feature state `away` on that feature, no `setData`).
 
 ## Assets and font
 

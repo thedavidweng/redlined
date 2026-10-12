@@ -18,7 +18,9 @@ globalThis.LimeData = (() => {
   // Inverse of at() for a north-up camera: the centre that puts `coordinates` at screen point [x, y] (used to open straight into a selected state).
   const frame = ([lng, lat], [x, y]) => [+(lng - (x - device.width / 2) * metersPerPt / (111320 * Math.cos(lat * Math.PI / 180))).toFixed(6), +(lat + (y - device.height / 2) * metersPerPt / 110574).toFixed(6)];
 
-  const user = [195, 374];
+  // Not where the reference rider stands (195, 374): there the nearest scooter is 37 m away on this map, a stub of a route and "1 min" where the reference shows 2.
+  // From here the walk is about 120 m (router: 2 min), still the nearest scooter by straight line.
+  const user = [267, 213];
   // Four scooters as on the reference screen, then more outside it for panning.
   const scooters = [[128, 166], [116, 190], [53, 252], [216, 322],
     [-60, 120], [-110, 330], [-40, 470], [450, 60], [470, 300], [430, 500], [120, -110], [300, -120], [250, -260], [-30, -200],
@@ -34,13 +36,12 @@ globalThis.LimeData = (() => {
   }));
   const polygon = ring => ({ type: 'Feature', properties: {}, geometry: { type: 'Polygon', coordinates: [[...ring, ring[0]].map(at)] } });
 
-  // Dotted walk from the rider to scooter i: a curve that turns one corner, and a made-up time (30 pt per minute).
+  // Walk from the rider to scooter i: the street route and time precomputed in walks.js (LimeWalks, from _tools/walk_routes.py; load it first).
+  // Minutes are the router's foot-profile duration rounded (its speed is about 4.5 km/h, sane), at least 1. The pill sits at the scooter.
   function walk(i) {
-    const [px, py] = scooters[i], path = [];
-    for (let t = 0; t <= 1.001; t += .1) path.push([user[0] * (1 - t) ** 2 + 2 * user[0] * t * (1 - t) + px * t * t, user[1] * (1 - t) ** 2 + 2 * py * t * (1 - t) + py * t * t]);
-    const length = path.slice(1).reduce((sum, p, k) => sum + Math.hypot(p[0] - path[k][0], p[1] - path[k][1]), 0);
-    return { minutes: Math.max(1, Math.round(length / 30)), coordinates: at(scooters[i]),
-      route: { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: path.map(at) } } };
+    const w = LimeWalks[i];
+    return { minutes: Math.max(1, Math.round(w.duration / 60)), coordinates: at(scooters[i]),
+      route: { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: w.coordinates } } };
   }
 
   return {
