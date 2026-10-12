@@ -4,6 +4,9 @@
 // The camera is Fairview, Vancouver (Granville St and W 8th Ave), about 3 km from where the references were taken.
 globalThis.ModoData = (() => {
   const device = IosDevices['iphone-16e'];
+  // The present. ?now=<ISO local time> (like ?state=, only read from the URL) freezes it, so recordings do not depend on the hour; without it, the real clock.
+  const fixed = new URLSearchParams(location.search).get('now'), pinned = fixed && new Date(fixed);
+  const clock = () => pinned && !isNaN(pinned) ? new Date(pinned) : new Date();
   const camera = { center: [-123.1385, 49.2645], zoom: 15.8, bearing: 0 };
 
   // Screen point -> [lng, lat] at the home camera (Web Mercator, 512 px tiles; flat is accurate enough for a few hundred metres).
@@ -76,11 +79,11 @@ globalThis.ModoData = (() => {
     const a = (n * 11) % 24 - 8, b = a + 8 + (n * 5) % 16 + 12 + (n * 7) % 60, c = b + 8 + (n * 3) % 20 + 40 + (n * 17) % 100;
     return [[a, a + 8 + (n * 5) % 16], [b, c], [c + 30, FAR]];
   };
-  const floorHour = (now = new Date()) => new Date(now).setMinutes(0, 0, 0);
+  const floorHour = (now = clock()) => new Date(now).setMinutes(0, 0, 0);
   // Busy intervals of pin n as [Date, Date] pairs, ordered, anchored to the hour of `now`.
-  const availability = (n, now = new Date()) => busy(n).map(([a, b]) => [new Date(floorHour(now) + a * Q), new Date(floorHour(now) + b * Q)]);
+  const availability = (n, now = clock()) => busy(n).map(([a, b]) => [new Date(floorHour(now) + a * Q), new Date(floorHour(now) + b * Q)]);
   // The free window containing [start, end]: { earliest, latest } (Dates; earliest is never before the current hour, latest is the next busy start), or null if it overlaps a busy interval.
-  const window = (n, start, end, now = new Date()) => {
+  const window = (n, start, end, now = clock()) => {
     const iv = availability(n, now);
     if (iv.some(([a, b]) => start < b && end > a)) return null;
     const before = iv.filter(([, b]) => b <= start).pop(), next = iv.find(([a]) => a >= end);
@@ -88,7 +91,7 @@ globalThis.ModoData = (() => {
   };
 
   return {
-    device, camera, frame, near, at, availability, window, cars, match,
+    device, camera, now: clock, frame, near, at, availability, window, cars, match,
     pins: { type: 'FeatureCollection', features: pins },
     clusters: { type: 'FeatureCollection', features: clusterFeatures },
     user: { coordinates: at([195, 404]) },

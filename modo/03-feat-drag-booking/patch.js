@@ -62,8 +62,8 @@
       dots = hours.flatMap(h => [...h.querySelectorAll('.dots svg')]);
       if (dots.length !== N) return false;
       const label = hours[0].querySelector('time').textContent, h = +label.split(' ')[0] % 12 + (label.endsWith('PM') ? 12 : 0);
-      const t = new Date(); t.setHours(h, 0, 0, 0);
-      if (t - Date.now() > 36e5) t.setDate(t.getDate() - 1);  // the label is the mock's load hour; across midnight that was yesterday's
+      const t = ModoData.now(); t.setHours(h, 0, 0, 0);
+      if (t - ModoData.now() > 36e5) t.setDate(t.getDate() - 1);  // the label is the mock's load hour; across midnight that was yesterday's
       hour0 = +t;
       // SVG has no offsetLeft: each dot's centre is its hour's layout position plus its rect offset from the hour (rects are scaled by the phone, hence k).
       const k = scale(), at = (d, h) => { const a = d.getBoundingClientRect(), b = h.getBoundingClientRect(); return [h.offsetLeft + (a.left - b.left + a.width / 2) / k, h.offsetTop + (a.top - b.top + a.height / 2) / k]; };

@@ -49,7 +49,7 @@
 
   // Availability strip: 24 hourly groups of four quarter-hour dots from the start of the current hour (ModoData.availability). Dot looks: available (light blue),
   // yours (navy, the chosen start..end) and unavailable (crossed grey). Redrawn by render() and fill(). Inline SVG (CSS masks are blocked from file://).
-  const NOW = new Date(), HOUR0 = new Date(NOW).setMinutes(0, 0, 0), Q = 9e5;
+  const NOW = ModoData.now(), HOUR0 = new Date(NOW).setMinutes(0, 0, 0), Q = 9e5;
   const DOT = '<svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M2.2 7.8 7.8 2.2" stroke="currentColor" stroke-width="1.6"/></svg>';
   const ring = c => `<svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="5" fill="${c}"/><circle cx="5" cy="5" r="4.4" fill="#fff"/><circle cx="5" cy="5" r="3.4" fill="${c}"/></svg>`;
   const FREE = ring('#8fbdd7'), MINE = ring('#476470');
@@ -126,7 +126,7 @@
 
   // Time picker: an in-app sheet (same IosSheet as Filters) holding an inline wheel datetime picker. Each column is a scroll-snap list; the cylinder look is a per-row rotateX and fade set from the scroll position.
   const ROW = 32, COPIES = 40, PAST = 30, FUTURE = 60, pbd = $('.pbd'), psheetEl = $('.psheet'), cols = [...$$('.pcol')];
-  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const today = ModoData.now(); today.setHours(0, 0, 0, 0);
   const dayLabel = i => { if (i === PAST) return 'Today'; const d = new Date(today); d.setDate(d.getDate() + i - PAST); return `${DAY[d.getDay()]} ${MON[d.getMonth()]} ${d.getDate()}`; };
   // n values; loop columns repeat them COPIES times and keep the view near the middle copy, like UIDatePicker.
   const wheels = [
@@ -177,7 +177,7 @@
   function openPicker(which, animate = true) {
     editing = which;
     $('.psub').hidden = !openReturn;
-    setWheels(times[which] ?? (which === 'start' ? roundUp(new Date()) : times.start ? new Date(+times.start + 36e5) : roundUp(Date.now() + 36e5)));
+    setWheels(times[which] ?? (which === 'start' ? roundUp(ModoData.now()) : times.start ? new Date(+times.start + 36e5) : roundUp(+ModoData.now() + 36e5)));
     if (animate) psheet.show(); else psheet.snap('open', false);
     cols.forEach(c => c.paint());  // the sheet was hidden when the wheels were set; paint again once it has a size
   }

@@ -19,7 +19,7 @@
     return m && { date: new Date(+m[3], MON.indexOf(m[2]), +m[1]), time: m[4] };
   }
   function day(d) {
-    const days = Math.round((d - new Date().setHours(0, 0, 0, 0)) / 864e5);
+    const days = Math.round((d - ModoData.now().setHours(0, 0, 0, 0)) / 864e5);
     return days === 0 ? 'today' : days === 1 ? 'tomorrow' : days > 0 && days < 7 ? DAY[d.getDay()] : `${d.getDate()} ${MON[d.getMonth()]}`;
   }
 

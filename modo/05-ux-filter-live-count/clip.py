@@ -1,7 +1,7 @@
 # Storyboard for 05-ux-filter-live-count. `d` is the Director from _tools/record.py.
 # Both sides do the same thing: open Filters, pick SUV and all-wheel drive, apply. Before: no feedback until the sheet is closed, then it has to be reopened to change anything.
 # After: the button counts as you go (4 -> 3 cars), and applying filters the map.
-SETTLED = "typeof ModoMap !== 'undefined' && ModoMap.loaded() && !ModoMap.isMoving() && !!ModoMap.getLayer('pins')"
+SETTLED = "typeof ModoMap !== 'undefined' && ModoMap.loaded() && !ModoMap.isMoving() && !!ModoMap.getLayer('pins') && location.search.includes('now=')"
 SCROLL = "top => document.querySelector('.fscroll').scrollTo({ top, behavior: 'smooth' })"
 SUV, AWD, APPLY, PILL = ('.fchip', 'SUV'), ('.row', 'all-wheel drive'), ('.apply', None), ('.filter', None)
 

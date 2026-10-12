@@ -5,7 +5,7 @@
 PIN = 1  # the RAV4, an SUV south-west of the user
 PROJECT = '''n => { const p = ModoMap.project(ModoData.pins.features[n].geometry.coordinates), r = ModoMap.getContainer().getBoundingClientRect();
   return [r.left + p.x, r.top + p.y - 22]; }'''  # pins hang above their tip: tap the head
-SETTLED = "typeof ModoMap !== 'undefined' && ModoMap.loaded() && !ModoMap.isMoving() && !!ModoMap.getLayer('pins')"
+SETTLED = "typeof ModoMap !== 'undefined' && ModoMap.loaded() && !ModoMap.isMoving() && !!ModoMap.getLayer('pins') && location.search.includes('now=')"
 CHIP, BACK = '.card .chips .chip', '.back'
 
 

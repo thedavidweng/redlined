@@ -31,7 +31,7 @@
     const $ = q => root.querySelector(q), $$ = q => [...root.querySelectorAll(q)];
     const head = $('.head'), segs = $$('.seg > button'), whens = $$('.when'), timesEl = $('.times'), clearBtn = $('.clear');
     const psheet = $('.psheet'), pbd = $('.pbd'), psave = $('.psave'), pclose = $('.pclose'), psub = $('.psub'), cols = $$('.pcol'), page = $('.page');
-    const NOW = new Date(), today = new Date(NOW).setHours(0, 0, 0, 0);
+    const NOW = ModoData.now(), today = new Date(NOW).setHours(0, 0, 0, 0);
 
     // ---- Header: one row ------------------------------------------------------------------------------------------------------------------------
     const row = document.createElement('div');

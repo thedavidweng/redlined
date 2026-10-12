@@ -2,6 +2,10 @@
 .walk { display: flex; align-items: center; gap: 7px; color: #7a7a7a; font: 400 14px/20px Roboto, sans-serif; white-space: nowrap; }
 .walk[hidden] { display: none; }
 .walk svg { flex: none; }
+button.walk { position: relative; padding: 0; border: 0; background: none; cursor: pointer; text-align: left; transition: opacity .15s ease; }
+button.walk::after { content: ''; position: absolute; inset: -8px -12px; }  /* a thumb-sized target around the line */
+button.walk:active { opacity: .6; }
+.walk-go { color: var(--navy); margin-left: 1px; }
 .card .walk { position: absolute; left: 17px; top: 245px; }
 .card { height: 353px; }
 .card .plan { top: 270px; }
@@ -30,7 +34,28 @@
 .as-cancel { margin-top: 8px; background: #fff; font-weight: 500; }
 .as-group button:active, .as-cancel:active { background: #e6e6e6; }
 
+/* Route preview: the sheet drops out of the way (the `translate` property composes with sheet.js's `transform`), Filter and locate fade, the bar rises above the tab bar. */
+.sheet { translate: 0 0; transition: translate .5s var(--ease); }
+.float { transition: opacity .25s var(--ease), visibility 0s; }
+.rp-on .sheet { translate: 0 100%; }
+.rp-on .float { opacity: 0; visibility: hidden; transition: opacity .25s var(--ease), visibility 0s .25s; }
+.rp-on .float > * { pointer-events: none; }
+.rp-snap .sheet, .rp-snap .float, .rp-snap .rp { transition: none; }
+.rp { position: absolute; z-index: 6; left: 10px; right: 10px; bottom: calc(var(--tab) + 10px); display: flex; align-items: center; gap: 8px; height: 64px; padding: 0 8px 0 16px; border-radius: 14px; background: #fff; box-shadow: 0 2px 10px #00000038;
+  visibility: hidden; opacity: 0; transform: translate3d(0, 14px, 0); transition: opacity .3s var(--ease), transform .45s var(--ease), visibility 0s .45s; }
+.rp-on .rp { visibility: visible; opacity: 1; transform: none; transition: opacity .3s var(--ease) .08s, transform .45s var(--ease) .08s, visibility 0s; }
+.rp-info { flex: 1; min-width: 0; }
+.rp-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 500 16px/23px Poppins, sans-serif; color: #222; }
+.rp-walk { display: flex; align-items: center; gap: 7px; font: 400 14px/20px Roboto, sans-serif; color: #7a7a7a; white-space: nowrap; }
+.rp-walk svg { flex: none; }
+.rp-go { flex: none; height: 38px; padding: 0 16px; border-radius: 4px; background: var(--navy); box-shadow: 0 2px 3px #0000002e; color: #fff; font: 500 14px/38px Roboto, sans-serif; letter-spacing: .5px; transition: opacity .15s ease; }
+.rp-x { flex: none; width: 40px; height: 40px; display: grid; place-items: center; color: #757575; border-radius: 20px; transition: opacity .15s ease; }
+.rp-go:active, .rp-x:active { opacity: .6; }
+
 @media (prefers-reduced-motion: reduce) {
+  .sheet, .float, .rp-on .float, .rp, .rp-on .rp { transition: none; }
+  .rp { transform: none; }
+  button.walk, .rp-go, .rp-x { transition: none; }
   .toast, .toast.on { transform: translate(-50%, 0); transition: none; }
   .as, .as.in, .as-bd, .as-bd.in { transition: none; }
   .addr-btn { transition: none; }

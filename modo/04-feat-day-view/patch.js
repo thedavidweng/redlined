@@ -71,9 +71,9 @@
     }
     function readHour0() {
       const label = strip.querySelector('.hour time')?.textContent;
-      if (!label) return hour0 || new Date().setMinutes(0, 0, 0);
-      const h = +label.split(' ')[0] % 12 + (label.endsWith('PM') ? 12 : 0), t = new Date(); t.setHours(h, 0, 0, 0);
-      if (t - Date.now() > 36e5) t.setDate(t.getDate() - 1);  // the label is the mock's load hour; across midnight that was yesterday's
+      if (!label) return hour0 || ModoData.now().setMinutes(0, 0, 0);
+      const h = +label.split(' ')[0] % 12 + (label.endsWith('PM') ? 12 : 0), t = ModoData.now(); t.setHours(h, 0, 0, 0);
+      if (t - ModoData.now() > 36e5) t.setDate(t.getDate() - 1);  // the label is the mock's load hour; across midnight that was yesterday's
       return +t;
     }
     function geometry(h) {
@@ -126,7 +126,7 @@
       });
     }
     function tick() {
-      const f = (Date.now() - starts[0]) / (starts[1] - starts[0]);
+      const f = (ModoData.now() - starts[0]) / (starts[1] - starts[0]);
       nowTick.hidden = f < 0 || f > 1;
       nowTick.style.left = `${f * 100}%`;
     }

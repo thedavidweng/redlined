@@ -4,7 +4,7 @@
 # Pins are map layers, so the tap point comes from the map: project() gives mock pixels, to_stage() the page.
 PROJECT = '''() => { const [lng, lat] = ModoData.pins.features[ModoData.near].geometry.coordinates;
   const p = ModoMap.project([lng, lat]), r = ModoMap.getContainer().getBoundingClientRect(); return [r.left + p.x, r.top + p.y - 22]; }'''
-SETTLED = "typeof ModoMap !== 'undefined' && ModoMap.loaded() && !ModoMap.isMoving() && !!ModoMap.getLayer('pins')"
+SETTLED = "typeof ModoMap !== 'undefined' && ModoMap.loaded() && !ModoMap.isMoving() && !!ModoMap.getLayer('pins') && location.search.includes('now=')"
 
 RETURN_TYPE = '.rows > div:first-child'
 
