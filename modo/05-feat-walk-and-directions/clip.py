@@ -1,4 +1,4 @@
-# Storyboard for 06-feat-walk-and-directions. `d` is the Director from _tools/record.py.
+# Storyboard for 05-feat-walk-and-directions. `d` is the Director from _tools/record.py.
 # Pins are map layers, not DOM nodes: project() gives mock pixels, to_stage() the page.
 PIN = 2  # north of the user's dot; selected, the strip above the sheet is too small for the whole route, so the walk line opens the route preview
 PROJECT = '''n => { const p = ModoMap.project(ModoData.pins.features[n].geometry.coordinates), r = ModoMap.getContainer().getBoundingClientRect();

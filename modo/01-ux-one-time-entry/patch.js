@@ -80,7 +80,7 @@
     };
 
     // What the mock has committed, from what it prints.
-    const committed = () => ({ open: segs[1].classList.contains('on'), start: parse($('[data-pickup]').textContent), end: parse($('[data-retby]').textContent) });
+    const committed = () => { const open = segs[1].classList.contains('on'); return { open, start: parse($('[data-pickup]').textContent), end: open ? null : parse($('[data-retby]').textContent) }; };  // open return: the page's Return by is start + 12 h, not a chosen end
     const roundUp = d => new Date(Math.ceil(d / 9e5) * 9e5);
 
     // The draft while the sheet is open.

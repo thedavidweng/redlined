@@ -1,5 +1,5 @@
 # Regenerates routes.js (ModoRoutes): reads the user dot and pins from the mock, then runs _tools/walk_routes.py.
-#   uv run --with playwright python modo/06-feat-walk-and-directions/routes.py     (dev server on :4173)
+#   uv run --with playwright python modo/05-feat-walk-and-directions/routes.py     (dev server on :4173)
 import asyncio, json, pathlib, subprocess, sys, tempfile
 from playwright.async_api import async_playwright
 
@@ -20,7 +20,7 @@ async def main():
     # The tool writes the temp input path into the header: replace it with the reproducible command.
     out = HERE / 'routes.js'
     lines = out.read_text().split('\n')
-    lines[1] = '// Regenerate: uv run --with playwright python modo/06-feat-walk-and-directions/routes.py'
+    lines[1] = '// Regenerate: uv run --with playwright python modo/05-feat-walk-and-directions/routes.py'
     out.write_text('\n'.join(lines))
 
 asyncio.run(main())

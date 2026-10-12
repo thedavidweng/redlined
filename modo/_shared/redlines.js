@@ -37,16 +37,16 @@ globalThis.REDLINED = {
     },
     {
       "n": 5,
-      "folder": "05-ux-filter-live-count",
-      "title": "Live count on Filters",
-      "caption": "Filters give no feedback. You toggle chips, tap APPLY, check the map, reopen, change, close, check again. Now the button counts as you tap: SUV, \"SHOW 4 CARS\"; add all-wheel drive, \"SHOW 3 CARS\". Tap it and the map shows just those cars.",
+      "folder": "05-feat-walk-and-directions",
+      "title": "Walk and directions",
+      "caption": "Select a Modo car and it never says how far it is. Now: \"3 min · 240 m\" under the station. Tap it and the sheet drops away to show the whole walking route, with Directions in Apple Maps or Google Maps. No more guessing the walk.",
       "clip": true
     },
     {
       "n": 6,
-      "folder": "06-feat-walk-and-directions",
-      "title": "Walk and directions",
-      "caption": "Select a Modo car and it never says how far it is. Now: \"4 min · 280 m\" under the station. Tap it and the sheet drops away to show the whole walking route, with Directions in Apple Maps or Google Maps. No more guessing the walk.",
+      "folder": "06-ux-filter-live-count",
+      "title": "Live count on Filters",
+      "caption": "Filters give no feedback. You toggle chips, tap APPLY, check the map, reopen, change, close, check again. Now the button counts as you tap: SUV, \"SHOW 9 CARS\"; add all-wheel drive, \"SHOW 3 CARS\". Tap it and the map shows just those cars.",
       "clip": true
     },
     {

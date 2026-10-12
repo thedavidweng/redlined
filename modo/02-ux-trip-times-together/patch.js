@@ -52,6 +52,7 @@
     function sync() {
       trip.classList.toggle('empty', $('[data-pickup]').textContent === 'Please set a time');
       rtype.hidden = $('[data-rtype]').textContent !== 'Open Return';
+      retby.hidden = !rtype.hidden;  // the mock keeps Return by in an open return (start + 12 h); here Return replaces it
       retby.classList.toggle('empty', $('[data-retby]').textContent === 'Please set a time');
       pickup.classList.toggle('empty', $('[data-pickup]').textContent === 'Please set a time');
       const a = !avail.hidden && parse($('[data-earliest]').textContent), b = parse($('[data-latest]').textContent);

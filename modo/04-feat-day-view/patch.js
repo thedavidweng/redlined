@@ -9,7 +9,7 @@
 //
 // SOURCE OF TRUTH is never ours. Pin: found from the plate on the page (the mock keeps its selection in a closure). Hour 0: the mock's strip starts at the hour it loaded in, read from its
 // first label like 03. Busy time: ModoData.availability(pin, that hour). Booking: parsed from the mock's Pick up / Return by rows ("Mon, 12 Oct 2026, 12:15 PM"; an open return is 12 h, as the mock marks it).
-// A booking that is not on the 15-min grid, is before the current hour, past the 4 days or overlaps busy time gets no capsule. The mock redraws its strip on every render (pin, times, OPEN RETURN),
+// A booking that is not on the 15-min grid, is before the current quarter, past the 4 days or overlaps busy time gets no capsule. The mock redraws its strip on every render (pin, times, OPEN RETURN),
 // which is our cue to re-read everything (MutationObserver on the strip).
 //
 // DRAG. One pointer capture on the day view (the segments come and go as the capsule moves between rows). A pointer position maps to a quarter boundary: the row is the bar nearest to y,
@@ -80,7 +80,7 @@
       hour0 = h;
       const d = new Date(h);
       starts = Array.from({ length: ROWS + 1 }, (_, r) => +new Date(d.getFullYear(), d.getMonth(), d.getDate() + r));
-      hq = toQ(hour0);
+      hq = toQ(Math.floor(+ModoData.now() / Q) * Q);  // the current quarter: the mock crosses out earlier ones, the current one is the earliest start
       rowEls.forEach((row, r) => { const day = new Date(starts[r]); row.querySelector('.dv-day').textContent = r ? `${DAY[day.getDay()]} ${day.getDate()}` : 'Today'; });
     }
 

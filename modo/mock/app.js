@@ -41,7 +41,13 @@
     $$('[data-seats]').forEach(e => e.textContent = car.seats);
     $$('[data-fuel]').forEach(e => e.textContent = car.fuel);
     $('[data-chips]').replaceChildren(...$('.card .chips').cloneNode(true).children);  // the page shows the same chips
+    // The photo: where its wheels sit and how wide it is differ per model (the card and the page each have their own size); the IPA hatchback is mirrored.
+    const { src, w, page: pw, flip, bottom } = car.photo;
+    $$('.photo').forEach(e => { e.setAttribute('src', src); e.classList.toggle('flip', !!flip); });
+    cardEl.querySelector('.photo').style.cssText = `width:${w}px;margin-left:${-w / 2}px;--bottom:${bottom}px`;
+    page.querySelector('.photo').style.width = `${pw}px`;
   }
+  const cardEl = $('.card'), page = $('.page');
   showCar(ModoData.cars[ModoData.near]);
   $$('[data-member]').forEach(e => e.textContent = ModoData.member);
   $$('[data-parking]').forEach(e => e.textContent = ModoData.parking);
@@ -56,12 +62,17 @@
   let selected = null;
   // The chosen range: an open return is marked for 12 h from the start (assumption: nothing in the reference shows it).
   const range = () => times.start && (openReturn ? [times.start, new Date(+times.start + 432e5)] : times.end && [times.start, times.end]);
-  function drawStrip() {
+  // Dark crossed: busy inside the chosen range (IMG_7638: #434343, against the grey #a1a1a1). Past quarters (before the current one) are crossed grey only when the chosen range is free (IMG_7637);
+  // with no time, or a busy range, they read free (IMG_7634, 7638, 7639).
+  const DARK = DOT.replace('<svg ', '<svg style="color:#434343" ');
+  const FLOOR = Math.floor(+NOW / Q) * Q;
+  function drawStrip(free) {
     const busy = ModoData.availability(selected ?? ModoData.near, NOW), mine = range();
     const hours = Array.from({ length: 24 }, (_, i) => {
       const dots = Array.from({ length: 4 }, (_, k) => {
         const t = HOUR0 + (i * 4 + k) * Q;
-        return busy.some(([a, b]) => t < b && t + Q > a) ? DOT : mine && t >= mine[0] && t < mine[1] ? MINE : FREE;
+        const inRange = mine && t >= mine[0] && t < mine[1];
+        return busy.some(([a, b]) => t < b && t + Q > a) ? inRange ? DARK : DOT : free && t < FLOOR ? DOT : inRange ? MINE : FREE;
       }).join('');
       const h = (new Date(HOUR0).getHours() + i) % 24;
       return `<div class="hour"><div class="dots">${dots}</div><time>${h % 12 || 12} ${h < 12 ? 'AM' : 'PM'}</time></div>`;
@@ -69,7 +80,7 @@
     $$('[data-strip]').forEach(e => e.innerHTML = hours);
   }
 
-  const sheetEl = $('.sheet'), float = $('.float'), cardEl = $('.card'), page = $('.page');
+  const sheetEl = $('.sheet'), float = $('.float');
   const sheet = IosSheet.create(sheetEl, {
     detents: { open: () => 0, hidden: () => sheetEl.offsetHeight },
     snaps: ['open', 'hidden'],  // one detent: letting go past halfway drops it to hidden, which returns home (below)
@@ -101,26 +112,50 @@
   // Header: SET RETURN / OPEN RETURN. An open return has no end time, so the arrow and End Time fade out (CSS, .times.open) and the vehicle page drops its Return by row.
   const segs = [...$$('.seg > button')], timesEl = $('.times'), whens = [...$$('.when')];
   const times = { start: null, end: null }, PLACEHOLDER = ['Start Time', 'End Time'];
-  let openReturn = false;
+  let markers, openReturn = false, later = null;  // later: the next free stretch the busy box offers
+  const avail = $('.avail'), availFree = $('.avail .free'), availBusy = $('.avail .busy');
   const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], DAY = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const fmt = d => `${MON[d.getMonth()]} ${d.getDate()}, ${d.getHours() % 12 || 12}:${String(d.getMinutes()).padStart(2, '0')} ${d.getHours() < 12 ? 'AM' : 'PM'}`;
   const clock = d => `${d.getHours() % 12 || 12}:${String(d.getMinutes()).padStart(2, '0')} ${d.getHours() < 12 ? 'AM' : 'PM'}`;
+  const fmt = d => `${d.getDate()} ${MON[d.getMonth()]} at ${clock(d)}`;  // the header's own format (IMG_7638: "12 Oct at 3:00 PM")
   const pageDate = d => `${DAY[d.getDay()]}, ${d.getDate()} ${MON[d.getMonth()]} ${d.getFullYear()}, ${clock(d)}`;  // the page's own format, not the header's
   const atDate = d => `${d.getDate()} ${MON[d.getMonth()]} ${d.getFullYear()} at ${clock(d)}`;
+  const hm = ms => `${Math.floor(ms / 36e5)}h ${Math.round(ms % 36e5 / 6e4)}m`;
+  let greyKey = '', grey = new Set();
   function render() {
     segs.forEach((b, i) => { b.classList.toggle('on', !!i === openReturn); b.setAttribute('aria-pressed', !!i === openReturn); });
     timesEl.classList.toggle('open', openReturn);
+    timesEl.classList.toggle('both', !openReturn && !!times.start && !!times.end);
     whens.forEach((b, i) => { const d = times[i ? 'end' : 'start']; b.lastChild.nodeValue = d ? fmt(d) : PLACEHOLDER[i]; b.classList.toggle('set', !!d); });
     $('[data-rtype]').textContent = openReturn ? 'Open Return' : 'Set Return';
+    // The row stays in an open return too, 12 h after the start (IMG_7637: 3:00 PM -> Tue 13 Oct 3:00 AM).
+    const mine = range();
     $('[data-pickup]').textContent = times.start ? pageDate(times.start) : 'Please set a time';
-    $('[data-retby]').textContent = times.end ? pageDate(times.end) : 'Please set a time';
-    $('[data-retrow]').hidden = openReturn;
+    $('[data-retby]').textContent = mine ? pageDate(mine[1]) : 'Please set a time';
     // BOOK VEHICLE and the Earliest/Latest box need a chosen range that is free on this car; otherwise the disabled look and the note stay. Booking itself is never done.
-    const mine = range(), free = mine && ModoData.window(selected ?? ModoData.near, mine[0], mine[1], NOW);
-    $('.book').disabled = !free; $('.note').hidden = !!free; $('.avail').hidden = !free;
+    const pin = selected ?? ModoData.near, free = mine && ModoData.window(pin, mine[0], mine[1], NOW);
+    $('.book').disabled = !free; $('.note').hidden = !!free;
+    // A chosen range that is busy shows the next stretch of the same length that is free, with a button that takes it (IMG_7639 and busy-box.png; the second line's end and the length for a set return are assumptions).
+    const next = mine && !free && ModoData.nextFree(pin, mine[0], mine[1] - mine[0], NOW);
+    avail.hidden = !free && !next; avail.classList.toggle('is-busy', !free);
+    availFree.hidden = !free; availBusy.hidden = !!free;
+    $('[data-earliest]').textContent = $('[data-latest]').textContent = $('[data-busy-from]').textContent = $('[data-busy-to]').textContent = '';
     if (free) { $('[data-earliest]').textContent = `${atDate(free.earliest)}→`; $('[data-latest]').textContent = free.latest ? atDate(free.latest) : 'No limit'; }
-    drawStrip();
+    else if (next) {
+      $('[data-busy-title]').textContent = `This vehicle will be available for ${hm(mine[1] - mine[0])} from:`;
+      $('[data-busy-from]').textContent = atDate(next.start); $('[data-busy-to]').textContent = atDate(next.end);
+      later = next;
+    }
+    // The card says so too, and the pin goes grey (only when the times change: one feature-state write per pin that changes).
+    cardEl.classList.toggle('busy', !!mine && !free); cardEl.querySelector('.unav').hidden = !(mine && !free);
+    const key = mine ? `${+mine[0]}-${+mine[1]}` : '';
+    if (key !== greyKey) {
+      greyKey = key;
+      grey = new Set(mine ? ModoData.pins.features.map(f => f.properties.n).filter(n => !ModoData.window(n, mine[0], mine[1], NOW)) : []);
+      markers?.busy(grey);
+    }
+    drawStrip(!!free);
   }
+  $('.switch').addEventListener('click', () => { if (!later) return; times.start = later.start; if (!openReturn) times.end = later.end; render(); });
   segs.forEach((b, i) => b.addEventListener('click', () => { openReturn = !!i; render(); }));
   $('.clear').addEventListener('click', () => { times.start = times.end = null; render(); });
 
@@ -193,7 +228,7 @@
   whens.forEach((b, i) => b.addEventListener('click', () => openPicker(i ? 'end' : 'start')));
   render();
 
-  let markers, home = null, pushed = false;
+  let home = null, pushed = false;
   const ease = t => 1 - (1 - t) ** 3;
 
   function fill(n) {
@@ -236,7 +271,7 @@
   cardEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); push(); } });
   $('.back').addEventListener('click', pop);
 
-  if (first.book) { times.start = new Date(HOUR0 + 15 * 6e4); times.end = new Date(HOUR0 + 45 * 6e4); }
+  if (first.book) { times.start = roundUp(NOW); times.end = new Date(+times.start + 18e5); }  // the reference's 12:15-12:45 at 12:11: the next quarter, for half an hour
   if (first.filters) fsheet.snap('open', false);
   if (first.picker) { openReturn = !!first.open; render(); openPicker(first.picker, false); }  // the reference was taken with OPEN RETURN selected
   if (first.select != null) {
@@ -248,6 +283,7 @@
   map.on('load', async () => {
     ModoStyle.mute(map);
     markers = await ModoMarkers.add(map, ModoData);
+    markers.busy(grey);
     if (selected != null) { markers.select(selected); home = { center: camera.center, zoom: camera.zoom }; }
     // One bounded query on the pin layers, a thumb-sized box around the tap (pins hang above their tip), nearest hit wins.
     const hit = p => {

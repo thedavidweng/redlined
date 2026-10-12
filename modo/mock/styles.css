@@ -28,6 +28,13 @@ svg { display: block; flex: none; }
 .when.set { color: #222; }
 .when:nth-of-type(1) { min-width: 114px; } .when:nth-of-type(2) { margin-left: 35px; }
 .to { margin-left: 4px; color: var(--navy); }
+.times { transition: padding-left .15s ease; }
+.times.open { padding-left: 24.7px; }  /* IMG_7638: an open return's single time sits further left, the calendar icon at 26 pt */
+/* Both times set (no reference has this): tighten so "12 Oct at 3:00 PM" twice fits before the clear button. */
+.times.both { padding-left: 14px; }
+.times.both .when { gap: 6px; font-size: 13px; }
+.times.both .when:nth-of-type(1) { min-width: 0; } .times.both .when:nth-of-type(2) { margin-left: 4px; }
+.times.both .to { margin: 0 0 0 8px; }
 /* Open return has no end time: the arrow and End Time fade out, then drop out of reach (visibility after the fade). */
 .to, .when:nth-of-type(2) { transition: opacity .15s ease, visibility 0s; }
 .times.open .to, .times.open .when:nth-of-type(2) { opacity: 0; visibility: hidden; transition: opacity .15s ease, visibility 0s .15s; }
@@ -53,11 +60,15 @@ svg { display: block; flex: none; }
 .scroll { position: absolute; left: 0; right: 0; top: 50px; bottom: 0; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; padding: 0 16px 24px; scrollbar-width: none; }
 .scroll::-webkit-scrollbar { display: none; }
 .card { display: block; position: relative; width: 100%; height: 333px; border-radius: 8px; background: #fff; box-shadow: 0 2px 4px #0000002b; cursor: pointer; outline: none; }
-.card .photo { position: absolute; left: 50%; top: 30px; width: 158px; margin-left: -79px; transform: scaleX(-1); pointer-events: none; }
+.card .photo { position: absolute; left: 50%; top: 0; width: 158px; height: var(--bottom, 105px); margin-left: -79px; object-fit: contain; object-position: 50% 100%; pointer-events: none; }
+.photo.flip { transform: scaleX(-1); }  /* the IPA asset faces the other way; the real app's photos do not */
 .card:active { background: #fafafa; }
 .card .strip { position: absolute; left: 0; right: 0; top: 130px; }
 .card .name { position: absolute; left: 16px; top: 195px; font: 500 18px/28px Poppins, sans-serif; color: #222; white-space: nowrap; }
 .card .where { position: absolute; left: 16px; top: 221px; font: 400 14.5px/22px Roboto, sans-serif; color: #7a7a7a; white-space: nowrap; }
+.card .unav { position: absolute; left: 16px; top: 204px; font: 400 12px/20px Roboto, sans-serif; letter-spacing: .1px; color: #cd2026; }
+.card.busy { height: 356px; }
+.card.busy .name { top: 221px; } .card.busy .where { top: 247px; } .card.busy .plan { top: 276px; } .card.busy .chips { top: 311px; }
 .plan { position: absolute; left: 17px; top: 250px; display: flex; align-items: center; gap: 9px; font: 400 14px/22px Roboto, sans-serif; color: #7a7a7a; }
 .card .chips { position: absolute; left: 16px; top: 285px; }
 .chips { display: flex; gap: 8px; }
@@ -92,7 +103,7 @@ svg { display: block; flex: none; }
 .page .name { font: 500 18px/25px Poppins, sans-serif; color: #222; }
 .page .where { font: 400 14.5px/19.5px Roboto, sans-serif; color: #8a8a8a; }
 .page .id .where:first-of-type { margin-top: 6px; }
-.page .photo { position: absolute; right: -1px; top: 29px; width: 106px; transform: scaleX(-1); }
+.page .photo { position: absolute; right: -1px; top: 0; width: 106px; height: 79px; object-fit: contain; object-position: 100% 100%; }
 .page hr { margin: 25px -24px 0; height: 1px; border: 0; background: #e6e6e6; }
 .page .strip { margin: 0 -24px; padding-left: 31px; height: 61px; padding-top: 16.5px; }
 .page .strip .hour::after { top: -3px; }
@@ -112,8 +123,13 @@ svg { display: block; flex: none; }
 .action .go { position: absolute; right: 12px; top: 24px; color: #6b6b6b; }
 .action:active { opacity: .6; }
 .avail + .action { border-bottom: 1px solid #e6e6e6; }
-.avail { display: flex; justify-content: space-between; padding: 4px 12px; background: #f5f5f5; font: 400 14px/28px Roboto, sans-serif; color: #2d4f5d; white-space: nowrap; }
-.avail[hidden] { display: none; }
+.avail { padding: 4px 12px; background: #f5f5f5; font: 400 14px/28px Roboto, sans-serif; color: #2d4f5d; white-space: nowrap; }
+.avail .free { display: flex; justify-content: space-between; }
+.avail .busy { text-align: center; padding-bottom: 12px; color: #26505e; }
+.avail .busy .span { display: flex; align-items: center; justify-content: space-between; }
+.avail .switch { display: block; width: 100%; height: 34px; margin-top: 12px; border-radius: 4px; background: #304f5c; box-shadow: 0 2px 4px #00000040; color: #fff; text-align: center; font: 500 14px/34px Roboto, sans-serif; letter-spacing: 1.1px; }
+.avail.is-busy { margin: 16px 0; }  /* IMG_7639: the busy box floats 16 pt below Change Time and above Contact Modo */
+.avail[hidden], .avail [hidden] { display: none; }
 .avail b { display: block; font-weight: 400; }
 .avail .r { text-align: right; }
 .section { margin-top: 28px; font: 500 20px/25px Poppins, sans-serif; color: #222; }

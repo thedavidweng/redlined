@@ -43,31 +43,29 @@ globalThis.ModoData = (() => {
   });
   const near = 0;
 
-  // One car per pin (index = pin n), invented. `class` and `features` use the Filters sheet's vocabulary (class: CAR/SUV/VAN/CARGO; features: its lowercase rows), `seats` is a number
-  // (the sheet's "N +" chips mean at least N), so a redline can count matches with `match`. Pin 0 is the car every earlier state shows. The photo is still the one Corolla asset.
-  const C = (name, type, seats, fuel, cls, ...features) => ({ name, type, seats, fuel, plan: 'Daily Drives', class: cls, features });
-  const cars = [
-    C('Toyota Corolla Hatchback', '4-door Hatchback', 5, 'Gas', 'CAR', 'audio: apple carplay'),
-    C('Toyota RAV4', 'SUV', 5, 'Gas', 'SUV', 'all-wheel drive', 'roof rack'),
-    C('Toyota Prius Prime PHEV', '4-door Hatchback', 5, 'Plug-in Hybrid', 'CAR', 'plug-in hybrid', 'hybrid', 'audio: apple carplay'),
-    C('Hyundai Kona Electric', 'SUV', 5, 'Electric', 'SUV', 'electric vehicle', 'audio: android auto'),
-    C('Honda Civic Sedan', '4-door Sedan', 5, 'Gas', 'CAR', 'audio: apple carplay', 'audio: android auto'),
-    C('Chrysler Grand Caravan', 'Minivan', 7, 'Gas', 'VAN', 'child seat'),
-    C('Ford Transit Cargo', 'Cargo Van', 2, 'Gas', 'CARGO', 'dolly: hand truck'),
-    C('Mazda3 Hatchback', '4-door Hatchback', 5, 'Gas', 'CAR', 'audio: android auto'),
-    C('Toyota Prius', '4-door Hatchback', 5, 'Hybrid', 'CAR', 'hybrid'),
-    C('Subaru Outback', 'Wagon', 5, 'Gas', 'SUV', 'all-wheel drive', 'roof rack', 'winter tires'),
-    C('Kia Soul', '4-door Hatchback', 5, 'Gas', 'CAR', 'bike rack - holds 2 bikes'),
-    C('Nissan Leaf', '4-door Hatchback', 5, 'Electric', 'CAR', 'electric vehicle'),
-    C('Honda CR-V Hybrid', 'SUV', 5, 'Hybrid', 'SUV', 'all-wheel drive', 'hybrid'),
-    C('Toyota Sienna Hybrid', 'Minivan', 8, 'Hybrid', 'VAN', 'hybrid', 'child seat'),
-    C('Mazda MX-5 Convertible', '2-door Convertible', 2, 'Gas', 'CAR', 'convertible'),
-    C('Ford Ranger', 'Pickup Truck', 5, 'Gas', 'CARGO', 'pickup truck'),
-    C('Toyota Corolla Hatchback', '4-door Hatchback', 5, 'Gas', 'CAR'),
-    C('Hyundai Elantra', '4-door Sedan', 5, 'Gas', 'CAR', 'audio: apple carplay'),
-    C('Tesla Model 3', '4-door Sedan', 5, 'Electric', 'CAR', 'electric vehicle'),
-    C('Volkswagen Golf', '4-door Hatchback', 5, 'Gas', 'CAR', 'ski/snowboard rack', 'winter tires'),
-  ];
+  // One car per pin (index = pin n), invented, but only models the real app showed with a photo (evidence IMG_7634..7638): `photo` is { src (relative to mock/index.html), w (the car's width on the card, pt),
+  // page (its width on Vehicle Information), flip (the IPA asset faces the other way), bottom (where its wheels sit on the card, pt from the card's top) }.
+  // `class` and `features` use the Filters sheet's vocabulary (class: CAR/SUV/VAN/CARGO; features: its lowercase rows), `seats` is a number (the sheet's "N +" chips mean at least N), so a redline can count matches
+  // with `match`. Pin 0 is the car every earlier state shows. No VAN or CARGO car has a photo, so those two chips match nothing (honest, and noted in the README).
+  const P = {
+    hatch: { src: 'assets/car@3x.png', w: 158, page: 106, flip: true, bottom: 105 },
+    sedan: { src: 'assets/cars/corolla-hybrid.png', w: 170, page: 104, bottom: 115 },
+    prime: { src: 'assets/cars/prius-prime.png', w: 169, page: 103, bottom: 115 },
+    rav4: { src: 'assets/cars/rav4.png', w: 169, page: 103, bottom: 115 },
+    escape: { src: 'assets/cars/escape.png', w: 162, page: 99, bottom: 115 },
+    kicks: { src: 'assets/cars/kicks.png', w: 186, page: 114, bottom: 115 },
+  };
+  const M = {
+    hatch: ['Toyota Corolla Hatchback', '4-door Hatchback', 5, 'Gas', 'Daily Drives', 'CAR', 'hatch', 'audio: apple carplay'],
+    sedan: ['Toyota Corolla Hybrid', '4-door Sedan', 5, 'Hybrid', 'Daily Drives', 'CAR', 'sedan', 'hybrid', 'audio: apple carplay'],
+    prime: ['Toyota Prius Prime PHEV', '4-door Hatchback', 5, 'Plug-in Hybrid', 'Daily Drives', 'CAR', 'prime', 'plug-in hybrid', 'hybrid', 'audio: apple carplay'],
+    rav4: ['Toyota RAV4 Hybrid', 'SUV (5 seat)', 5, 'Hybrid', 'Large & Loadable', 'SUV', 'rav4', 'hybrid', 'all-wheel drive', 'audio: apple carplay'],
+    escape: ['Ford Escape Hybrid', 'SUV (5 seat)', 5, 'Hybrid', 'Large & Loadable', 'SUV', 'escape', 'hybrid', 'audio: android auto'],
+    kicks: ['Nissan Kicks', 'SUV (5 seat)', 5, 'Gas', 'Large & Loadable', 'SUV', 'kicks', 'audio: apple carplay', 'audio: android auto'],
+  };
+  const C = key => { const [name, type, seats, fuel, plan, cls, photo, ...features] = M[key]; return { name, type, seats, fuel, plan, class: cls, features, photo: P[photo] }; };
+  // Spread so that SUVs sit near the user (pins 1 and 3 are the two nearest SUVs, pin 0 stays the Corolla) and every model shows up more than once.
+  const cars = ['hatch', 'rav4', 'sedan', 'escape', 'prime', 'kicks', 'hatch', 'rav4', 'prime', 'sedan', 'escape', 'hatch', 'kicks', 'prime', 'rav4', 'sedan', 'escape', 'hatch', 'kicks', 'prime'].map(C);
   // Pin numbers whose car matches a filter choice: { classes: ['SUV'], seats: 5 (at least), features: ['hybrid'] (all of them) }; every key is optional. A redline counts with `.length`.
   const match = ({ classes = [], seats = 0, features = [] } = {}) => cars.flatMap((c, n) => (!classes.length || classes.includes(c.class)) && c.seats >= seats && features.every(f => c.features.includes(f)) ? [n] : []);
 
@@ -77,21 +75,29 @@ globalThis.ModoData = (() => {
   const busy = n => {
     if (n === 0) return [[274, FAR]];
     const a = (n * 11) % 24 - 8, b = a + 8 + (n * 5) % 16 + 12 + (n * 7) % 60, c = b + 8 + (n * 3) % 20 + 40 + (n * 17) % 100;
-    return [[a, a + 8 + (n * 5) % 16], [b, c], [c + 30, FAR]];
+    return [[a, a + 8 + (n * 5) % 16], [b, c], [c + 56 + (n * 3) % 12, FAR]];
   };
   const floorHour = (now = clock()) => new Date(now).setMinutes(0, 0, 0);
+  const floorQuarter = (now = clock()) => Math.floor(+now / Q) * Q;  // the current quarter hour: nothing earlier can be booked (7634..7637 were taken at 14:49: 2:45 PM is the earliest)
   // Busy intervals of pin n as [Date, Date] pairs, ordered, anchored to the hour of `now`.
   const availability = (n, now = clock()) => busy(n).map(([a, b]) => [new Date(floorHour(now) + a * Q), new Date(floorHour(now) + b * Q)]);
-  // The free window containing [start, end]: { earliest, latest } (Dates; earliest is never before the current hour, latest is the next busy start), or null if it overlaps a busy interval.
+  // The free window containing [start, end]: { earliest, latest } (Dates; earliest is never before the current quarter, latest is the next busy start), or null if it starts in the past or overlaps a busy interval.
   const window = (n, start, end, now = clock()) => {
     const iv = availability(n, now);
-    if (iv.some(([a, b]) => start < b && end > a)) return null;
+    if (start < floorQuarter(now) || iv.some(([a, b]) => start < b && end > a)) return null;
     const before = iv.filter(([, b]) => b <= start).pop(), next = iv.find(([a]) => a >= end);
-    return { earliest: new Date(Math.max(floorHour(now), before ? +before[1] : 0)), latest: next ? next[0] : null };
+    return { earliest: new Date(Math.max(floorQuarter(now), before ? +before[1] : 0)), latest: next ? next[0] : null };
+  };
+  // The first free stretch of `length` ms starting at or after `from` (never before the current quarter): { start, end } Dates on the quarter grid, or null if the car is never free that long.
+  const nextFree = (n, from, length, now = clock()) => {
+    const iv = availability(n, now);
+    let s = Math.max(Math.ceil(+from / Q) * Q, floorQuarter(now)), hit;
+    while ((hit = iv.find(([a, b]) => s < b && s + length > a))) s = Math.ceil(+hit[1] / Q) * Q;
+    return s >= floorHour(now) + FAR * Q / 2 ? null : { start: new Date(s), end: new Date(s + length) };
   };
 
   return {
-    device, camera, now: clock, frame, near, at, availability, window, cars, match,
+    device, camera, now: clock, frame, near, at, availability, window, nextFree, cars, match,
     pins: { type: 'FeatureCollection', features: pins },
     clusters: { type: 'FeatureCollection', features: clusterFeatures },
     user: { coordinates: at([195, 404]) },
