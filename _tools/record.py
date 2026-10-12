@@ -33,6 +33,10 @@ class Director:
         k = b['width'] / await (await iframe.content_frame()).evaluate('innerWidth')
         return b['x'] + x * k, b['y'] + y * k
 
+    async def ring(self, side, selector, tone):
+        # Highlight ring around an element of the mock, drawn by the stage. tone: 'hl' | 'bad' | 'good'; None removes it.
+        await self.js('([s, sel, t]) => stage.ring(s, sel, t)', [side, selector, tone])
+
     async def drag(self, x0, y0, x1, y1, dur=0.6):
         # Press at (x0, y0), pull to (x1, y1) with the finger hint following, release.
         await self.glide(x0, y0, 0.5)

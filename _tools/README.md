@@ -19,4 +19,6 @@ uv run --with playwright --with pillow python _tools/calibrate.py lime home
 
 `Director.drag(x0, y0, x1, y1, dur)` moves the finger hint along a path while pressing (for sheets and maps). `Director.box(selector, text)` is generic: the first element matching `selector` that contains `text`; scope row-specific clips in the selector (`.manage-row:has-text("X") .btn`).
 
+`Director.ring(side, selector, tone)` (`stage.ring` in the stage) draws a stage-side outline around any element of the mock, tracking it while it moves; `tone` is `'hl'`, `'bad'` or `'good'`, and `None` removes it.
+
 `Director.to_stage(side, x, y)` turns a point in the mock's own viewport into stage coordinates (the iframe is offset and scaled). Use it for things that are not DOM, such as map markers: project their coordinates inside the iframe, then convert. See `lime/01-fix-range-in-km/clip.py`. Wait for the map to be loaded and idle before `d.intro()`.

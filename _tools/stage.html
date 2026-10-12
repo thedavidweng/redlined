@@ -32,6 +32,12 @@
   body.device .panels { grid-template-columns: repeat(2, max-content); justify-content: center; column-gap: 220px; }
   body.device .window { flex: none; width: var(--win-w); height: var(--win-h); border-radius: var(--win-r); }
   .window iframe { position: absolute; top: 0; left: 0; width: 1000px; height: 1000px; border: 0; transform-origin: 0 0; }
+  /* Highlight ring drawn in the stage, over the iframe and under the finger. Same language as Deliverect's cap-hl/bad/good: outline tightens 8px to 3px and fades in. */
+  .ring { position: absolute; z-index: 2; pointer-events: none; border-radius: 12px; outline: 2px solid transparent; outline-offset: 8px; opacity: 0;
+    transition: opacity .25s ease, outline-color .25s ease, outline-offset .35s var(--ease); }
+  .ring.on { opacity: 1; outline-offset: 3px; }
+  .ring.hl { outline-color: #f5a524; } .ring.bad { outline-color: #d4442e; } .ring.good { outline-color: #00a862; }
+  @media (prefers-reduced-motion: reduce) { .ring { transition: none; } }
   .receipt { position: absolute; right: 26px; bottom: 26px; width: 238px; padding: 18px 18px 26px; background: #fdfdfb; color: #111;
     font: 500 14px/1.45 ui-monospace, "SF Mono", Menlo, monospace; text-align: center; transform: translateY(140%) rotate(3deg);
     transition: transform .7s var(--ease); filter: drop-shadow(0 14px 24px #0003);
@@ -132,6 +138,29 @@
         row.classList.remove('cap-hl', 'cap-bad', 'cap-good');
         if (name && row.textContent.includes(name)) row.classList.add(cls);
       }
+    },
+    // Rings an element of the mock from the stage's own DOM (nothing is injected into the mock). tone: 'hl' | 'bad' | 'good'; null or '' removes it.
+    // While visible it follows the element every frame (sheet springs, scrolling); hidden, the loop stops.
+    ring(side, selector, tone) {
+      const win = document.querySelector(`#${side} .window`), frame = win.querySelector('iframe');
+      let el = win.querySelector('.ring');
+      if (!el) { el = document.createElement('div'); el.className = 'ring'; frame.after(el); }
+      cancelAnimationFrame(el.raf);
+      if (!selector || !tone) { el.classList.remove('on'); return; }
+      el.classList.remove('hl', 'bad', 'good');
+      el.classList.add(tone);
+      const pad = 4;  // breathing room between the element and the outline's resting position
+      const place = () => {
+        const target = frame.contentDocument.querySelector(selector);
+        if (target) {
+          const r = target.getBoundingClientRect(), k = frame.getBoundingClientRect().width / frame.offsetWidth;
+          Object.assign(el.style, { left: `${r.left * k - pad}px`, top: `${r.top * k - pad}px`, width: `${r.width * k + 2 * pad}px`, height: `${r.height * k + 2 * pad}px` });
+        }
+        el.raf = requestAnimationFrame(place);
+      };
+      place();
+      void el.offsetWidth;  // commit the 8px start so the tighten-in animates
+      el.classList.add('on');
     },
     finger(x, y, on = true) {
       const f = document.querySelector('#finger');
