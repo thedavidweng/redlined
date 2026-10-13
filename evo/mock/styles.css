@@ -35,7 +35,7 @@ p, h2, h3 { margin: 0; }
 .sheet { position: absolute; z-index: 4; left: 0; right: 0; bottom: 0; height: calc(296px + var(--safe-bottom)); visibility: hidden; border-radius: 24px 24px 0 0; background: #fff; box-shadow: 0 -2px 16px #00000024;
   transform: translate3d(0, 100%, 0); will-change: transform; contain: layout; touch-action: none; user-select: none; -webkit-user-select: none; }
 .sheet.dragging { cursor: grabbing; }
-.sheet > * { position: absolute; }
+.sheet > *, .pane > * { position: absolute; }
 .expand { left: 185px; top: 6px; width: 20px; height: 20px; border-radius: 50%; background: #8f9396; color: #fff; display: grid; place-items: center; }
 .expand svg { width: 20px; height: 20px; }
 .expand:active { background: #7b7f82; }
@@ -58,7 +58,7 @@ p, h2, h3 { margin: 0; }
 
 /* Expanded: the sheet's full-screen card. A black top, a white card and the prices; it fades in over the map and the tab bar. */
 .full { position: absolute; z-index: 8; inset: 0; visibility: hidden; opacity: 0; background: #000; transition: opacity .3s var(--ease), visibility 0s .3s; }
-.is-expanded .full { visibility: visible; opacity: 1; transition: opacity .3s var(--ease); }
+[data-kind=car].is-expanded .full-car, [data-kind=parking].is-expanded .full-parking, [data-kind=trip].is-expanded .full-trip { visibility: visible; opacity: 1; transition: opacity .3s var(--ease); }
 .page { position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain; padding: 103px 0 112px; background: linear-gradient(#000 229px, #fff 229px) local; scrollbar-width: none; }
 .page::-webkit-scrollbar { display: none; }
 .card { position: relative; height: 206px; margin: 0 16px; border-radius: 16px; background: #fff; box-shadow: 0 4px 14px #00000029; transform: translateY(48px); transition: transform .45s var(--ease); }
@@ -86,6 +86,73 @@ p, h2, h3 { margin: 0; }
 .rate-row:last-child { border-bottom: 0; }
 .rate-row b { font-weight: 600; font-size: 14px; }
 .foot { width: 262px; white-space: nowrap; margin-top: 9px; padding: 8px 8px 9px; border-radius: 6px; background: #f4f4f5; color: #8e8e93; font-size: 11.5px; line-height: 15px; }
+/* Parking spots and the trip use the same sheet and full card as the car: app[data-kind] picks which content shows (car, parking, trip). */
+.pane { display: none; inset: 0; }
+[data-kind=car] .pane-car, [data-kind=parking] .pane-parking, [data-kind=trip] .pane-trip { display: block; }
+[data-kind=parking] .sheet { height: calc(312px + var(--safe-bottom)); }
+
+/* Parking card, compact (sheet) and expanded (card): the same rows, a different rhythm. */
+.ptitle { left: 16px; right: 16px; font-weight: 700; letter-spacing: -.01em; }
+.open { left: 16px; height: 24px; padding: 0 8px; border-radius: 8px; background: #e9f8ea; color: #2f9a33; font-size: 12.3px; line-height: 24px; white-space: nowrap; }
+.rule { left: 16px; right: 16px; height: 0; margin: 0; border: 0; border-top: 1px solid #e3e3e5; }
+.dist, .desc { left: 19px; display: flex; align-items: center; gap: 3px; letter-spacing: -.01em; }
+.dist { height: 24px; font-size: 12.6px; white-space: nowrap; }
+.dist svg { width: 18px; height: 20px; color: var(--cyan); }
+.desc { font-size: 11px; line-height: 17px; }
+.desc svg { flex: none; width: 18px; height: 20px; color: var(--cyan); }
+.pane-parking .ptitle { top: 35.5px; font-size: 17.8px; line-height: 28px; }
+.pane-parking .open { top: 100px; }
+.pane-parking .rule { top: 148px; }
+.pane-parking .dist { top: 164px; }
+.pane-parking .desc { top: 188px; }
+.pane-parking .desc span { width: 230px; }
+.pane-parking .directions { left: 326px; top: 189px; }
+.full-parking .page { padding-bottom: 40px; background: linear-gradient(#000 244px, #fff 244px) local; }
+.full-parking .card { height: 232px; }
+.full-parking .ptitle { top: 15px; font-size: 16.7px; line-height: 28.3px; }
+.full-parking .open { top: 80px; }
+.full-parking .rule { top: 128px; }
+.full-parking .dist { top: 143px; }
+.full-parking .desc { top: 168px; }
+.full-parking .desc span { width: 195px; }
+.full-parking .directions { top: 168px; }
+.details { padding: 0 32px; }
+.details h3 { margin-top: 10px; font-size: 14px; line-height: 26px; font-weight: 700; letter-spacing: -.01em; }
+.drow { display: flex; align-items: center; gap: 20px; width: 100%; margin-top: 18.5px; font-size: 12.2px; line-height: 24px; text-align: left; letter-spacing: -.01em; }
+.drow svg { flex: none; width: 20px; height: 20px; color: var(--cyan); }
+.drow.first { margin-top: 23px; font-size: 11.3px; line-height: 17px; }
+.drow.cyan { color: var(--cyan); }
+.drow b { font-weight: 600; font-size: 12.5px; }
+button.drow { margin-top: 19px; }
+
+/* In trip: Stopover, the car with its Bluetooth link, Lock and end trip. .trip is laid out in card coordinates and sits in the sheet as well as in the card. */
+.trip { left: 0; top: 0; width: 358px; height: 203px; }
+.pane-trip .trip { left: 16px; top: 14px; }
+.trip > * { position: absolute; }
+.trip > .model { left: 16px; top: 12px; }
+.trip > .plate { left: 16px; top: 48px; }
+.tbtn { top: 87px; width: 56px; height: 56px; border: 2px solid var(--cyan); border-radius: 14px; display: grid; place-items: center; color: var(--cyan); }
+.tbtn svg { width: 22px; height: 22px; }
+.tbtn:active { background: var(--cyan-wash); }
+.tbtn.stopover { left: 26px; }
+.tbtn.lock { left: 276.5px; }
+.tlabel { top: 145.7px; width: 90px; font-size: 12.8px; line-height: 20.5px; text-align: center; letter-spacing: -.01em; }
+.tlabel.stopover { left: 9px; }
+.tlabel.lock { left: 259.5px; }
+.trip > .photo { left: 126px; top: 102.6px; width: 106px; height: 47px; }
+.bt { left: 172px; top: 152px; width: 12px; height: 20px; color: var(--cyan); }
+.full-trip .page { padding-bottom: 40px; background: linear-gradient(#000 227px, #fff 227px) local; }
+.full-trip .card { height: 203px; }
+.full-trip .pricing { padding-top: 0; margin-top: -3px; }
+.big { height: 2px; margin: 24px -16px 0; border: 0; background: #ececee; }
+.pricing .expense { margin-top: 20px; gap: 6px; font-size: 13.5px; }
+.expense svg { width: 22px; height: 22px; }
+.notes { margin-top: 12px; font-size: 10.8px; line-height: 22px; font-style: italic; color: #8e8e93; }
+.link { display: flex; align-items: center; gap: 12px; height: 24px; margin-top: 14px; color: var(--cyan); font-size: 12.5px; letter-spacing: -.01em; }
+.link svg { width: 20px; height: 20px; }
+.link.call { margin-top: 21px; gap: 9px; }
+.link.call svg { width: 23px; height: 23px; }
+
 .top { position: absolute; z-index: 1; left: 0; right: 0; top: 0; height: 99px; background: #000; pointer-events: none; }
 .collapse { position: absolute; left: 4px; top: calc(var(--safe-top) + 4px); width: 48px; height: 48px; display: grid; place-items: center; color: #fff; pointer-events: auto; }
 .collapse svg { width: 26px; height: 26px; }

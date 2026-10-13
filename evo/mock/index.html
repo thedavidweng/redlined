@@ -33,6 +33,17 @@
       <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c-4-4.6-7-8.4-7-12.2C5 5.8 8 3 12 3s7 2.800 7 6.800c0 3.800-3 7.600-7 12.200z" stroke-linejoin="round"/><circle cx="12" cy="9.800" r="2.800"/></g></symbol>
       <symbol id="i-tag" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 3h8.600c.5 0 1 .2 1.400.6l8 8c.8.8.8 2 0 2.800l-6.600 6.600c-.8.8-2 .8-2.800 0l-8-8C3.200 13.600 3 13.100 3 12.600z"/><circle cx="7.500" cy="7.500" r="1.400" fill="currentColor" stroke="none"/></g></symbol>
       <symbol id="i-turn" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.600" stroke-linecap="round" stroke-linejoin="round"><path d="M6 19v-6.500c0-1.700 1.300-3 3-3h10"/><path d="m15.500 5.500 3.500 4-3.500 4"/></g></symbol>
+      <!-- Parking and in-trip glyphs. -->
+      <symbol id="i-pin-line" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 19c-3.500-3.800-6-6.900-6-10C6 5.600 8.600 3 12 3s6 2.600 6 6c0 3.100-2.500 6.200-6 10z" stroke-linejoin="round"/><circle cx="12" cy="8.800" r="2.400"/><path d="M5.500 22.200h13"/></g></symbol>
+      <symbol id="i-pcircle" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.900" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.800 17.500V6.800h3.200a3.200 3.200 0 0 1 0 6.400H9.800"/></g></symbol>
+      <symbol id="i-info" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.900" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 10.800v6.200"/></g><circle cx="12" cy="7.600" r="1.200" fill="currentColor"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.900" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6.500V12l3.600 2.200"/></g></symbol>
+      <symbol id="i-pause" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.900" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.500 8.500v7M14.500 8.500v7" stroke-width="2.200"/></g></symbol>
+      <symbol id="i-stop" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.900"/><rect x="7.800" y="7.800" width="8.400" height="8.400" rx="1.600" fill="currentColor"/></symbol>
+      <symbol id="i-bt" viewBox="0 0 24 24"><path d="m6.500 8 11 8.500-5.500 4.500V3l5.500 4.500-11 8.500" fill="none" stroke="currentColor" stroke-width="1.800" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-note" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.900" stroke-linecap="round" stroke-linejoin="round"><path d="M11.500 21H6.800c-1 0-1.800-.8-1.800-1.800V4.800C5 3.800 5.800 3 6.800 3h7.200L19 8v2.500M13.500 3.200v3.500c0 .8.700 1.500 1.500 1.500h3.800"/><path d="m13 20.500.6-2.800 5.600-5.600a1.300 1.300 0 0 1 1.900 1.900l-5.600 5.600z"/></g></symbol>
+      <symbol id="i-pencil" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.900" stroke-linecap="round" stroke-linejoin="round"><path d="m4 20 1-4.200L16.300 4.500a2.100 2.100 0 0 1 3 3L8 18.800z"/><path d="m14.400 6.400 3.200 3.200"/></g></symbol>
+      <symbol id="i-phone" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="M8.300 6.300c.5-.5 1.300-.4 1.700.2l1 1.600c.3.500.2 1-.2 1.400l-.8.800c.8 1.700 2 2.900 3.700 3.700l.8-.8c.4-.4.9-.5 1.400-.2l1.600 1c.6.400.7 1.200.2 1.700l-.9 1c-.8.800-2 1-3.100.6-3-1.100-5.700-3.800-6.800-6.800-.4-1.100-.2-2.300.6-3.100z" fill="#fff"/></symbol>
       <!-- The car in the sheet: a drawn side view of a black hatchback with the roof rack and the cyan stripe of the livery. -->
       <symbol id="i-car" viewBox="0 0 280 124">
         <ellipse cx="142" cy="108" rx="122" ry="7" fill="#000" opacity=".16"/>
@@ -63,6 +74,7 @@
 
     <div class="sheet" role="dialog" aria-label="Car details">
       <button class="expand" aria-label="Show more"><svg><use href="#i-up"/></svg></button>
+      <div class="pane pane-car">
       <h2 class="model" data-model></h2>
       <span class="plate" data-plate></span>
       <svg class="photo"><use href="#i-car"/></svg>
@@ -70,6 +82,27 @@
       <p class="stat walk"><svg><use href="#i-walk"/></svg><span><span data-walk></span> km • <span data-minutes></span> min</span></p>
       <span class="rate">$0.49/min</span>
       <button class="book" title="Outside this mock">BOOK NOW</button>
+      </div>
+      <div class="pane pane-parking">
+        <h2 class="ptitle" data-pname></h2>
+        <span class="open" data-phours></span>
+        <hr class="rule">
+        <p class="dist"><svg><use href="#i-pin-line"/></svg><span data-pdist></span></p>
+        <p class="desc"><svg><use href="#i-pin"/></svg><span data-pshort></span></p>
+        <button class="directions" aria-label="Directions" title="Outside this mock"><svg><use href="#i-turn"/></svg></button>
+      </div>
+      <div class="pane pane-trip">
+        <div class="trip">
+          <h2 class="model" data-model></h2>
+          <span class="plate" data-plate></span>
+          <button class="tbtn stopover" aria-label="Stopover" title="Outside this mock"><svg><use href="#i-pause"/></svg></button>
+          <span class="tlabel stopover">Stopover</span>
+          <svg class="photo"><use href="#i-car"/></svg>
+          <svg class="bt"><use href="#i-bt"/></svg>
+          <button class="tbtn lock" aria-label="Lock and end trip" title="Outside this mock"><svg><use href="#i-stop"/></svg></button>
+          <span class="tlabel lock">Lock and<br>end trip</span>
+        </div>
+      </div>
     </div>
 
     <nav class="tabs">
@@ -79,7 +112,7 @@
       <button title="Outside this mock"><svg><use href="#i-menu"/></svg>Menu</button>
     </nav>
 
-    <section class="full" aria-label="Car details" aria-hidden="true">
+    <section class="full full-car" aria-label="Car details" aria-hidden="true">
       <div class="page">
         <div class="card">
           <h2 class="model" data-model></h2>
@@ -101,6 +134,54 @@
       </div>
       <div class="top"><button class="collapse" aria-label="Collapse"><svg><use href="#i-down"/></svg></button></div>
       <div class="bar"><button class="book" title="Outside this mock">BOOK NOW</button></div>
+    </section>
+
+    <section class="full full-parking" aria-label="Parking details" aria-hidden="true">
+      <div class="page">
+        <div class="card">
+          <h2 class="ptitle" data-pname></h2>
+          <span class="open" data-phours></span>
+          <hr class="rule">
+          <p class="dist"><svg><use href="#i-pin-line"/></svg><span data-pdist></span></p>
+          <p class="desc"><svg><use href="#i-pin"/></svg><span data-pshort></span></p>
+          <button class="directions" aria-label="Directions" title="Outside this mock"><svg><use href="#i-turn"/></svg></button>
+        </div>
+        <div class="details">
+          <h3>Parking details</h3>
+          <p class="drow first cyan"><svg><use href="#i-pcircle"/></svg><span data-pdetails></span></p>
+          <button class="drow cyan" title="Outside this mock"><svg><use href="#i-info"/></svg><b>View parking photos</b></button>
+          <p class="drow"><svg><use href="#i-clock"/></svg><span data-phours></span></p>
+        </div>
+      </div>
+      <div class="top"><button class="collapse" aria-label="Collapse"><svg><use href="#i-down"/></svg></button></div>
+    </section>
+
+    <section class="full full-trip" aria-label="Trip details" aria-hidden="true">
+      <div class="page">
+        <div class="card">
+          <div class="trip">
+            <h2 class="model" data-model></h2>
+            <span class="plate" data-plate></span>
+            <button class="tbtn stopover" aria-label="Stopover" title="Outside this mock"><svg><use href="#i-pause"/></svg></button>
+            <span class="tlabel stopover">Stopover</span>
+            <svg class="photo"><use href="#i-car"/></svg>
+            <svg class="bt"><use href="#i-bt"/></svg>
+            <button class="tbtn lock" aria-label="Lock and end trip" title="Outside this mock"><svg><use href="#i-stop"/></svg></button>
+            <span class="tlabel lock">Lock and<br>end trip</span>
+          </div>
+        </div>
+        <div class="pricing">
+          <div data-rates></div>
+          <p class="foot">All rates and fees are subject to GST and PST</p>
+          <hr class="big">
+          <h3 class="expense"><svg><use href="#i-note"/></svg>Expense details</h3>
+          <p class="notes">No notes added</p>
+          <button class="link" title="Outside this mock"><svg><use href="#i-pencil"/></svg>Edit</button>
+          <hr class="big">
+          <button class="link call" title="Outside this mock"><svg><use href="#i-phone"/></svg>Call the call center</button>
+        </div>
+      </div>
+      <div class="top"><button class="collapse" aria-label="Collapse"><svg><use href="#i-down"/></svg></button></div>
     </section>
   </div>
   <script src="../../_ios/maplibre/maplibre-gl.js"></script>

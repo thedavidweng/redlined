@@ -1,7 +1,7 @@
 // Home-screen map content: cars, parking, charging stations and the rider. Every marker is a symbol layer whose image is drawn once to a 3x canvas
 // (IosMapImages.draw) from the IPA's pin PNGs, never a DOM node, so panning costs the UI nothing. Classic script (file://).
 //   EvoMarkers.add(map, EvoData)  →  Promise of { select(n), clear() }, resolves when the layers are on the map.
-//   select(n) swaps car n for the selected pin; clear() restores the home look. Feature state only: no tiling, no layout, no DOM.
+//   select(n) swaps car n for the selected pin; clear() restores the home look. selectParking(n) / clearParking() do the same for a parking sign. Feature state only: no tiling, no layout, no DOM.
 globalThis.EvoMarkers = (() => {
   const { draw } = IosMapImages;
   // The IPA's PNGs are a fallback set (the Evo logo on the pin, bike parking); the live app draws a car glyph, so every marker is drawn here from the reference crops.
@@ -29,6 +29,14 @@ globalThis.EvoMarkers = (() => {
     g.fillStyle = '#fff'; g.font = '600 11px -apple-system, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('P', 13, 11.500);
     car(g, 3.500, 22, .95, '#000');
   }
+  function parkingSelected(g) {  // the tapped sign, as the reference shows it: black with a cyan edge, stem, P disc and car
+    const w = 26, h = 40, cyan = '#00b5e6';
+    g.beginPath(); g.roundRect(1, 1, w - 2, h - 6, 5); g.fillStyle = '#000'; g.fill(); g.lineWidth = 1.800; g.strokeStyle = cyan; g.stroke();
+    g.fillStyle = cyan; g.fillRect(w / 2 - 1.200, h - 5.500, 2.400, 5.500);
+    g.beginPath(); g.arc(13, 11, 7.500, 0, 2 * Math.PI); g.fill();
+    g.fillStyle = '#000'; g.font = '600 11px -apple-system, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('P', 13, 11.500);
+    car(g, 3.500, 22, .95, cyan);
+  }
   function charging(g) {  // a plug, pale cyan with a cyan edge, and a black bolt
     g.beginPath(); g.roundRect(4, 11, 18, 14, 7); g.moveTo(8, 12); g.lineTo(8, 2); g.moveTo(18, 12); g.lineTo(18, 2);
     g.lineWidth = 6.500; g.strokeStyle = '#00b9e3'; g.lineCap = 'round'; g.stroke(); g.lineWidth = 4.300; g.strokeStyle = '#c9ecf8'; g.stroke();
@@ -38,7 +46,7 @@ globalThis.EvoMarkers = (() => {
 
   async function add(map, data) {
     for (const [id, w, h, paint] of [['evo-car', 34, 42.5, g => balloon(g, '#000', '#00b9e3')], ['evo-car-selected', 34, 42.5, g => balloon(g, '#00b5e6', '#000')],
-      ['evo-parking', 26, 40, parking], ['evo-charging', 26, 36, charging]]) draw(map, id, w, h, paint);
+      ['evo-parking', 26, 40, parking], ['evo-parking-selected', 26, 40, parkingSelected], ['evo-charging', 26, 36, charging]]) draw(map, id, w, h, paint);
     // The rider: Mapbox's puck, a blue dot with a white edge and a soft shadow, no heading cone.
     draw(map, 'evo-user', 32, 32, g => {
       const disc = (r, fill) => { g.beginPath(); g.arc(16, 16, r, 0, 2 * Math.PI); g.fillStyle = fill; g.fill(); };
@@ -55,18 +63,20 @@ globalThis.EvoMarkers = (() => {
     const pin = { 'icon-allow-overlap': true, 'icon-ignore-placement': true, 'icon-anchor': 'bottom' };
     const shown = (on = 1, off = 0) => ['case', ['boolean', ['feature-state', 'selected'], false], on, off];
     map.addLayer({ id: 'evo-charging', type: 'symbol', source: 'evo-charging', layout: { ...pin, 'icon-image': 'evo-charging' } });
-    map.addLayer({ id: 'evo-parking', type: 'symbol', source: 'evo-parking', layout: { ...pin, 'icon-image': 'evo-parking' } });
+    map.addLayer({ id: 'evo-parking', type: 'symbol', source: 'evo-parking', layout: { ...pin, 'icon-image': 'evo-parking' }, paint: { 'icon-opacity': shown(0, 1) } });
+    map.addLayer({ id: 'evo-parking-selected', type: 'symbol', source: 'evo-parking', layout: { ...pin, 'icon-image': 'evo-parking-selected' }, paint: { 'icon-opacity': shown() } });
     map.addLayer({ id: 'evo-user', type: 'symbol', source: 'evo-user', layout: { ...pin, 'icon-anchor': 'center', 'icon-image': 'evo-user' } });
     map.addLayer({ id: 'evo-cars', type: 'symbol', source: 'evo-cars', layout: { ...pin, 'icon-image': 'evo-car' }, paint: { 'icon-opacity': shown(0, 1) } });
     map.addLayer({ id: 'evo-car-selected', type: 'symbol', source: 'evo-cars', layout: { ...pin, 'icon-image': 'evo-car-selected' }, paint: { 'icon-opacity': shown() } });
 
-    let chosen = null;
-    const set = n => {
-      if (chosen != null) map.setFeatureState({ source: 'evo-cars', id: chosen + 1 }, { selected: false });
-      if (n != null) map.setFeatureState({ source: 'evo-cars', id: n + 1 }, { selected: true });
-      chosen = n;
+    // One feature-state setter per source: cars and parking spots each have at most one selected.
+    const chosen = {}, setter = source => n => {
+      if (chosen[source] != null) map.setFeatureState({ source, id: chosen[source] + 1 }, { selected: false });
+      if (n != null) map.setFeatureState({ source, id: n + 1 }, { selected: true });
+      chosen[source] = n;
     };
-    return { select: set, clear: () => set(null) };
+    const set = setter('evo-cars'), setParking = setter('evo-parking');
+    return { select: set, clear: () => set(null), selectParking: setParking, clearParking: () => setParking(null) };
   }
 
   return { add };

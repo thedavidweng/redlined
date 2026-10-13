@@ -41,6 +41,28 @@ globalThis.EvoData = (() => {
   const parkingSpots = [[301, 590], [79, 530], [250, 700], [140, 600], [30, 640], [350, 520], [200, 500], [300, 740], [62, 800], [372, 400], [120, 790], [12, 520], [230, 610], [320, 230]];
   const chargers = [[180, 610], [100, 680], [330, 620], [60, 450]];
   const points = list => list.map(p => ({ type: 'Feature', properties: {}, geometry: { type: 'Point', coordinates: at(p) } }));
+  // One entry per parking spot above, in the same order: street, kind, level, reserved spots, hours, short text (compact card), details (expanded card). All invented.
+  const SPOTS = [
+    ['2290 West 4th Ave', 'parkade-underground', 'P1', 6, 'Open 24/7', 'Underground parkade, Level P1 - reserved Evo bays by the lift', 'Underground parkade with 6 reserved Evo spots on level P1, next to the elevator lobby'],
+    ['1475 Vine Street', 'lot', '', 4, 'Open 6am–11pm', 'Surface lot behind the building - Evo bays at the back', 'Surface lot behind the building with 4 reserved Evo spots along the back fence'],
+    ['3120 Yew Street', 'street', '', 3, 'Open 24/7', 'Street parking - Evo bays marked on the east side', 'Street parking with 3 Evo bays marked on the east side of the block'],
+    ['2415 Larch Street', 'parkade-above', 'L2', 8, 'Open 24/7', 'Parkade Reserved Level 2 - follow the Evo signs', 'Parkade with 8 reserved Evo spots on Level 2, entrance from the lane'],
+    ['1893 Cypress Street', 'lot', '', 5, 'Open 6am–11pm', 'Gated lot - Evo bays right of the entrance', 'Gated lot with 5 reserved Evo spots to the right of the entrance, gate opens with the Evo app'],
+    ['2840 Arbutus Street', 'parkade-underground', 'P2', 10, 'Open 24/7', 'Underground Level P2 - overflow available on P3', 'Underground parkade with 10 reserved Evo spots on level P2 and overflow on level P3'],
+    ['1018 Balsam Street', 'street', '', 2, 'Open 24/7', 'Street parking - two Evo bays by the corner', 'Street parking with 2 Evo bays by the corner, next to the mailbox'],
+    ['3361 West 10th Ave', 'parkade-above', 'L3', 10, 'Open 24/7', 'North Parkade Reserved Level 3 - overflow available on the roof', 'North parkade with 10 reserved Evo spots on Level 3 and overflow on roof (level 8)'],
+    ['2652 Maple Street', 'lot', '', 6, 'Open 7am–10pm', 'Surface lot - Evo bays near the bike racks', 'Surface lot with 6 reserved Evo spots near the bike racks'],
+    ['1260 Pine Street', 'parkade-underground', 'P1', 4, 'Open 24/7', 'Underground Level P1 - reserved bays by the stairs', 'Underground parkade with 4 reserved Evo spots on level P1, beside the stairwell'],
+    ['2207 West 12th Ave', 'street', '', 3, 'Open 24/7', 'Street parking - Evo bays on the north side', 'Street parking with 3 Evo bays on the north side of the avenue'],
+    ['1700 West 7th Ave', 'lot', '', 5, 'Open 6am–11pm', 'Surface lot - enter from the lane', 'Surface lot with 5 reserved Evo spots, entrance from the lane'],
+    ['2950 Larch Street', 'parkade-above', 'L1', 7, 'Open 24/7', 'Parkade Reserved Level 1 - overflow on Level 2', 'Parkade with 7 reserved Evo spots on Level 1 and overflow on Level 2'],
+    ['1550 West 4th Ave', 'parkade-underground', 'P1', 12, 'Open 24/7', 'Underground Level P1 - 12 reserved spots', 'Underground parkade with 12 reserved Evo spots on level P1, entrance on Yew Street'],
+  ];
+  const parking = points(parkingSpots).map((f, i) => {
+    const [street, kind, level, spots, hours, short, details] = SPOTS[i];
+    return Object.assign(f, { id: i + 1, properties: { n: i, name: `${street}${level ? ` - ${level}` : ''}: ${spots} Reserved Spots${kind === 'parkade-above' ? ' & Overflow Parking' : ''}`, short, details, hours, kind, level } });
+  });
+  const nearestParking = 3;
 
   // Plates look like the real ones (two letters, a digit, a space, two digits, a letter), all made up.
   const LETTERS = 'ABCDEFGHJKLMNPRSTUVWXYZ';
@@ -58,10 +80,13 @@ globalThis.EvoData = (() => {
     return { km, minutes: Math.max(1, Math.round(km / 5 * 60)) };
   }
 
+  // The app shows the straight line from the rider to the spot ("> 10.62 km"), not a walk.
+  const distance = i => Math.hypot(parkingSpots[i][0] - user[0], parkingSpots[i][1] - user[1]) * metersPerPt(camera.center[1], camera.zoom) / 1000;
+
   return {
-    device, camera, frame, walk, nearest, PIN, SELECTED_ZOOM,
+    device, camera, frame, walk, distance, nearest, nearestParking, PIN, SELECTED_ZOOM,
     vehicles: { type: 'FeatureCollection', features: vehicles },
-    parking: { type: 'FeatureCollection', features: points(parkingSpots) },
+    parking: { type: 'FeatureCollection', features: parking },
     charging: { type: 'FeatureCollection', features: points(chargers) },
     user: { coordinates: at(user) },
     price: { perMinute: 0.49, accessFee: 1.85, rates: [['For 1 minute', 0.49], ['1 hour', 17.99], ['1 day', 104.99], ['3 days', 264.99], ['5 days', 424.99]] },
