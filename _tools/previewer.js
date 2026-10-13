@@ -1,6 +1,7 @@
-// Product page: runs the redline storyboard live in _tools/stage.html (an iframe at 1920x1080, scaled to fit).
+// Product page: runs the redline storyboard live in _tools/stage.html (an iframe at its canvas size, scaled to fit).
+// Landscape: the wide stage (1920x1080, Before and After side by side). Portrait: layout=single, one window at the mock's size, Before then After in place.
 // Classic script so the page also works from file://. List: <product>/_shared/redlines.js (REDLINED). Deep link: #<folder>.
-// Talks to the stage with postMessage only: { redlined: 'play', redline } and { redlined: 'stop' }.
+// Talks to the stage with postMessage only: { redlined: 'play', redline } and { redlined: 'stop' }; the stage answers with its canvas size ({ redlined: 'size', w, h }).
 (() => {
   const { product, label, redlines } = REDLINED;
   const $ = selector => document.querySelector(selector);
@@ -16,10 +17,21 @@
     seg.append(b);
   }
 
-  // The stage is 1920x1080 and scaled down to the player box.
-  const fit = () => { stage.style.transform = `scale(${screen.clientWidth / 1920})`; };
-  new ResizeObserver(fit).observe(screen);
-  fit();
+  // The stage canvas is scaled down to fit the player box; the screen takes the scaled size.
+  const player = $('.player'), portrait = matchMedia('(orientation: portrait)');
+  let size = { w: 1920, h: 1080 };
+  const fit = () => {
+    const k = Math.min(player.clientWidth / size.w, player.clientHeight / size.h);
+    Object.assign(stage.style, { width: `${size.w}px`, height: `${size.h}px`, transform: `scale(${k})` });
+    Object.assign(screen.style, { width: `${size.w * k}px`, height: `${size.h * k}px` });
+  };
+  new ResizeObserver(fit).observe(player);
+  addEventListener('message', ({ source, data }) => {
+    if (source !== stage.contentWindow || data?.redlined !== 'size') return;
+    size = { w: data.w, h: data.h };
+    document.body.style.setProperty('--stage-ratio', `${size.w} / ${size.h}`);
+    fit();
+  });
 
   let current, loaded = false, visible = true;
   const send = msg => stage.contentWindow?.postMessage(msg, '*');
@@ -33,7 +45,14 @@
     send(on ? { redlined: 'play', redline: current } : { redlined: 'stop' });
   }
   stage.addEventListener('load', () => { loaded = true; play(); });
-  stage.src = `../_tools/stage.html?product=${product}`;
+  // Rotating swaps the stage for the other layout; its load handler plays the current redline again.
+  function layout() {
+    loaded = false;
+    sent = '';
+    document.body.classList.toggle('single', portrait.matches);
+    stage.src = `../_tools/stage.html?product=${product}${portrait.matches ? '&layout=single' : ''}`;
+  }
+  portrait.addEventListener('change', layout);
   new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; play(); }).observe(screen);
   document.addEventListener('visibilitychange', play);
 
@@ -72,6 +91,6 @@
     empty.textContent = 'No redlines yet.';
     empty.hidden = false;
   }
-  if (redlines.length) go(location.hash.slice(1));
+  if (redlines.length) { layout(); go(location.hash.slice(1)); }
   else showNone();
 })();

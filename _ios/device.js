@@ -4,11 +4,11 @@
 //   IosDevice.mount(appElement, { width: 390, height: 844, radius: 47.33, cutout: 'notch', safe: { top: 47, bottom: 34 } })  →  { mode, device }
 //   cutout: 'notch' (iPhone X to 16e) or 'island' (default). safe defaults to the cutout's usual insets (47 / 59 top, 34 bottom).
 //   ?cutout=none in the page URL hides the cutout (the status bar stays): calibration only, because iOS screenshots never show the notch.
-//   IosDevice.scale()  →  how much desktop mode shrinks the phone (1 elsewhere), so a map can render at the size it is shown
+//   IosDevice.scale()  →  how much the phone is scaled on screen (desktop shrinks it to fit, fullscreen fits its width to the screen; 1 in the stage), so a map can render at the size it is shown
 //   IosDevice.credit(html)  →  data credits (map tiles) shown outside the app, never inside it: the page corner on
 //   desktop, the stage corner in the stage (and so in the clip), a thin strip under the top edge that fades out on a phone, where there is no outside.
 // Modes: 'stage' (inside an iframe, as in _tools/stage.html: exact device size, no shell), 'fullscreen' (narrow
-// viewport such as a phone browser: fills the screen, real status bar and env(safe-area-inset-*)), 'desktop' (phone
+// viewport such as a phone browser: the device width scaled to the screen width, full height, real status bar and env(safe-area-inset-*)), 'desktop' (phone
 // window centred in the page, scaled down to fit).
 globalThis.IosDevice = (() => {
   const svg = (w, h, body) => `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true">${body}</svg>`;
@@ -41,8 +41,8 @@ globalThis.IosDevice = (() => {
       el('div', 'ios-status', `<span class="time">9:41</span><span class="cutout"></span><span class="icons">${ICONS.join('')}</span>`),
       el('div', 'ios-home'));
     device.append(screen);
-    if (mode === 'desktop') {
-      const fit = () => device.style.setProperty('--ios-scale', scale = Math.min(1, (innerHeight - 56) / height, (innerWidth - 56) / width));
+    if (mode !== 'stage') {
+      const fit = () => device.style.setProperty('--ios-scale', scale = mode === 'fullscreen' ? innerWidth / width : Math.min(1, (innerHeight - 56) / height, (innerWidth - 56) / width));
       addEventListener('resize', fit);
       fit();
     }

@@ -13,9 +13,10 @@ html.ios body { background: #111; }
 .ios-desktop .ios-device { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(var(--ios-scale, 1));
   box-shadow: 0 0 0 10px #050506, 0 0 0 11px #4a4b4f, 0 40px 100px -30px #000; }
 .ios-stage .ios-device { width: 100vw; height: 100vh; border-radius: 0; }
-.ios-fullscreen .ios-device { width: 100vw; height: 100dvh; border-radius: 0;
-  --safe-top: env(safe-area-inset-top, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --safe-left: env(safe-area-inset-left, 0px); --safe-right: env(safe-area-inset-right, 0px); }
+/* Fullscreen keeps the device's own width (the mocks are laid out in its pt) and scales it to the viewport width; the height fills the screen. */
+.ios-fullscreen .ios-device { --k: var(--ios-scale, 1); position: fixed; left: 0; top: 0; height: calc(100dvh / var(--k)); border-radius: 0; transform: scale(var(--k)); transform-origin: 0 0;
+  --safe-top: calc(env(safe-area-inset-top, 0px) / var(--k)); --safe-bottom: calc(env(safe-area-inset-bottom, 0px) / var(--k));
+  --safe-left: calc(env(safe-area-inset-left, 0px) / var(--k)); --safe-right: calc(env(safe-area-inset-right, 0px) / var(--k)); }
 
 .ios-status, .ios-home { position: absolute; z-index: 100; pointer-events: none; color: var(--status-ink, #000); }
 .ios-status { left: 0; right: 0; top: 0; height: var(--safe-top); display: grid; grid-template-columns: 1fr 126px 1fr; align-items: center;

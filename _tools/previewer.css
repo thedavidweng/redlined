@@ -26,9 +26,9 @@ header p { margin: 6px 0 0; max-width: 78ch; font-size: 14px; line-height: 1.5; 
 .btn.quiet { background: none; color: var(--muted); box-shadow: none; padding: 0 8px; }
 .btn.quiet:hover { color: var(--ink); }
 .player { min-height: 0; display: grid; place-items: center; }
-.screen { position: relative; max-width: 100%; max-height: 100%; aspect-ratio: 16 / 9; height: 100%; border-radius: 14px; overflow: hidden; background: #111;
+.screen { position: relative; width: 100%; height: 100%; border-radius: 14px; overflow: hidden; background: #111;  /* sized by previewer.js to the stage, scaled */
   box-shadow: 0 0 0 1px #ffffff1f, 0 30px 80px -30px #000, 0 0 0 7px #ffffff08; }
-#stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; border: 0; transform-origin: 0 0; background: #0a0a0a; }
+#stage { position: absolute; left: 0; top: 0; border: 0; transform-origin: 0 0; background: #0a0a0a; }
 .empty { position: absolute; inset: 0; display: grid; place-content: center; color: var(--muted); font-size: 15px; text-align: center; line-height: 1.6; padding: 24px; }
 .empty[hidden] { display: none; }
 .empty code { background: var(--chip); color: var(--ink-2); padding: 2px 6px; border-radius: 5px; font-size: 13px; }
@@ -42,6 +42,9 @@ nav { justify-self: center; display: flex; align-items: center; gap: 8px; max-wi
 .arrow { width: 32px; height: 32px; padding: 0; background: var(--chip); box-shadow: inset 0 0 0 1px var(--line); color: var(--ink); font-size: 15px; }
 .arrow:hover { background: var(--chip-hover); }
 button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* Portrait: the stage is one tall window, so the page scrolls and the player takes most of a screen. */
+body.single { height: auto; min-height: 100%; grid-template-rows: auto; }
+body.single .player { width: 100%; aspect-ratio: var(--stage-ratio, 3 / 4); max-height: 80svh; }
 @media (max-width: 760px) {
   body { padding: 16px; }
   header { flex-direction: column; align-items: stretch; }

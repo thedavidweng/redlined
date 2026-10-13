@@ -6,7 +6,7 @@
 // moves it steps down (3 -> 2 -> 1.5 -> 1) only if frames run slow, and sharpens again once it settles. Capable
 // devices never step down, and a 1x screen (the recording stage) is left alone. Classic script, works from file://.
 //   IosMapPerf.attach(map)
-// Pixel ratio follows the phone's real size on screen: desktop mode scales the phone down (IosDevice.scale()).
+// Pixel ratio follows the phone's real size on screen: desktop mode scales the phone down, fullscreen fits it to the screen width (IosDevice.scale()).
 globalThis.IosMapPerf = (() => {
   // Symbol fades. fadeDuration 0 forces a full label placement on every rendered frame (MapLibre Style._updatePlacement), which is
   // what costs frames while the finger pans, pinches or rotates; the default 300 ms reuses a placement and spreads new ones over frames.

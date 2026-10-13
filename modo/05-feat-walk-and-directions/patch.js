@@ -122,7 +122,7 @@
     // A tap on the map leaves the preview and nothing else (the mock would deselect the car); a tap on a pin goes through and selects it.
     root.addEventListener('click', e => {
       if (!previewing || !mapEl.contains(e.target)) return;
-      const r = mapEl.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+      const r = mapEl.getBoundingClientRect(), k = globalThis.IosDevice?.scale() ?? 1, x = (e.clientX - r.left) / k, y = (e.clientY - r.top) / k;  // screen px -> map px
       if (map.queryRenderedFeatures([[x - 20, y - 50], [x + 20, y + 6]], { layers: ['pins', 'pins-grouped'] }).length) return;
       e.stopPropagation();
       exitPreview(true);
