@@ -14,7 +14,7 @@ globalThis.REDLINED_PRODUCTS = [
     "name": "Evo",
     "label": "Evo · Map",
     "about": "Evo is a car-sharing service in Vancouver: members find a Prius on a map in the iOS app and book it for the minute, the hour or the day.",
-    "cover": null,
+    "cover": "evo/_shared/cover.webp",
     "icon": "evo/_shared/icon.png",
     "count": 3
   },
