@@ -1,0 +1,8 @@
+/* Parking level pill: sits next to the hours pill, same size and type, in the app's pale cyan. */
+.ep-row { position: absolute; left: 16px; right: 16px; display: flex; gap: 6px; }
+.pane-parking .ep-row { top: 100px; }
+.full-parking .ep-row { top: 80px; }
+.ep-row .open { position: static; }
+.ep-level { display: flex; align-items: center; gap: 4px; height: 24px; padding: 0 8px 0 6px; border-radius: 8px; background: var(--cyan-wash); color: #0087a8; font-size: 12.3px; line-height: 24px; white-space: nowrap; letter-spacing: -.01em; }
+.ep-level[hidden] { display: none; }
+.ep-level svg { flex: none; }
