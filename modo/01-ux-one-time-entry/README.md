@@ -8,9 +8,7 @@
 
 > Return type and time lived in two places, and you chose the type blind. Now one tap on the trip opens one sheet: pick up, return, SET or OPEN. A live line shows how many cars are free for it. On a car's page, the same sheet changes the return type in place.
 
-![One entry for the trip time](media/clip.gif)
-
-Upload `media/clip.mp4` to X. `clip.gif` is a fallback.
+Clip for X: `uv run _tools/record.py modo/01-ux-one-time-entry` writes `media/clip.mp4` (local, not committed).
 
 Preview: [../index.html#01-ux-one-time-entry](../index.html#01-ux-one-time-entry)
 Live: [../mock/index.html?redline=01-ux-one-time-entry](../mock/index.html?redline=01-ux-one-time-entry)

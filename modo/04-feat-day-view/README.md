@@ -8,9 +8,7 @@
 
 > A 12-hour open return runs off the edge of the hourly strip, and you can't see the free window at all. Now each day is one row, so the whole booking and everything free around it fit on screen. Drag it across midnight and it carries on in the next row.
 
-![Day view](media/clip.gif)
-
-Upload `media/clip.mp4` to X. `clip.gif` is a fallback.
+Clip for X: `uv run _tools/record.py modo/04-feat-day-view` writes `media/clip.mp4` (local, not committed).
 
 Preview: [../index.html#04-feat-day-view](../index.html#04-feat-day-view)
 Live: [../mock/index.html?redline=04-feat-day-view&state=booked](../mock/index.html?redline=04-feat-day-view&state=booked)

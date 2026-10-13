@@ -7,9 +7,7 @@
 **Caption**
 
 > The nearest SUV is taken. The "SUV" chip on its card does nothing, so you open Filters, pick the class, apply, then scan the map. Now the chips are buttons: tap SUV and the map keeps only SUVs, with a toast, and the sheet jumps to the next-nearest one.
-![Filter from chips](media/clip.gif)
-
-Upload `media/clip.mp4` to X. `clip.gif` is a fallback.
+Clip for X: `uv run _tools/record.py modo/07-feat-filter-from-chips` writes `media/clip.mp4` (local, not committed).
 
 Builds on [06](../06-ux-filter-live-count/README.md): it loads 06's patch and drives it through the Filters sheet.
 

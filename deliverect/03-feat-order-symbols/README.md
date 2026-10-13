@@ -8,9 +8,7 @@
 
 > Similar customer names like Rohan and Ronan cause constant mixups on the counter. Giving each order a simple shape that prints on the receipt makes matching instant, even on plain thermal paper.
 
-![Order symbols](media/clip.gif)
-
-Upload `media/clip.mp4` to X. `clip.gif` is a fallback.
+Clip for X: `uv run _tools/record.py deliverect/03-feat-order-symbols` writes `media/clip.mp4` (local, not committed).
 
 Preview: [../index.html#03-feat-order-symbols](../index.html#03-feat-order-symbols)
 Live: [../mock/index.html?redline=03-feat-order-symbols](../mock/index.html?redline=03-feat-order-symbols)

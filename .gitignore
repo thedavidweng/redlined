@@ -1,5 +1,5 @@
 .DS_Store
-media/.frames-*
+*/*/media/
 __pycache__/
 _site/
 .cache/

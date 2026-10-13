@@ -3,51 +3,47 @@ globalThis.REDLINED = {
   "product": "deliverect",
   "name": "Deliverect",
   "label": "Deliverect · Pickup Manager",
+  "mock": "deliverect/mock/index.html?view=manage",
+  "device": null,
   "about": "Deliverect is a SaaS platform for restaurants and food businesses.",
-  "cover": "deliverect/01-ux-swipe-to-confirm/media/cover.webp",
+  "cover": "deliverect/_shared/cover.webp",
   "icon": "deliverect/_shared/icon.png",
   "redlines": [
     {
       "n": 1,
       "folder": "01-ux-swipe-to-confirm",
       "title": "Swipe to confirm",
-      "caption": "A single tap on Picked up closes the ticket instantly with no undo. Swiping across instead keeps the same flow and stops accidental completions during a rush.",
-      "clip": true
+      "caption": "A single tap on Picked up closes the ticket instantly with no undo. Swiping across instead keeps the same flow and stops accidental completions during a rush."
     },
     {
       "n": 2,
       "folder": "02-ux-tap-twice-to-confirm",
       "title": "Tap twice to confirm",
-      "caption": "If swiping feels like too much, confirm twice instead. The first tap turns the button into Tap again for three seconds, and the second tap completes the order.",
-      "clip": true
+      "caption": "If swiping feels like too much, confirm twice instead. The first tap turns the button into Tap again for three seconds, and the second tap completes the order."
     },
     {
       "n": 3,
       "folder": "03-feat-order-symbols",
       "title": "Order symbols",
-      "caption": "Similar customer names like Rohan and Ronan cause constant mixups on the counter. Giving each order a simple shape that prints on the receipt makes matching instant, even on plain thermal paper.",
-      "clip": true
+      "caption": "Similar customer names like Rohan and Ronan cause constant mixups on the counter. Giving each order a simple shape that prints on the receipt makes matching instant, even on plain thermal paper."
     },
     {
       "n": 4,
       "folder": "04-feat-order-details",
       "title": "Order details on tap",
-      "caption": "Checking what items are in a bag should not force staff to leave the pickup screen. Tapping an order expands the items and kitchen notes right there so anyone can verify a ticket without losing their place.",
-      "clip": true
+      "caption": "Checking what items are in a bag should not force staff to leave the pickup screen. Tapping an order expands the items and kitchen notes right there so anyone can verify a ticket without losing their place."
     },
     {
       "n": 5,
       "folder": "05-ux-picked-up-feedback",
       "title": "Picked up feedback",
-      "caption": "When an order disappears with zero feedback, staff second guess whether it actually went through. Showing a quick confirmation before the row leaves removes all doubt. Here are three ways to do it.",
-      "clip": true
+      "caption": "When an order disappears with zero feedback, staff second guess whether it actually went through. Showing a quick confirmation before the row leaves removes all doubt. Here are three ways to do it."
     },
     {
       "n": 6,
       "folder": "06-ux-channel-tabs",
       "title": "Channel tabs",
-      "caption": "Drivers always announce their app first, but filtering by channel takes three clicks in a dropdown. Dedicated tabs with order counts cut that down to a single tap.",
-      "clip": true
+      "caption": "Drivers always announce their app first, but filtering by channel takes three clicks in a dropdown. Dedicated tabs with order counts cut that down to a single tap."
     }
   ]
 };

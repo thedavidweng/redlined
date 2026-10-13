@@ -8,9 +8,7 @@
 
 > Your booking already shows as dark dots on the strip, but changing it sends you through a sheet of wheels, twice. Now the dots are one block: drag it to move the trip, drag an end to change pick up or return. It snaps to 15 minutes and stops at unavailable times.
 
-![Drag the booking](media/clip.gif)
-
-Upload `media/clip.mp4` to X. `clip.gif` is a fallback.
+Clip for X: `uv run _tools/record.py modo/03-feat-drag-booking` writes `media/clip.mp4` (local, not committed).
 
 Preview: [../index.html#03-feat-drag-booking](../index.html#03-feat-drag-booking)
 Live: [../mock/index.html?redline=03-feat-drag-booking&state=booked](../mock/index.html?redline=03-feat-drag-booking&state=booked)

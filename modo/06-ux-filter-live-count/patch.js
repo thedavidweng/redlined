@@ -56,6 +56,7 @@
     const disc = count => {  // the mock only drew discs for its own counts (2, 3); a filtered cluster can drop to 1
       const id = `modo-cluster-${count}`;
       if (!map.hasImage(id)) IosMapImages.load(ModoAssets.cluster).then(img => {
+        if (map.hasImage(id)) return;  // another feed got here first
         IosMapImages.draw(map, id, 32, 32, g => { g.drawImage(img, 0, 0, 32, 32); g.fillStyle = '#fff'; g.font = '500 20px Roboto, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(count, 16, 16.6); });
         feed();  // feed again, now the image exists
       });

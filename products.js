@@ -5,7 +5,7 @@ globalThis.REDLINED_PRODUCTS = [
     "name": "Deliverect",
     "label": "Deliverect · Pickup Manager",
     "about": "Deliverect is a SaaS platform for restaurants and food businesses.",
-    "cover": "deliverect/01-ux-swipe-to-confirm/media/cover.webp",
+    "cover": "deliverect/_shared/cover.webp",
     "icon": "deliverect/_shared/icon.png",
     "count": 6
   },
@@ -23,7 +23,7 @@ globalThis.REDLINED_PRODUCTS = [
     "name": "Lime",
     "label": "Lime · Map",
     "about": "Lime is a micro-mobility company that rents shared electric scooters and bikes in cities around the world.",
-    "cover": "lime/01-fix-range-in-km/media/cover.webp",
+    "cover": "lime/_shared/cover.webp",
     "icon": "lime/_shared/icon.png",
     "count": 1
   },
@@ -41,7 +41,7 @@ globalThis.REDLINED_PRODUCTS = [
     "name": "Modo",
     "label": "Modo · Map",
     "about": "Modo is a car-share co-operative in Vancouver, Canada: members book shared cars and bikes by the hour from a map in its iOS app.",
-    "cover": "modo/01-ux-one-time-entry/media/cover.webp",
+    "cover": "modo/_shared/cover.webp",
     "icon": "modo/_shared/icon.png",
     "count": 7
   }

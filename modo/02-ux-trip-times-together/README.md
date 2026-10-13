@@ -8,9 +8,7 @@
 
 > Four places on one page show your trip's times, split by a button, BOOK and a row of numbers. To change the time you scroll past all of it. Now the strip, pick up, return and free window sit in one block, and each time opens its editor.
 
-![Trip times together](media/clip.gif)
-
-Upload `media/clip.mp4` to X. `clip.gif` is a fallback.
+Clip for X: `uv run _tools/record.py modo/02-ux-trip-times-together` writes `media/clip.mp4` (local, not committed).
 
 Preview: [../index.html#02-ux-trip-times-together](../index.html#02-ux-trip-times-together)
 Live: [../mock/index.html?redline=02-ux-trip-times-together&state=booked](../mock/index.html?redline=02-ux-trip-times-together&state=booked)

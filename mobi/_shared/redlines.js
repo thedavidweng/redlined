@@ -3,6 +3,8 @@ globalThis.REDLINED = {
   "product": "mobi",
   "name": "Mobi by Rogers",
   "label": "Mobi by Rogers · Map",
+  "mock": "mobi/mock/index.html",
+  "device": "iphone-16e",
   "about": "Mobi by Rogers is Vancouver's public bike share, sponsored by Rogers.",
   "cover": null,
   "icon": "mobi/_shared/icon.png",

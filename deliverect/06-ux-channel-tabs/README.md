@@ -8,9 +8,7 @@
 
 > Drivers always announce their app first, but filtering by channel takes three clicks in a dropdown. Dedicated tabs with order counts cut that down to a single tap.
 
-![Channel tabs](media/clip.gif)
-
-Upload `media/clip.mp4` to X. `clip.gif` is a fallback.
+Clip for X: `uv run _tools/record.py deliverect/06-ux-channel-tabs` writes `media/clip.mp4` (local, not committed).
 
 Preview: [../index.html#06-ux-channel-tabs](../index.html#06-ux-channel-tabs)
 Live: [../mock/index.html?redline=06-ux-channel-tabs](../mock/index.html?redline=06-ux-channel-tabs)

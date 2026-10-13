@@ -52,7 +52,7 @@ globalThis.IosDevice = (() => {
 
   let current = null, scale = 1;
   function credit(html) {
-    if (current === 'stage') { try { parent.stage?.credit?.(html); } catch {} return; }  // cross-origin parent: nothing to do
+    if (current === 'stage') { parent.postMessage({ redlined: 'credit', html }, '*'); return; }  // the stage draws it (from file:// it cannot be reached directly)
     const note = el('div', 'ios-credit', html);
     document.body.append(note);
     if (current === 'fullscreen') setTimeout(() => note.classList.add('gone'), 5000);

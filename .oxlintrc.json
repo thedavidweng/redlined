@@ -23,6 +23,8 @@
   "globals": {
     "maplibregl": "readonly",
     "RedlineMotion": "readonly",
+    "REDLINED": "readonly",
+    "redlineClip": "readonly",
     "RedlineFixtures": "readonly",
     "redlinePatch": "readonly",
     "IosState": "readonly",

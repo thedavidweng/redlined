@@ -1,4 +1,4 @@
-# Publishes the site to GitHub Pages on every push to main. Build: _tools/build.py (slim copy of the repo + web-encoded clips).
+# Publishes the site to GitHub Pages on every push to main. Build: _tools/build.py (slim copy of the repo: pages, mocks, the live stage; no recorded clips).
 name: Pages
 
 on:
@@ -33,13 +33,6 @@ jobs:
           pipx run ruff==0.17.0 check _tools
           npx -y oxlint@1.87.0
           node deliverect/mock/model.test.mjs
-      - uses: actions/cache@v4
-        with:
-          path: .cache/web-clips
-          key: web-clips-${{ hashFiles('**/media/clip.mp4') }}
-          restore-keys: web-clips-
-      - name: Install ffmpeg
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
       - name: Build
         run: python3 _tools/build.py
       - uses: actions/configure-pages@v5

@@ -12,6 +12,8 @@
   if (redline) for (const src of ['../_shared/fixtures.js', '../_shared/motion.js', ...(after ? [`../${redline}/patch.js`] : [])]) await loadScript(src);
   const [fixtures, motion, patch] = redline ? [RedlineFixtures, RedlineMotion, after ? redlinePatch : null] : [];
   if (patch) document.head.append(Object.assign(document.createElement('link'), { rel: 'stylesheet', href: `../${redline}/patch.css` }));
+  // Framed (the stage): hide the app chrome so the window shows just the order list, and add the outlines the clips use. Last in <head>, so it wins over the patch's rules.
+  if (window.top !== window) document.head.append(Object.assign(document.createElement('link'), { rel: 'stylesheet', href: '../_shared/frame.css' }));
 
   let pickupItems = orders;
   let manageItems = redline ? fixtures.redlineOrders : managedOrders;

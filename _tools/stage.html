@@ -1,6 +1,10 @@
 <!doctype html>
-<!-- Generic before/after stage. Recording: driven by _tools/record.py. Manual preview:
-     /_tools/stage.html?product=deliverect&redline=01-ux-swipe-to-confirm -->
+<!-- Generic before/after stage: plays one redline's storyboard (<redline>/clip.js, run by _tools/play.js inside each mock) side by side, then loops.
+     Works from file:// and from a static host: only relative paths, a script tag instead of fetch, postMessage instead of reaching into the iframes.
+       stage.html?product=modo&redline=03-feat-drag-booking            loops (manual preview, the product previewer embeds this)
+       stage.html?product=modo&redline=03-feat-drag-booking&once=1     one pass, then stage.finished = true (_tools/record.py)
+     Without ?redline= it waits for postMessage({ redlined: 'play', redline }) / ({ redlined: 'stop' }) from the embedding page.
+     Only one mock is live at a time; the other panel shows a frozen still. Drawn here, over the mocks: finger, ripple, ring, receipt, credit, dimming. -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -28,10 +32,10 @@
   .after .tag { color: var(--ink); }
   .window { position: relative; flex: 1; border-radius: 18px; overflow: hidden; background: white;
     box-shadow: 0 0 0 1px #ffffff1f, 0 30px 80px -24px #000000e6, 0 0 0 9px #ffffff08; }
-  /* Portrait phone products (stage.json has "device"): two phones at device size, scaled down only if they don't fit, centred. */
+  /* Portrait phone products (REDLINED.device, from stage.json): two phones at device size, scaled down only if they don't fit, centred. */
   body.device .panels { grid-template-columns: repeat(2, max-content); justify-content: center; column-gap: 220px; }
   body.device .window { flex: none; width: var(--win-w); height: var(--win-h); border-radius: var(--win-r); }
-  .window iframe { position: absolute; top: 0; left: 0; width: 1000px; height: 1000px; border: 0; transform-origin: 0 0; }
+  .window iframe { position: absolute; top: 0; left: 0; width: 1000px; height: 1000px; border: 0; transform-origin: 0 0; pointer-events: none; }
   /* Highlight ring drawn in the stage, over the iframe and under the finger. Same language as Deliverect's cap-hl/bad/good: outline tightens 8px to 3px and fades in. */
   .ring { position: absolute; z-index: 2; pointer-events: none; border-radius: 12px; outline: 2px solid transparent; outline-offset: 8px; opacity: 0;
     transition: opacity .25s ease, outline-color .25s ease, outline-offset .35s var(--ease); }
@@ -58,8 +62,9 @@
   .credit a { color: inherit; text-decoration: none; }
   @keyframes ripple { from { opacity: .9; scale: .7; } to { opacity: 0; scale: 1.9; } }
 </style>
+<script src="../_ios/devices.js"></script>
 </head>
-<body>
+<body class="curtain">
   <header>
     <div class="brand"><span class="brand-mark"></span><span class="brand-word">Redlined</span></div>
     <div class="meta"><span id="product"></span><span class="num" id="number"></span></div>
@@ -67,113 +72,181 @@
   <div class="panels">
     <section class="panel before" id="before">
       <div class="label"><span class="tag">Before</span></div>
-      <div class="window"><iframe></iframe><div class="receipt"></div></div>
+      <div class="window"><div class="ring"></div><div class="receipt"></div></div>
     </section>
     <section class="panel after" id="after">
       <div class="label"><span class="tag">After</span></div>
-      <div class="window"><iframe></iframe><div class="receipt"></div></div>
+      <div class="window"><div class="ring"></div><div class="receipt"></div></div>
     </section>
   </div>
   <div class="credit" id="credit"></div>
   <div class="finger" id="finger"></div>
 <script>
   const params = new URLSearchParams(location.search);
-  let product = params.get('product'), redline = null, config = null, frameCss = '', redlines = [];
-  const ready = product && fetch(`/${product}/_shared/stage.json`).then(r => r.json()).then(async c => {
-    config = c;
-    if (typeof c.device === 'string') {  // a device name from _ios/devices.js, the one place sizes are written
-      await new Promise((resolve, reject) => document.head.append(Object.assign(document.createElement('script'), { src: '/_ios/devices.js', onload: resolve, onerror: reject })));
-      if (!IosDevices[c.device]) throw new Error(`stage.json: unknown device "${c.device}"`);
-      c.device = IosDevices[c.device];
-    }
-    if (c.frame_css) frameCss = await fetch(`/${c.frame_css}`).then(r => r.text());
-    if (c.device) {
-      const s = Math.min(1, 864 / c.device.height);  // 864 = panel height below the 52px label
+  const product = /^[a-z0-9-]+$/.test(params.get('product') ?? '') ? params.get('product') : null;
+  const once = params.get('once') === '1';
+  const $ = selector => document.querySelector(selector);
+  let config = null, redlines = [], redline = null, gen = 0, waiters = new Set(), finger = { x: 960, y: 1180 };
+  const STALE = new Error('stopped');  // thrown into whatever a stop() interrupts
+
+  // Config comes from <product>/_shared/redlines.js (generated by sync.py), loaded by script tag so it also works from file://.
+  const ready = product && new Promise((resolve, reject) => document.head.append(Object.assign(document.createElement('script'), { src: `../${product}/_shared/redlines.js`, onload: resolve, onerror: reject }))).then(() => {
+    config = REDLINED;
+    redlines = config.redlines;
+    const device = typeof config.device === 'string' ? IosDevices[config.device] : null;  // a name from _ios/devices.js, the one place sizes are written
+    if (config.device && !device) throw new Error(`stage.json: unknown device "${config.device}"`);
+    config.device = device;
+    if (device) {
+      const s = Math.min(1, 864 / device.height);  // 864 = panel height below the 52px label
       document.body.classList.add('device');
-      for (const [name, value] of [['w', c.device.width], ['h', c.device.height], ['r', c.device.radius]]) document.body.style.setProperty(`--win-${name}`, `${value * s}px`);
+      for (const [name, value] of [['w', device.width], ['h', device.height], ['r', device.radius]]) document.body.style.setProperty(`--win-${name}`, `${value * s}px`);
     }
-    redlines = await new Promise((resolve, reject) => document.head.append(Object.assign(document.createElement('script'), {
-      src: `/${product}/_shared/redlines.js`, onload: () => resolve(REDLINED.redlines), onerror: reject })));
     // "Deliverect Pickup Manager": the product in full weight, the surface after it. No separator glyph.
-    const [name, ...rest] = (c.label ?? c.name).split(' · ');
-    document.querySelector('#product').innerHTML = `<b>${name}</b>${rest.map(part => ` ${part}`).join('')}`;
+    const [name, ...rest] = (config.label ?? config.name).split(' · ');
+    $('#product').innerHTML = `<b>${name}</b>${rest.map(part => ` ${part}`).join('')}`;
   });
-  function load(side) {
-    const frame = document.querySelector(`#${side} iframe`);
-    const box = frame.parentElement.getBoundingClientRect();
+
+  const now = () => Date.now() / 1000;
+  const sleep = s => { const g = gen; return new Promise((resolve, reject) => setTimeout(() => g === gen ? resolve() : reject(STALE), s * 1000)); };
+  const waitFor = (frame, type) => new Promise((resolve, reject) => waiters.add({ frame, type, resolve, reject }));
+  const frames = () => [...document.querySelectorAll('.window iframe')];
+  const scaleOf = frame => frame.getBoundingClientRect().width / frame.offsetWidth;
+  const toStage = (frame, x, y) => { const r = frame.getBoundingClientRect(), k = scaleOf(frame); return [r.left + x * k, r.top + y * k]; };
+  const toMock = (frame, x, y) => { const r = frame.getBoundingClientRect(), k = scaleOf(frame); return [(x - r.left) / k, (y - r.top) / k]; };
+
+  // A mock in a panel. mode 'still': loads, freezes itself and reports 'frozen'. 'live': reports 'ready', then plays on 'run'.
+  // `under` stacks the new frame below a frozen one in the same window, so the swap never flashes.
+  function mount(side, mode, under) {
+    const win = $(`#${side} .window`), frame = document.createElement('iframe'), box = win.getBoundingClientRect();
     const scale = config.device ? box.width / config.device.width : box.width / 1000;
     frame.style.transform = `scale(${scale})`;
     if (config.device) frame.style.width = `${config.device.width}px`;
     frame.style.height = `${box.height / scale}px`;
-    return new Promise(resolve => {
-      frame.onload = () => {
-        if (frameCss) {
-          const style = frame.contentDocument.createElement('style');
-          style.textContent = frameCss;
-          frame.contentDocument.head.append(style);
-        }
-        // Retry any image that failed under the burst of parallel requests.
-        for (const img of frame.contentDocument.images) if (img.complete && !img.naturalWidth) img.src = img.src.split('?')[0] + '?r=' + Date.now();
-        setTimeout(resolve, 400);
-      };
-      frame.src = `/${config.mock}${config.mock.includes('?') ? '&' : '?'}redline=${redline}&side=${side}&t=${Date.now()}`;
-    });
+    const url = new URL(`../${config.mock}`, location.href);
+    for (const [key, value] of [['redline', redline], ['side', side], ['play', mode], ...new URLSearchParams(extra)]) url.searchParams.set(key, value);
+    frame.src = url;
+    under ? under.before(frame) : win.prepend(frame);
+    return frame;
   }
-  window.stage = {
-    async setup({ redline: name }) {
+  let extra = '';  // the storyboard's `query`: extra mock URL params (e.g. state=booked), read from clip.js by script tag
+
+  function send(frame, message) { frame.contentWindow.postMessage(message, '*'); }
+
+  function reset() {
+    for (const frame of frames()) frame.remove();  // a removed iframe takes its timers and WebGL contexts with it
+    for (const side of ['before', 'after']) { stage.receipt(side, null); stage.ring(side, null); }
+    stage.focus(null);
+    stage.finger(960, 1180, false);
+  }
+
+  async function pass() {
+    reset();
+    stage.marks = [];
+    const after = mount('after', 'still');
+    await waitFor(after, 'frozen');
+    const before = mount('before', 'live');
+    await waitFor(before, 'ready');
+    // Intro: the curtain lifts, the panels settle, then the Before side starts.
+    stage.marks.push({ kind: 'start', t: now() });
+    stage.curtain(false);
+    await sleep(0.9);
+    stage.focus('before');
+    await sleep(0.5);
+    let done = waitFor(before, 'done');
+    send(before, { redlined: 'run', from: toMock(before, finger.x, finger.y), exit: null });
+    await done;
+    // Hand over: Before freezes where it ended, a fresh After starts under the frozen one. The recorder cuts that wait.
+    const frozen = waitFor(before, 'frozen');
+    send(before, { redlined: 'freeze' });
+    stage.focus('after');
+    const t0 = now();
+    const fresh = mount('after', 'live', after);
+    await Promise.all([frozen, waitFor(fresh, 'ready')]);
+    after.remove();
+    stage.marks.push({ kind: 'cut', t0, t1: now() });
+    done = waitFor(fresh, 'done');
+    send(fresh, { redlined: 'run', from: toMock(fresh, finger.x, finger.y), exit: toMock(fresh, finger.x, 1180) });
+    await done;
+    // Outro: the finger has left (play.js), hold the end, close the curtain.
+    stage.focus(null);
+    await sleep(1.6);
+    stage.curtain(true);
+    await sleep(0.6);
+  }
+
+  async function loop(name) {
+    const g = gen;
+    try {
       await ready;
+      if (g !== gen) return;
       redline = name;
       // Posting number only; the folder name and explanations belong in the caption.
       const n = redlines.find(r => r.folder === name)?.n;
-      document.querySelector('#number').innerHTML = n ? `No.<b>${String(n).padStart(2, '0')}</b>` : '';
-      await Promise.all([load('before'), load('after')]);
+      $('#number').innerHTML = n ? `No.<b>${String(n).padStart(2, '0')}</b>` : '';
+      // The storyboard may ask for extra mock params (query); the stage reads them from clip.js itself, a script tag works across origins.
+      extra = await new Promise(resolve => {
+        document.head.append(Object.assign(document.createElement('script'), { src: `../${product}/${name}/clip.js`, onload: () => resolve(globalThis.redlineClip?.query ?? ''), onerror: () => resolve('') }));
+      });
+      globalThis.redlineClip = undefined;
+      if (g !== gen) return;
+      do { await pass(); } while (!once);
+      stage.finished = true;
+    } catch (error) {
+      if (error === STALE) return;
+      console.error(error);
+      stage.error = String(error);
+    }
+  }
+
+  window.stage = {
+    finished: false,
+    marks: [],  // {kind:'start', t} when the curtain lifts, {kind:'cut', t0, t1} for waits the recorder should drop (seconds, Date.now()/1000)
+    // Destroys both mocks at once and ignores anything they still say.
+    stop() {
+      gen++;
+      for (const w of waiters) w.reject(STALE);
+      waiters.clear();
+      reset();
+      stage.curtain(true);
+      stage.finished = false;
     },
-    reload: load,
+    // Switching redline from a running pass: fade the panels out first, then restart.
+    async play(name) {
+      const running = frames().length > 0 && !document.body.classList.contains('curtain');
+      const g = ++gen;
+      for (const w of waiters) w.reject(STALE);
+      waiters.clear();
+      stage.finished = false;
+      for (const frame of frames()) frame.dataset.stale = '';  // no more messages from these
+      if (running) { stage.curtain(true); await new Promise(resolve => setTimeout(resolve, 500)); }
+      if (g === gen) loop(name);
+    },
     focus(side) {
-      for (const s of ['before', 'after']) document.querySelector(`#${s}`).classList.toggle('dim', side && s !== side);
+      for (const s of ['before', 'after']) $(`#${s}`).classList.toggle('dim', side && s !== side);
     },
     receipt(side, html) {
-      const el = document.querySelector(`#${side} .receipt`);
+      const el = $(`#${side} .receipt`);
       if (html) el.innerHTML = html;
       el.classList.toggle('on', Boolean(html));
     },
-    highlight(side, name, cls) {
-      const doc = document.querySelector(`#${side} iframe`).contentDocument;
-      for (const row of doc.querySelectorAll('.manage-row')) {
-        row.classList.remove('cap-hl', 'cap-bad', 'cap-good');
-        if (name && row.textContent.includes(name)) row.classList.add(cls);
-      }
-    },
-    // Rings an element of the mock from the stage's own DOM (nothing is injected into the mock). tone: 'hl' | 'bad' | 'good'; null or '' removes it.
-    // While visible it follows the element every frame (sheet springs, scrolling); hidden, the loop stops.
-    ring(side, selector, tone) {
-      const win = document.querySelector(`#${side} .window`), frame = win.querySelector('iframe');
-      let el = win.querySelector('.ring');
-      if (!el) { el = document.createElement('div'); el.className = 'ring'; frame.after(el); }
-      cancelAnimationFrame(el.raf);
-      if (!selector || !tone) { el.classList.remove('on'); return; }
+    // Outline around an element of the mock, drawn here, over the iframe and under the finger. rect is in the window's own px (the iframe's offset
+    // and scale already applied), or null to remove it. tone: 'hl' | 'bad' | 'good'. Same language as Deliverect's cap-hl/bad/good: the outline tightens 8px to 3px and fades in.
+    ring(side, rect, tone) {
+      const el = $(`#${side} .ring`), pad = 4;  // breathing room between the element and the outline's resting position
+      if (!rect) { el.classList.remove('on'); return; }
       el.classList.remove('hl', 'bad', 'good');
       el.classList.add(tone);
-      const pad = 4;  // breathing room between the element and the outline's resting position
-      const place = () => {
-        const target = frame.contentDocument.querySelector(selector);
-        if (target) {
-          const r = target.getBoundingClientRect(), k = frame.getBoundingClientRect().width / frame.offsetWidth;
-          Object.assign(el.style, { left: `${r.left * k - pad}px`, top: `${r.top * k - pad}px`, width: `${r.width * k + 2 * pad}px`, height: `${r.height * k + 2 * pad}px` });
-        }
-        el.raf = requestAnimationFrame(place);
-      };
-      place();
-      void el.offsetWidth;  // commit the 8px start so the tighten-in animates
-      el.classList.add('on');
+      Object.assign(el.style, { left: `${rect.left - pad}px`, top: `${rect.top - pad}px`, width: `${rect.width + 2 * pad}px`, height: `${rect.height + 2 * pad}px` });
+      if (!el.classList.contains('on')) { void el.offsetWidth; el.classList.add('on'); }  // commit the 8px start so the tighten-in animates
     },
     finger(x, y, on = true) {
-      const f = document.querySelector('#finger');
+      const f = $('#finger');
+      finger = { x, y };
       f.style.translate = `${x}px ${y}px`;
       f.classList.toggle('on', on);
     },
     press(down) {
-      const f = document.querySelector('#finger');
+      const f = $('#finger');
       f.classList.toggle('down', down);
       if (down) {
         const r = document.createElement('div');
@@ -183,13 +256,33 @@
         setTimeout(() => r.remove(), 600);
       }
     },
-    // Data credits a mock must show but the real app doesn't (map tiles): IosDevice.credit() hands them up here.
-    credit(html) { document.querySelector('#credit').innerHTML = html; },
+    // Data credits a mock must show but the real app doesn't (map tiles): IosDevice.credit() posts them here.
+    credit(html) { $('#credit').innerHTML = html; },
     // Fades only the panels, so the brand and backdrop hold still across the loop seam.
     curtain(on) { document.body.classList.toggle('curtain', on); },
   };
-  // Manual preview: opening the stage with ?redline= shows the pair straight away.
-  if (params.get('redline')) window.stage.setup({ redline: params.get('redline') });
+
+  // Everything the mocks say arrives here; the sender's frame tells which side it is.
+  addEventListener('message', ({ source, data }) => {
+    if (!data?.redlined) return;
+    if (source === parent && parent !== window) {
+      if (data.redlined === 'play') stage.play(data.redline);
+      if (data.redlined === 'stop') stage.stop();
+      return;
+    }
+    const frame = frames().find(f => f.contentWindow === source);
+    if (!frame || 'stale' in frame.dataset) return;
+    const side = frame.closest('.panel').id, k = scaleOf(frame);
+    for (const w of [...waiters]) if (w.frame === frame && w.type === data.redlined) { waiters.delete(w); w.resolve(); }
+    if (data.redlined === 'finger') stage.finger(...toStage(frame, data.x, data.y), data.on);
+    if (data.redlined === 'press') stage.press(data.down);
+    if (data.redlined === 'ring') stage.ring(side, data.rect && Object.fromEntries(Object.entries(data.rect).map(([key, value]) => [key, value * k])), data.tone);
+    if (data.redlined === 'receipt') stage.receipt(side, data.html);
+    if (data.redlined === 'credit') stage.credit(data.html);
+  });
+
+  // Manual preview and the recorder: ?redline= starts straight away.
+  if (params.get('redline')) stage.play(params.get('redline'));
 </script>
 </body>
 </html>

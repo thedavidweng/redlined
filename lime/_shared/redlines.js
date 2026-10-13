@@ -3,16 +3,17 @@ globalThis.REDLINED = {
   "product": "lime",
   "name": "Lime",
   "label": "Lime · Map",
+  "mock": "lime/mock/index.html",
+  "device": "iphone-16e",
   "about": "Lime is a micro-mobility company that rents shared electric scooters and bikes in cities around the world.",
-  "cover": "lime/01-fix-range-in-km/media/cover.webp",
+  "cover": "lime/_shared/cover.webp",
   "icon": "lime/_shared/icon.png",
   "redlines": [
     {
       "n": 1,
       "folder": "01-fix-range-in-km",
       "title": "Range in kilometres",
-      "caption": "The price on this sheet is in Canadian dollars, but the range is in miles. Canada measures in kilometres, so 13 mi becomes 21 km. Same scooter, same sheet, one less sum to do before you ride.",
-      "clip": true
+      "caption": "The price on this sheet is in Canadian dollars, but the range is in miles. Canada measures in kilometres, so 13 mi becomes 21 km. Same scooter, same sheet, one less sum to do before you ride."
     }
   ]
 };

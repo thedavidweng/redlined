@@ -3,6 +3,8 @@ globalThis.REDLINED = {
   "product": "evo",
   "name": "Evo",
   "label": "Evo · Map",
+  "mock": "evo/mock/index.html",
+  "device": "iphone-16e",
   "about": "Evo is a car-sharing service in Vancouver: members find a Prius on a map in the iOS app and book it for the minute, the hour or the day.",
   "cover": null,
   "icon": "evo/_shared/icon.png",

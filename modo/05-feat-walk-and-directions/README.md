@@ -10,9 +10,7 @@
 
 Routes are precomputed (`routes.js`, from `routes.py` and `_tools/walk_routes.py`: OSRM foot routing on OpenStreetMap data), so the page works from disk; the real app would ask a routing API. Time and distance are the router's. Directions open the real maps URLs in a new tab.
 
-![Walk and directions](media/clip.gif)
-
-Upload `media/clip.mp4` to X. `clip.gif` is a fallback.
+Clip for X: `uv run _tools/record.py modo/05-feat-walk-and-directions` writes `media/clip.mp4` (local, not committed).
 
 Preview: [../index.html#05-feat-walk-and-directions](../index.html#05-feat-walk-and-directions)
 Live: [../mock/index.html?redline=05-feat-walk-and-directions](../mock/index.html?redline=05-feat-walk-and-directions)

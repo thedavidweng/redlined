@@ -1,6 +1,7 @@
 // Keeps a MapLibre map smooth on weak GPUs.
 //   new maplibregl.Map(IosMapPerf.options({ container: 'map', ... }))   shared Map options (see options() below)
 //   IosMapPerf.attach(map)                                              pixel ratio and label fades while the camera moves
+//   IosMapPerf.maps                                                     every attached map (_tools/play.js freezes and waits on them)
 // Pixel ratio: at rest the map renders at the screen's full pixel ratio; while the camera
 // moves it steps down (3 -> 2 -> 1.5 -> 1) only if frames run slow, and sharpens again once it settles. Capable
 // devices never step down, and a 1x screen (the recording stage) is left alone. Classic script, works from file://.
@@ -17,7 +18,10 @@ globalThis.IosMapPerf = (() => {
 
   const SLOW = 18, BUDGET = 14, WINDOW = 5, SETTLE = 160;  // ms: mean frame time that steps down, frame time aimed for, frames averaged, rest before sharpening
 
+  const maps = [];
+
   function attach(map) {
+    maps.push(map);
     // rest: full ratio. Moving: from at most 2, down the ladder as far as the device needs.
     const ratios = () => {
       const rest = devicePixelRatio * (globalThis.IosDevice?.scale() ?? 1);
@@ -71,5 +75,5 @@ globalThis.IosMapPerf = (() => {
     apply(rest);
   }
 
-  return { attach, options };
+  return { attach, options, maps };
 })();

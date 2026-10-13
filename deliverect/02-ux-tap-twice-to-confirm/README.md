@@ -8,9 +8,7 @@
 
 > If swiping feels like too much, confirm twice instead. The first tap turns the button into Tap again for three seconds, and the second tap completes the order.
 
-![Tap twice to confirm](media/clip.gif)
-
-Upload `media/clip.mp4` to X. `clip.gif` is a fallback.
+Clip for X: `uv run _tools/record.py deliverect/02-ux-tap-twice-to-confirm` writes `media/clip.mp4` (local, not committed).
 
 Preview: [../index.html#02-ux-tap-twice-to-confirm](../index.html#02-ux-tap-twice-to-confirm)
 Live: [../mock/index.html?redline=02-ux-tap-twice-to-confirm](../mock/index.html?redline=02-ux-tap-twice-to-confirm)

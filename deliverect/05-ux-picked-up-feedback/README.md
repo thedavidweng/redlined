@@ -8,9 +8,7 @@
 
 > When an order disappears with zero feedback, staff second guess whether it actually went through. Showing a quick confirmation before the row leaves removes all doubt. Here are three ways to do it.
 
-![Picked up feedback](media/clip.gif)
-
-Upload `media/clip.mp4` to X. `clip.gif` is a fallback.
+Clip for X: `uv run _tools/record.py deliverect/05-ux-picked-up-feedback` writes `media/clip.mp4` (local, not committed).
 
 Preview: [../index.html#05-ux-picked-up-feedback](../index.html#05-ux-picked-up-feedback)
 Live: [../mock/index.html?redline=05-ux-picked-up-feedback](../mock/index.html?redline=05-ux-picked-up-feedback)

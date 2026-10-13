@@ -8,9 +8,7 @@
 
 > A single tap on Picked up closes the ticket instantly with no undo. Swiping across instead keeps the same flow and stops accidental completions during a rush.
 
-![Swipe to confirm](media/clip.gif)
-
-Upload `media/clip.mp4` to X. `clip.gif` is a fallback.
+Clip for X: `uv run _tools/record.py deliverect/01-ux-swipe-to-confirm` writes `media/clip.mp4` (local, not committed).
 
 Preview: [../index.html#01-ux-swipe-to-confirm](../index.html#01-ux-swipe-to-confirm)
 Live: [../mock/index.html?redline=01-ux-swipe-to-confirm](../mock/index.html?redline=01-ux-swipe-to-confirm)
