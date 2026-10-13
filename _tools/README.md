@@ -33,4 +33,4 @@ Director: `x`, `y`, `wait(s)`, `until(fn)`, `find(selector, text)` (first match 
 
 Pass order: curtain on; After is loaded frozen (`play=still`: map snapshot, animations paused, WebGL context released) and Before runs live; when Before is done it is frozen, After goes live under it and runs; then the finger leaves, a pause, curtain, and either loop or `stage.finished`. Only one mock is ever live, so only one WebGL map renders.
 
-`walk_routes.py`: precomputes foot routes from one point to many (public OSRM foot router, sequential) into a classic script, so a mock draws real walking routes without a runtime fetch: `uv run python _tools/walk_routes.py <in.json> <out.js> <GlobalName>`, with `in.json` = `{"from": [lng, lat], "to": [[lng, lat], ...]}`.
+`walk_routes.py`: precomputes routes from one point to many (public OSRM router, sequential; foot by default, `--profile car` for driving, `--names` adds the end street) into a classic script, so a mock draws real routes without a runtime fetch: `uv run python _tools/walk_routes.py <in.json> <out.js> <GlobalName> [--profile foot|car] [--names]`, with `in.json` = `{"from": [lng, lat], "to": [[lng, lat], ...]}`.

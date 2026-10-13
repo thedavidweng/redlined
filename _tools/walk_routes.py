@@ -1,15 +1,20 @@
-"""Precompute walking routes along streets, so mocks need no runtime fetch (pages work from file://).
+"""Precompute routes along streets, so mocks need no runtime fetch (pages work from file://). Walking by default, driving with --profile car.
 
-    uv run python _tools/walk_routes.py <in.json> <out.js> <GlobalName>
+    uv run python _tools/walk_routes.py <in.json> <out.js> <GlobalName> [--profile foot|car] [--names]
 
 in.json:  {"from": [lng, lat], "to": [[lng, lat], ...]}
 out.js:   classic script, globalThis.<GlobalName> = [{ "distance": m, "duration": s, "coordinates": [[lng, lat], ...] }, ...]
           (index = position in "to"; the line is trimmed to start and end exactly at the given points, see trim()).
-Router: OSM Germany foot profile (routing.openstreetmap.de/routed-foot), queried one at a time with a short delay.
+          --names adds "name": the street the router snapped the end point to ("" if unnamed), for labels.
+Router: OSM Germany (routing.openstreetmap.de), queried one at a time with a short delay. Profiles: foot (default, routed-foot) and
+car (routed-car, driving: one-ways and turn rules apply, no live traffic).
 """
 import json, math, sys, time, urllib.request
 
-URL = 'https://routing.openstreetmap.de/routed-foot/route/v1/foot/{},{};{},{}?overview=full&geometries=geojson'
+PROFILES = {'foot': 'routed-foot/route/v1/foot', 'car': 'routed-car/route/v1/driving'}
+URL = 'https://routing.openstreetmap.de/{}/{},{};{},{}?overview=full&geometries=geojson'
+LABELS = {'foot': 'Walking routes from routing.openstreetmap.de (OSRM foot profile, OpenStreetMap data).',
+          'car': 'Driving routes from routing.openstreetmap.de (OSRM car profile, OpenStreetMap data).'}
 
 
 def closest(line, p):
@@ -37,12 +42,13 @@ def trim(line, a, b):
     return [a, [round(p[0], 6), round(p[1], 6)]] + mid + [[round(q[0], 6), round(q[1], 6)], b]
 
 
-def route(a, b):
-    req = urllib.request.Request(URL.format(*a, *b), headers={'User-Agent': 'redlined-walk-routes/1.0'})
+def route(a, b, profile='foot', names=False):
+    req = urllib.request.Request(URL.format(PROFILES[profile], *a, *b), headers={'User-Agent': 'redlined-walk-routes/1.0'})
     for attempt in range(4):
         try:
             with urllib.request.urlopen(req, timeout=30) as r:
-                best = json.load(r)['routes'][0]
+                reply = json.load(r)
+            best = reply['routes'][0]
             break
         except Exception as e:
             if attempt == 3:
@@ -52,23 +58,34 @@ def route(a, b):
     line = [[round(x, 6), round(y, 6)] for x, y in best['geometry']['coordinates']]
     line = trim(line, list(a), list(b))
     line = [p for k, p in enumerate(line) if k == 0 or p != line[k - 1]]
-    return {'distance': round(best['distance'], 1), 'duration': round(best['duration'], 1), 'coordinates': line}
+    result = {'distance': round(best['distance'], 1), 'duration': round(best['duration'], 1), 'coordinates': line}
+    if names: result['name'] = reply['waypoints'][1].get('name', '')
+    return result
 
 
-def main(src, out, name):
+def main(src, out, name, profile='foot', names=False):
     spec = json.load(open(src))
     start = [round(v, 6) for v in spec['from']]
     routes = []
     for i, to in enumerate(spec['to']):
-        routes.append(route(start, [round(v, 6) for v in to]))
+        routes.append(route(start, [round(v, 6) for v in to], profile, names))
         print(i, routes[-1]['distance'], 'm', routes[-1]['duration'], 's', file=sys.stderr)
         time.sleep(1)
-    head = (f'// Generated, do not edit. Walking routes from routing.openstreetmap.de (OSRM foot profile, OpenStreetMap data).\n'
-            f'// Regenerate: uv run python _tools/walk_routes.py {src} {out} {name}\n')
+    flags = (f' --profile {profile}' if profile != 'foot' else '') + (' --names' if names else '')
+    head = (f'// Generated, do not edit. {LABELS[profile]}\n'
+            f'// Regenerate: uv run python _tools/walk_routes.py {src} {out} {name}{flags}\n')
     body = ',\n'.join('  ' + json.dumps(r, separators=(',', ':')) for r in routes)
     open(out, 'w').write(f'{head}globalThis.{name} = [\n{body}\n];\n')
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 4: sys.exit(__doc__)
-    main(*sys.argv[1:])
+    args = sys.argv[1:]
+    names = '--names' in args
+    if names: args.remove('--names')
+    profile = 'foot'
+    if '--profile' in args:
+        i = args.index('--profile')
+        profile = args[i + 1] if i + 1 < len(args) else ''
+        del args[i:i + 2]
+    if len(args) != 3 or profile not in PROFILES: sys.exit(__doc__)
+    main(*args, profile, names)
