@@ -8,5 +8,12 @@ globalThis.REDLINED = {
   "about": "Evo is a car-sharing service in Vancouver: members find a Prius on a map in the iOS app and book it for the minute, the hour or the day.",
   "cover": null,
   "icon": "evo/_shared/icon.png",
-  "redlines": []
+  "redlines": [
+    {
+      "n": 1,
+      "folder": "01-feat-walk-route",
+      "title": "Walk route",
+      "caption": "Select an Evo car and the app says \"0.31 km • 4 min\" with no hint where it comes from, and never shows the way. Now the figure is the real street walk, the route is on the map, and one tap opens the whole route with Directions in Apple Maps or Google Maps."
+    }
+  ]
 };

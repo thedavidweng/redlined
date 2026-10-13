@@ -8,7 +8,7 @@ Before/after redesigns of real products' UI/UX, posted on X. One product per fol
 | Product | Surface | Redlines | Demo |
 | --- | --- | --- | --- |
 | [Deliverect](deliverect/) | Pickup Manager | 6 | [Open](https://thedavidweng.github.io/redlined/deliverect/) |
-| [Evo](evo/) | Map | 0 | [Open](https://thedavidweng.github.io/redlined/evo/) |
+| [Evo](evo/) | Map | 1 | [Open](https://thedavidweng.github.io/redlined/evo/) |
 | [Lime](lime/) | Map | 1 | [Open](https://thedavidweng.github.io/redlined/lime/) |
 | [Mobi by Rogers](mobi/) | Map | 0 | [Open](https://thedavidweng.github.io/redlined/mobi/) |
 | [Modo](modo/) | Map | 7 | [Open](https://thedavidweng.github.io/redlined/modo/) |
