@@ -6,7 +6,7 @@
 // moves it steps down (3 -> 2 -> 1.5 -> 1) only if frames run slow, and sharpens again once it settles. Capable
 // devices never step down, and a 1x screen (the recording stage) is left alone. Classic script, works from file://.
 //   IosMapPerf.attach(map)
-// Pixel ratio follows the phone's real size on screen: desktop mode scales the phone down, fullscreen fits it to the screen width (IosDevice.scale()).
+// Pixel ratio follows the phone's real size on screen, including the stage's outer preview scale.
 globalThis.IosMapPerf = (() => {
   // Symbol fades. fadeDuration 0 forces a full label placement on every rendered frame (MapLibre Style._updatePlacement), which is
   // what costs frames while the finger pans, pinches or rotates; the default 300 ms reuses a placement and spreads new ones over frames.
@@ -22,12 +22,13 @@ globalThis.IosMapPerf = (() => {
 
   function attach(map) {
     maps.push(map);
+    let displayScale = 1;
     // rest: full ratio. Moving: from at most 2, down the ladder as far as the device needs.
     const ratios = () => {
-      const rest = devicePixelRatio * (globalThis.IosDevice?.scale() ?? 1);
+      const rest = devicePixelRatio * (globalThis.IosDevice?.scale() ?? 1) * displayScale;
       return { rest, motion: [Math.min(rest, 2), ...[1.5, 1].filter(r => r < rest && r < 2)] };
     };
-    let { rest, motion: steps } = ratios(), level = 0, moving = false, settle, last, frames = [], skip = 0;
+    let { rest, motion: steps } = ratios(), level = 0, moving = false, sampling = false, settle, last, frames = [], skip = 0;
 
     function apply(ratio) {
       if (ratio === map.getPixelRatio()) return;
@@ -37,7 +38,7 @@ globalThis.IosMapPerf = (() => {
       frames = []; skip = 3;  // the first frames after a canvas resize are not representative
     }
     function sample(now) {
-      if (!moving) return;
+      if (!moving || steps.length === 1) { sampling = false; return; }
       requestAnimationFrame(sample);
       const dt = now - last; last = now;
       if (skip) { skip--; return; }
@@ -53,25 +54,37 @@ globalThis.IosMapPerf = (() => {
       apply(steps[level = Math.max(level + 1, fit < 0 ? steps.length - 1 : fit)]);
     }
 
+    function startSampling() {
+      if (!moving || sampling || steps.length === 1) return;
+      sampling = true; last = performance.now(); requestAnimationFrame(sample);
+    }
+
     // e.originalEvent is set when the user's finger, wheel or key started the move, absent for easeTo/flyTo/jumpTo from the app.
     map.on('movestart', e => { if ('_fadeDuration' in map) map._fadeDuration = e.originalEvent ? FADE : 0; });
     map.on('movestart', () => {
-      if (steps.length === 1 && steps[0] === rest) return;  // 1x screen: nothing to give up
       clearTimeout(settle);
       if (moving) return;
       moving = true; frames = []; skip = 3; last = performance.now();
       apply(steps[level]);
-      requestAnimationFrame(sample);
+      startSampling();
     });
     map.on('moveend', () => {
       moving = false;
       clearTimeout(settle);
       settle = setTimeout(() => apply(rest), SETTLE);
     });
-    addEventListener('resize', () => {
+    const resize = () => {
       ({ rest, motion: steps } = ratios()); level = Math.min(level, steps.length - 1);
-      if (!moving) apply(rest);
+      apply(moving ? steps[level] : rest);
+      startSampling();
+    };
+    addEventListener('resize', resize);
+    addEventListener('message', ({ source, data }) => {
+      if (source !== parent || parent === window || data?.redlined !== 'scale' || !Number.isFinite(data.scale) || data.scale <= 0) return;
+      displayScale = data.scale;
+      resize();
     });
+    if (parent !== window) parent.postMessage({ redlined: 'scale-request' }, '*');
     apply(rest);
   }
 

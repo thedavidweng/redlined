@@ -25,7 +25,7 @@ header p { margin: 6px 0 0; max-width: 78ch; font-size: 14px; line-height: 1.5; 
 .btn svg { width: 15px; height: 15px; }
 .btn.quiet { background: none; color: var(--muted); box-shadow: none; padding: 0 8px; }
 .btn.quiet:hover { color: var(--ink); }
-.player { min-height: 0; display: grid; place-items: center; }
+.player { min-height: 0; display: grid; place-items: center; contain: size; }
 .screen { position: relative; width: 100%; height: 100%; border-radius: 14px; overflow: hidden; background: #111;  /* sized by previewer.js to the stage, scaled */
   box-shadow: 0 0 0 1px #ffffff1f, 0 30px 80px -30px #000, 0 0 0 7px #ffffff08; }
 #stage { position: absolute; left: 0; top: 0; border: 0; transform-origin: 0 0; background: #0a0a0a; }

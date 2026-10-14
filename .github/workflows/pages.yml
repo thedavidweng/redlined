@@ -33,6 +33,7 @@ jobs:
           pipx run ruff==0.17.0 check _tools
           npx -y oxlint@1.87.0
           node deliverect/mock/model.test.mjs
+          node _tools/performance.test.mjs
       - name: Build
         run: python3 _tools/build.py
       - uses: actions/configure-pages@v5

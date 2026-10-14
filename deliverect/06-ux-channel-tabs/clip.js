@@ -4,7 +4,7 @@ globalThis.redlineClip = {
   async before(d) {
     for (const name of ['Malik', 'Ronan', 'Carter', 'Kevin']) {
       const r = await d.box('.manage-row', name);
-      await d.glide(r.x + r.width * .1, r.y + r.height / 2, 0.45, false);
+      await d.glide(r.x + r.width * .1, r.y + r.height / 2, 0.45);
       await d.wait(0.2);
     }
     await d.wait(1.0);

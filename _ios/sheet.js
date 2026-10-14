@@ -5,7 +5,7 @@
 //   is lower. One detent must be named 'hidden' (the sheet's own height, so it is off screen); it is not draggable to.
 // snaps: the detent names a release can settle on, top to bottom (the rest are reached by show/hide/snap only).
 // shown: where show() goes by default (default: the last snap).
-// onMove(y, at): on every position change; at is the measured detent table, e.g. at.collapsed.
+// onMove(y, at): on every displayed position change; at is the measured detent table, e.g. at.collapsed.
 // spring: { stiffness: 300, damping: 22 } by default (damping below critical: a small bounce on release).
 // Only the sheet's transform changes while it moves, so nothing reflows and the map never repaints.
 // While a finger drags, el gets the class 'dragging' (use it to switch off CSS transitions).
@@ -51,9 +51,9 @@ globalThis.IosSheet = (() => {
         let dt = Math.min(64, now - last) / 1000; last = now;
         while (dt > 0) {
           const h = Math.min(dt, 1 / 120);
-          v += (-SPRING.stiffness * (y - to) - SPRING.damping * v) * h; place(y + v * h); dt -= h;
+          v += (-SPRING.stiffness * (y - to) - SPRING.damping * v) * h; y += v * h; dt -= h;
         }
-        if (Math.abs(y - to) < .3 && Math.abs(v) < 8) finish(); else frame = requestAnimationFrame(tick);
+        if (Math.abs(y - to) < .3 && Math.abs(v) < 8) finish(); else { place(y); frame = requestAnimationFrame(tick); }
       };
       frame = requestAnimationFrame(tick);
     }

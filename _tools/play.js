@@ -139,9 +139,13 @@
       ring(selector, tone) {  // outline drawn by the stage around an element, following it each frame; tone 'hl' | 'bad' | 'good'; null removes
         cancelAnimationFrame(ringFrame);
         if (!selector || !tone) { post('ring', { rect: null }); return; }
+        let previous;
         const place = () => {
           const el = typeof selector === 'string' ? find(selector) : selector;
-          if (el) { const { left, top, width, height } = el.getBoundingClientRect(); post('ring', { rect: { left, top, width, height }, tone }); }
+          if (el) {
+            const { left, top, width, height } = el.getBoundingClientRect(), rect = { left, top, width, height };
+            if (!previous || Object.keys(rect).some(key => rect[key] !== previous[key])) { post('ring', { rect, tone }); previous = rect; }
+          }
           ringFrame = requestAnimationFrame(place);
         };
         place();
@@ -194,7 +198,6 @@
     const t0 = performance.now();
     while (!settled() && performance.now() - t0 < 20000) await sleep(.2);
     if (performance.now() - t0 >= 20000) console.warn('play.js: gave up waiting for the mock to settle');
-    await sleep(.5);
   }
 
   // ---- freeze ------------------------------------------------------------------------------------------------

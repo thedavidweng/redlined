@@ -141,9 +141,11 @@
   const sleep = s => { const g = gen; return new Promise((resolve, reject) => setTimeout(() => g === gen ? resolve() : reject(STALE), s * 1000)); };
   const waitFor = (frame, type) => new Promise((resolve, reject) => waiters.add({ frame, type, resolve, reject }));
   const frames = () => [...document.querySelectorAll('.window iframe')];
+  let displayScale = 1;
   const scaleOf = frame => frame.getBoundingClientRect().width / frame.offsetWidth;
-  const toStage = (frame, x, y) => { const r = frame.getBoundingClientRect(), k = scaleOf(frame); return [r.left + x * k, r.top + y * k]; };
-  const toMock = (frame, x, y) => { const r = frame.getBoundingClientRect(), k = scaleOf(frame); return [(x - r.left) / k, (y - r.top) / k]; };
+  const sendScale = frame => send(frame, { redlined: 'scale', scale: displayScale * scaleOf(frame) });
+  const toStage = (frame, x, y) => { const r = frame.getBoundingClientRect(), k = r.width / frame.offsetWidth; return [r.left + x * k, r.top + y * k]; };
+  const toMock = (frame, x, y) => { const r = frame.getBoundingClientRect(), k = r.width / frame.offsetWidth; return [(x - r.left) / k, (y - r.top) / k]; };
 
   // A mock in a panel. mode 'still': loads, freezes itself and reports 'frozen'. 'live': reports 'ready', then plays on 'run'.
   // `under` stacks the new frame below a frozen one in the same window, so the swap never flashes.
@@ -179,12 +181,11 @@
     if (after) await waitFor(after, 'frozen');
     const before = mount('before', 'live');
     await waitFor(before, 'ready');
-    // Intro: the curtain lifts, the panels settle, then the Before side starts.
+    // Intro: focus and reveal together; start as soon as the .45s curtain transition ends.
     stage.marks.push({ kind: 'start', t: now() });
-    stage.curtain(false);
-    await sleep(0.9);
     stage.focus('before');
-    await sleep(0.5);
+    stage.curtain(false);
+    await sleep(0.45);
     let done = waitFor(before, 'done');
     send(before, { redlined: 'run', from: toMock(before, finger.x, finger.y), exit: null });
     await done;
@@ -304,15 +305,23 @@
     if (source === parent && parent !== window) {
       if (data.redlined === 'play') stage.play(data.redline);
       if (data.redlined === 'stop') stage.stop();
+      if (data.redlined === 'scale' && Number.isFinite(data.scale) && data.scale > 0) {
+        displayScale = data.scale;
+        frames().forEach(sendScale);
+      }
       return;
     }
     const frame = frames().find(f => f.contentWindow === source);
     if (!frame || 'stale' in frame.dataset) return;
-    const side = frame.closest('.panel').id, k = scaleOf(frame);
+    const side = frame.closest('.panel').id;
     for (const w of [...waiters]) if (w.frame === frame && w.type === data.redlined) { waiters.delete(w); w.resolve(); }
     if (data.redlined === 'finger') stage.finger(...toStage(frame, data.x, data.y), data.on);
     if (data.redlined === 'press') stage.press(data.down);
-    if (data.redlined === 'ring') stage.ring(side, data.rect && Object.fromEntries(Object.entries(data.rect).map(([key, value]) => [key, value * k])), data.tone);
+    if (data.redlined === 'scale-request') sendScale(frame);
+    if (data.redlined === 'ring') {
+      const k = data.rect ? scaleOf(frame) : 1;
+      stage.ring(side, data.rect && Object.fromEntries(Object.entries(data.rect).map(([key, value]) => [key, value * k])), data.tone);
+    }
     if (data.redlined === 'receipt') stage.receipt(side, data.html);
     if (data.redlined === 'credit') stage.credit(data.html);
   });

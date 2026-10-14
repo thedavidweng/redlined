@@ -21,9 +21,11 @@
   const player = $('.player'), portrait = matchMedia('(orientation: portrait)');
   let size = { w: 1920, h: 1080 };
   const fit = () => {
-    const k = Math.min(player.clientWidth / size.w, player.clientHeight / size.h);
+    const { width, height } = player.getBoundingClientRect();
+    const k = Math.min(width / size.w, height / size.h);
     Object.assign(stage.style, { width: `${size.w}px`, height: `${size.h}px`, transform: `scale(${k})` });
     Object.assign(screen.style, { width: `${size.w * k}px`, height: `${size.h * k}px` });
+    send({ redlined: 'scale', scale: k });
   };
   new ResizeObserver(fit).observe(player);
   addEventListener('message', ({ source, data }) => {
@@ -44,7 +46,7 @@
     sent = key;
     send(on ? { redlined: 'play', redline: current } : { redlined: 'stop' });
   }
-  stage.addEventListener('load', () => { loaded = true; play(); });
+  stage.addEventListener('load', () => { loaded = true; fit(); play(); });
   // Rotating swaps the stage for the other layout; its load handler plays the current redline again.
   function layout() {
     loaded = false;
