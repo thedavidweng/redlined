@@ -39,7 +39,7 @@ def sync_product(product, files):
     return data
 
 
-SITE = 'https://thedavidweng.github.io/redlined/'
+SITE = 'https://redlined.blahaj.uk/'
 TABLE = re.compile(r'(<!-- products:start -->\n).*?(<!-- products:end -->)', re.S)
 
 
