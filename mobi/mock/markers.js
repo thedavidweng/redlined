@@ -25,6 +25,18 @@ globalThis.MobiMarkers = (() => {
     });
   }
 
+  // Unavailable station marker: dark disc with a white rim and horizontal no-entry bar, with no count.
+  function unavailable(map, id) {
+    draw(map, id, 55, 62, g => {
+      g.scale(1.1, 1.1);
+      const cx = 25, cy = 25;
+      g.beginPath(); g.arc(cx, cy, 22, 0, 2 * Math.PI); g.fillStyle = '#fff'; g.fill();
+      g.beginPath(); g.arc(cx, cy, 19.5, 0, 2 * Math.PI); g.fillStyle = '#5c6469'; g.fill();
+      g.lineCap = 'butt'; g.lineWidth = 6; g.strokeStyle = '#fff';
+      g.beginPath(); g.moveTo(cx - 13, cy); g.lineTo(cx + 13, cy); g.stroke();
+    });
+  }
+
   // Out-of-service hatching: thin red diagonals on a pale pink ground, tiled by the fill-pattern.
   function hatch(map, id) {
     draw(map, id, 4, 4, g => {
@@ -38,7 +50,7 @@ globalThis.MobiMarkers = (() => {
 
   async function add(map, data) {
     await document.fonts.load('700 23px Urbanist').catch(() => {});
-    data.stations.forEach(s => pin(map, `mobi-pin-${s.n}`, s.bikes, s.bikes / (s.bikes + s.docks)));
+    data.stations.forEach(s => s.operational ? pin(map, `mobi-pin-${s.n}`, s.bikes, s.bikes / (s.bikes + s.docks)) : unavailable(map, `mobi-pin-${s.n}`));
     draw(map, 'mobi-user', 24, 24, g => {
       g.beginPath(); g.arc(12, 12, 8.5, 0, 2 * Math.PI); g.fillStyle = BLUE; g.fill();
     });

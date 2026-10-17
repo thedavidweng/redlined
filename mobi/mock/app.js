@@ -19,9 +19,9 @@
   const patch = after ? globalThis.redlinePatch : null;
   if (patch) document.head.append(Object.assign(document.createElement('link'), { rel: 'stylesheet', href: `../${redline}/patch.css` }));
 
-  // STATE SEAM (inert without ?state=): ?state=<name> opens straight into that state, for calibration. The station states open on the nearest
-  // station: sheet-expanded is the Expanded detent a tap opens, selected the Half screen one. An unknown state falls back to home (IosState.pick).
-  const STATES = { home: {}, selected: { select: MobiData.nearest, sheet: 'half' }, 'sheet-expanded': { select: MobiData.nearest, sheet: 'expanded' } };
+  // STATE SEAM (inert without ?state=): ?state=<name> opens straight into that state, for calibration. Station states open on
+  // the nearest station, except station-unavailable which previews the independent unavailable station.
+  const STATES = { home: {}, selected: { select: MobiData.nearest, sheet: 'half' }, 'sheet-expanded': { select: MobiData.nearest, sheet: 'expanded' }, 'station-unavailable': { select: MobiData.unavailable, sheet: 'half' } };
   const first = IosState.pick(STATES).state;
   const start = first.select == null ? camera : MobiData.frame(first.select);
 
@@ -71,18 +71,26 @@
     $('[data-min]').textContent = s.minutes;
     $('[data-bikes]').textContent = s.bikes;
     $('[data-docks]').textContent = s.docks;
-    list();
+    app.classList.toggle('is-unavailable', !s.operational);
+    if (s.operational) list(); else $('.bikes').innerHTML = '';
     app.classList.add('is-selected');
   }
   function select(n) {
-    if (sheet.state === 'hidden') sheet.show('expanded');  // first: show() places the sheet while still 'hidden', which onMove would read as a dismissal
+    const station = MobiData.stations[n];
+    if (station.operational) {
+      if (sheet.state === 'hidden') sheet.show('expanded');
+    } else if (sheet.state === 'hidden') {
+      sheet.show('half');
+    } else {
+      sheet.snap('half');
+    }
     fill(n);
     markers?.select(n);
     map.easeTo({ ...MobiData.frame(n), ...ease });
   }
   function deselect(animate = true) {
     selected = null;
-    app.classList.remove('is-selected');
+    app.classList.remove('is-selected', 'is-unavailable');
     markers?.clear();
     map.easeTo({ ...camera, ...ease });
     if (animate && sheet.state !== 'hidden') sheet.hide();

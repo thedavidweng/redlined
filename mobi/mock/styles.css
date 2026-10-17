@@ -67,6 +67,13 @@ i[data-mask], .bikes i { display: block; width: 24px; height: 24px; background: 
 .route { right: 15px; top: 50%; width: 51px; height: 51px; margin-top: -25.5px; border-radius: 14px; background: #fff; box-shadow: 0 3px 8px #00000030; display: grid; place-items: center; }
 .route i { position: static; margin: 0; width: 20px; height: 20px; color: var(--red); }
 .route:active { opacity: .6; }
+
+/* Unavailable stations retain the title, DOCK label and route card, then show the peach status row; counts and bike tabs are absent. */
+.unavailable-status { left: 0; right: 0; top: 208px; height: 38px; padding: 0 16px; border-radius: 8px; background: #fff0e8; color: #a8160e;
+  display: flex; align-items: center; font: 500 16px/22px Urbanist, sans-serif; }
+.unavailable-status { display: none; }
+.is-unavailable .unavailable-status { display: flex; }
+.is-unavailable .count, .is-unavailable .divider, .is-unavailable .lower { display: none; }
 .count { top: calc(200px - var(--p) * 13px); transform: translateX(-50%); text-align: center; white-space: nowrap; }
 .count.left { left: 20.6%; } .count.right { left: 78%; }
 .count .row { display: flex; align-items: center; justify-content: center; gap: 7px; height: 58px; }

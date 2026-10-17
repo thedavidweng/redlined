@@ -13,18 +13,18 @@ globalThis.MobiData = (() => {
   // Screen point -> [lng, lat] at the home camera (flat is accurate enough for a few hundred metres).
   const at = ([x, y]) => [+(camera.center[0] + (x - device.width / 2) * metersPerPt(camera.zoom) / KX).toFixed(6), +(camera.center[1] - (y - device.height / 2) * metersPerPt(camera.zoom) / KY).toFixed(6)];
 
-  // [name, bikes, docks, electric bikes among the bikes]. The first seven are on the home screen, as in the reference.
+  // [name, bikes, docks, electric bikes among the bikes, operational]. The first seven are on the home screen, as in the reference.
   const LIST = [
     ['Hamilton & Nelson', 8, 11, 3], ['Nelson & Cambie', 19, 4, 6], ['Cambie & Pacific', 10, 9, 4], ['Pacific & Beatty', 17, 0, 5],
     ['Pacific & Davie', 19, 6, 7], ['Davie & Marinaside', 5, 14, 2], ['Pacific & Expo', 12, 8, 4], ['Richards & Smithe', 6, 13, 1],
-    ['Hamilton & Davie', 14, 5, 5], ['Smithe & Cambie', 3, 16, 0], ['Expo & Robson', 9, 10, 3], ['Homer & Nelson', 15, 4, 6],
+    ['Hamilton & Davie', 14, 5, 5, false], ['Smithe & Cambie', 3, 16, 0], ['Expo & Robson', 9, 10, 3], ['Homer & Nelson', 15, 4, 6],
     ['Richards & Nelson', 7, 12, 2], ['Pacific & Mainland', 11, 8, 4], ['Marinaside & Boathouse', 4, 15, 1], ['Marinaside & Cooperage', 13, 6, 5],
     ['Marinaside & Davie', 18, 3, 8], ['Nelson & Seymour', 2, 17, 0], ['Homer & Smithe', 16, 3, 6], ['Robson & Beatty', 10, 9, 3],
   ];
   // Bike numbers: five digits, made up, stable per station.
   const bikeIds = (i, count) => Array.from({ length: count }, (_, k) => 30000 + (i * 7919 + k * 1543 + 211) % 9000 + k);
-  const stations = LIST.map(([name, bikes, docks, electric], i) => ({
-    n: i, name: `Station ${name}`, bikes, docks, electric,
+  const stations = LIST.map(([name, bikes, docks, electric, operational = true], i) => ({
+    n: i, name: `Station ${name}`, bikes, docks, electric, operational,
     ft: MobiRoutes.stations[i].ft, minutes: Math.max(1, Math.round(MobiRoutes.stations[i].ft / 290)),
     electricIds: bikeIds(i, electric), mechanicalIds: bikeIds(i + 31, bikes - electric),
   }));
@@ -43,7 +43,7 @@ globalThis.MobiData = (() => {
   }
 
   return {
-    device, camera, frame, stations, nearest: 3,
+    device, camera, frame, stations, nearest: 3, unavailable: 8,
     user: MobiRoutes.user,
     code: '4081265',  // User Code: seven digits, made up
     stationPoints: { type: 'FeatureCollection', features: stations.map(s => feature(MobiRoutes.stations[s.n].at, { n: s.n }, s.n + 1)) },
