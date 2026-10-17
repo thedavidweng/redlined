@@ -26,29 +26,49 @@
     <button class="locate" aria-label="My location" title="Outside this mock"><img src="assets/map_orientation_fill_24@3x.png" alt=""></button>
     <button class="scan" title="Outside this mock"><img src="assets/ic_qr_scan_32@3x.png" alt="">Start ride</button>
     <div class="sheet-probe"></div>
-    <div class="sheet" role="dialog" aria-label="Scooter details">
+    <div class="sheet home-sheet" role="dialog" aria-label="Scooter details">
       <button class="strip"><img src="assets/rewards_24@3x.png" alt=""><span>Promo will apply: 25% off, up to $5</span><img class="go" src="assets/arrows_right_16@3x.png" alt=""></button>
       <div class="panel">
-        <div class="grabber"></div>
-        <button class="close" aria-label="Close"><img src="assets/close_24@3x.png" alt=""></button>
-        <h2 class="title">Scooter <span data-plate></span></h2>
-        <p class="range"><img src="assets/battery_3_16@3x.png" alt=""><span><span data-range></span> mi range</span></p>
-        <img class="photo" src="assets/scooter_4.1@3x.png" alt="">
-        <hr>
-        <div class="promo"><img src="assets/promo_24@3x.png" alt=""><span>25% off, up to $5</span><button class="link">Details</button></div>
-        <p class="price">then CAD $0 to unlock, CAD $0.15/min</p>
-        <div class="actions">
-          <button class="pill" style="left:16px;width:93px"><img src="assets/qr_code_24@3x.png" alt="">Scan</button>
-          <button class="pill" style="left:117px;width:90px"><img src="assets/ring_24@3x.png" alt="">Ring</button>
-          <button class="pill" style="left:215px;width:144px"><img src="assets/flag_slant_24@3x.png" alt="">Report Issue</button>
-        </div>
-        <h3 class="head" style="top:288px">Payment method</h3>
-        <button class="pay"><img src="assets/apple_pay_24@3x.png" alt=""><span>Apple Pay</span><img class="caret" src="assets/caret_right_24@3x.png" alt=""></button>
-        <h3 class="head" style="top:392px">Pricing details</h3>
-        <p class="body">25% off, up to $5, then CAD $0 to unlock, CAD $0.15/min</p>
-        <p class="note">Pricing is per ride and based on total time, rounded up to the next minute. <button class="link">Learn more</button></p>
+        <div class="grabber"></div><button class="close" aria-label="Close"><img src="assets/close_24@3x.png" alt=""></button>
+        <h2 class="title">Scooter <span data-plate></span></h2><p class="range"><img src="assets/battery_3_16@3x.png" alt=""><span><span data-range></span> mi range</span></p><img class="photo" src="assets/scooter_4.1@3x.png" alt=""><hr>
+        <div class="promo"><img src="assets/promo_24@3x.png" alt=""><span>25% off, up to $5</span><button class="link">Details</button></div><p class="price">then CAD $0 to unlock, CAD $0.15/min</p>
+        <div class="actions"><button class="pill" style="left:16px;width:93px"><img src="assets/qr_code_24@3x.png" alt="">Scan</button><button class="pill" style="left:117px;width:90px"><img src="assets/ring_24@3x.png" alt="">Ring</button><button class="pill" style="left:215px;width:144px"><img src="assets/flag_slant_24@3x.png" alt="">Report Issue</button></div>
+        <h3 class="head" style="top:288px">Payment method</h3><button class="pay"><img src="assets/apple_pay_24@3x.png" alt=""><span>Apple Pay</span><img class="caret" src="assets/caret_right_24@3x.png" alt=""></button><h3 class="head" style="top:392px">Pricing details</h3><p class="body">25% off, up to $5, then CAD $0 to unlock, CAD $0.15/min</p><p class="note">Pricing is per ride and based on total time, rounded up to the next minute. <button class="link">Learn more</button></p>
       </div>
     </div>
+    <svg class="trip-symbols" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
+      <symbol id="trip-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+      <symbol id="trip-battery" viewBox="0 0 24 24"><rect x="2" y="5" width="18" height="14" rx="3"/><path d="M23 9v6M7 9v6M11 9v6M15 9v6"/></symbol>
+      <symbol id="trip-qr" viewBox="0 0 24 24"><path d="M2 2h8v8H2zM14 2h8v8h-8zM2 14h8v8H2zM15 14h3v4h4v4h-7v-4M22 14v2M5 5h2v2H5zM17 5h2v2h-2zM5 17h2v2H5z"/></symbol>
+      <symbol id="trip-helmet" viewBox="0 0 24 24"><path d="M3 14v-2a9 9 0 0 1 18 0v5h-6l-2-6H3M6 14l-2 7M16 18l-1 3M8 14v3h4"/></symbol>
+      <symbol id="trip-book" viewBox="0 0 24 24"><path d="M12 5v16M12 5C8 2 4 2 2 4v16c4-2 7-1 10 1 3-2 6-3 10-1V4c-2-2-6-2-10 1Z"/></symbol>
+      <symbol id="trip-park" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9 19V6h5a4 4 0 0 1 0 8H9"/></symbol>
+      <symbol id="trip-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="12" rx="2"/><path d="M8 10V6a4 4 0 0 1 8 0v4"/></symbol>
+    </defs></svg>
+    <div class="trip-title">Ride in progress</div>
+    <button class="trip-help" aria-label="Help" title="Outside this mock">?</button>
+    <div class="trip-map-tools" title="Outside this mock"><button aria-label="My location"><svg viewBox="0 0 24 24"><path d="m3 10 18-7-7 18-3-8Z"/></svg></button><button aria-label="Map settings"><svg viewBox="0 0 24 24"><path d="M3 7h18M3 17h18"/><circle cx="15" cy="7" r="3"/><circle cx="8" cy="17" r="3"/></svg></button></div>
+    <div class="sheet trip-sheet" role="dialog" aria-label="Ride in progress">
+      <div class="park"><span class="parking-icon"><svg><use href="#trip-park"/></svg><i></i></span><b>You can park here</b></div>
+      <div class="trip-panel">
+        <button class="trip-grabber" aria-label="Toggle ride details" aria-expanded="false"><i></i></button>
+        <div class="trip-summary">
+          <div class="trip-metrics"><span><svg><use href="#trip-clock"/></svg><span class="trip-time">00:17</span></span><strong><svg><use href="#trip-battery"/></svg><span><span data-trip-range>24.5</span> km</span></strong><span><svg><use href="#trip-qr"/></svg><span data-plate></span></span></div>
+          <button class="unlock" title="Outside this mock"><svg><use href="#trip-helmet"/></svg>Unlock helmet</button>
+        </div>
+        <div class="trip-scroll">
+          <div class="ride-card">
+            <div class="ride-row slow-row"><div><b>Slow mode</b><p>Lower max speed of up to 7 mph</p></div><button class="toggle" aria-label="Slow mode off" title="Outside this mock"><i>×</i></button></div>
+            <button class="ride-row helmet-row" title="Outside this mock"><span>Helmet verification<small>Earn a 10% discount when you verify you're wearing a helmet</small></span><svg><use href="#trip-helmet"/></svg></button>
+          </div>
+          <h3>LEARN</h3>
+          <div class="ride-card"><button class="ride-row" title="Outside this mock"><span>How to ride</span><svg><use href="#trip-book"/></svg></button><button class="ride-row" title="Outside this mock"><span>Parking and zones</span><svg><use href="#trip-park"/></svg></button></div>
+          <h3>PRICING</h3>
+          <div class="ride-card ride-price"><span>Unlock fee</span><i></i><span>CAD $0</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="trip-actions"><button class="pause" aria-label="Pause ride" title="Outside this mock"><svg viewBox="0 0 24 24"><path d="M7 4v16M17 4v16"/></svg></button><button class="end-ride" title="Outside this mock"><svg><use href="#trip-lock"/></svg>End ride</button></div>
     <div class="bar"><button class="reserve"><b>Reserve Scooter</b><span>Free to reserve for 10 minutes</span></button></div>
   </div>
   <script src="../../_ios/maplibre/maplibre-gl.js"></script>

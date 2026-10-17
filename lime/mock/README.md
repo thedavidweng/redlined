@@ -6,7 +6,11 @@ Serve the `redlined` folder (`python3 ~/Development/redlined/_tools/serve.py`) a
 
 ## States
 
-`?state=home` (default), `?state=selected` (nearest scooter as a balloon pin, camera eased to put it at x200 y385, sheet collapsed) and `?state=sheet-expanded`. Tapping a scooter selects it, the close button returns home. The sheet (`../../_ios/sheet.js`, Lime passes its own detents in `app.js`) is transform-only: pointer events (mouse and touch), rubber band past the detents, snap by velocity and position with a spring, `prefers-reduced-motion` jumps instead of animating. Animation durations (500 ms chrome and sheet, 600 ms camera) are estimates, there is no reference video.
+`?state=home` (default), `?state=selected`, and `?state=sheet-expanded` cover the parked scooter flow. `?state=in-trip` and `?state=in-trip-expanded` reproduce the collapsed and expanded ride-in-progress detents from `IMG_7688.PNG` and `IMG_7689.PNG` (1170x2532, logical 390x844). The trip fixture uses a deterministic `00:17` timer, 24.5 km range, and fictional existing plate; pause, end ride, helmet, payment, and pricing actions are intentionally outside this mock. The parking banner is retained at both detents. By default there is no promo: the known base rate shows alone, and the exact no-promo layout is unsourced. `?promo=25off` adds the captured promo ("Promo will apply: 25% off, up to $5" strip and the promo line in the sheet).
+
+The sheet (`../../_ios/sheet.js`) supports dragging and grabber taps between detents. Trip details scroll above the fixed action bar. The timer is frozen across detents rather than simulating billing; the expanded screenshot's later `00:23` is not a separate ride state. Slow mode remains `7 mph` exactly as captured, despite the trip range using km. Helmet verification offers a 10% discount, not a completion percentage.
+
+Trip geography and vehicle identity remain fictional. The supplied street-photo thumbnail is omitted rather than reusing private location imagery; map controls are visual-only and exact map styling is not calibrated. Only the visible unlock fee is reproduced: further pricing rows and pause/end/helmet flows have no evidence. The new trip UI is an evidence-based approximation, not a 1:1 calibration.
 
 ## Redline seam
 
