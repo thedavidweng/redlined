@@ -25,7 +25,7 @@ globalThis.REDLINED_PRODUCTS = [
     "about": "Lime is a micro-mobility company that rents shared electric scooters and bikes in cities around the world.",
     "cover": "lime/_shared/cover.webp",
     "icon": "lime/_shared/icon.png",
-    "count": 1
+    "count": 2
   },
   {
     "product": "mobi",
@@ -34,7 +34,7 @@ globalThis.REDLINED_PRODUCTS = [
     "about": "Mobi by Rogers is Vancouver's public bike share, sponsored by Rogers.",
     "cover": null,
     "icon": "mobi/_shared/icon.png",
-    "count": 0
+    "count": 2
   },
   {
     "product": "modo",

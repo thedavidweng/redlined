@@ -9,8 +9,8 @@ Before/after redesigns of real products' UI/UX, posted on X. One product per fol
 | --- | --- | --- | --- |
 | [Deliverect](deliverect/) | Pickup Manager | 6 | [Open](https://redlined.blahaj.uk/deliverect/) |
 | [Evo](evo/) | Map | 3 | [Open](https://redlined.blahaj.uk/evo/) |
-| [Lime](lime/) | Map | 1 | [Open](https://redlined.blahaj.uk/lime/) |
-| [Mobi by Rogers](mobi/) | Map | 0 | [Open](https://redlined.blahaj.uk/mobi/) |
+| [Lime](lime/) | Map | 2 | [Open](https://redlined.blahaj.uk/lime/) |
+| [Mobi by Rogers](mobi/) | Map | 2 | [Open](https://redlined.blahaj.uk/mobi/) |
 | [Modo](modo/) | Map | 7 | [Open](https://redlined.blahaj.uk/modo/) |
 <!-- products:end -->
 

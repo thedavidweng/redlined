@@ -1,0 +1,5 @@
+/* The rate sits in 10 px of new height under the metrics row; the scroll area starts 10 px lower to match. */
+.trip-metrics { margin-bottom: 4px; }
+.trip-rate { margin: 0 26px 8px; height: 18px; color: #555; font: 400 14px/18px var(--sf); white-space: nowrap; }
+.trip-summary { height: 156px; }
+.trip-scroll { top: 156px; }

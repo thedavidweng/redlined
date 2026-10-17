@@ -14,6 +14,12 @@ globalThis.REDLINED = {
       "folder": "01-fix-range-in-km",
       "title": "Range in kilometres",
       "caption": "The price on this sheet is in Canadian dollars, but the range is in miles. Canada measures in kilometres, so 13 mi becomes 21 km. Same scooter, same sheet, one less sum to do before you ride."
+    },
+    {
+      "n": 2,
+      "folder": "02-fix-trip-rate-missing",
+      "title": "Trip rate missing",
+      "caption": "Before the ride, Lime shows the price per minute. Once the timer starts, the ride sheet's Pricing lists only the $0 unlock fee. Here the rate sits under the timer."
     }
   ]
 };
