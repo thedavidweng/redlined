@@ -1,0 +1,5 @@
+/* Unavailable stations only: the status row goes directly under the title, the DOCK label and route card move down to make room.
+   --p is the sheet's 0 (Expanded) to 1 (Half screen) position, as in the mock's own rules. */
+.is-unavailable .unavailable-status { top: calc(66px - var(--p) * 3px); height: 34px; font-weight: 600; }
+.is-unavailable .dock-chip { top: calc(112px - var(--p) * 4px); }
+.is-unavailable .card { top: calc(152px - var(--p) * 5.5px); }

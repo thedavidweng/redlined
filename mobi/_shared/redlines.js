@@ -8,5 +8,18 @@ globalThis.REDLINED = {
   "about": "Mobi by Rogers is Vancouver's public bike share, sponsored by Rogers.",
   "cover": null,
   "icon": "mobi/_shared/icon.png",
-  "redlines": []
+  "redlines": [
+    {
+      "n": 1,
+      "folder": "01-ux-unavailable-status-first",
+      "title": "Unavailable status first",
+      "caption": "Tap an unavailable station and the sheet leads with distance and walking time; \"Station unavailable\" waits below. Now the status sits right under the station name, so you know before you read the route. The route button stays."
+    },
+    {
+      "n": 2,
+      "folder": "02-ux-type-counts",
+      "title": "Bike types with counts",
+      "caption": "The station sheet gives one bike total and an Electric / Mechanical switch with no numbers, and the map calls the same type \"Classic\". Now each tab shows its count (Electric · 5, Classic · 12), and the bike type has one name."
+    }
+  ]
 };
