@@ -16,6 +16,8 @@ Name folders `<nn>-<type>-<slug>` in lowercase kebab-case. `<nn>` is the two-dig
 2. Add a row to the product README table. Its order is the posting order. The redline list (`<product>/_shared/redlines.js`) is generated from that table and the folders on disk by `_tools/sync.py`; `serve.py` and `record.py` run it for you. A folder missing from the table still appears, at the end; a deleted one disappears. Title and caption come from the folder's README (`# Title`, the `> ` line under `**Caption**`).
 3. Preview: double-click `<product>/index.html`, or run `python3 _tools/serve.py` and open `/<product>/#<folder>`. It shows the caption above the clip, as on X, plays the storyboard live in the stage, with Replay, and "Try it live" opens the interactive mock with the patch applied (`mock/index.html?redline=<folder>`). While building, use the stage for a live side-by-side: `/_tools/stage.html?product=<product>&redline=<folder>` (needs the server).
 
+The redline README's `Live: [label](../mock/index.html?...)` query is also generated into `redlines.js`. The previewer's Try it live and Original links preserve those parameters (such as `state=in-trip-expanded`); Original adds `side=before`. Keep this Live link aligned with the intended interactive starting state. The storyboard's `query` controls its recording independently.
+
 ## Works from disk
 
 Every page must work when opened straight from disk (`file://`), so: classic `<script src>` only, no ES modules, no `fetch`. Each script wraps itself in `(() => { … })()` and shares through a global: the mock exposes `DeliverectModel`/`DeliverectManage`, `_shared/` exposes `RedlineFixtures`/`RedlineMotion`, and each `patch.js` sets `globalThis.redlinePatch = { apply }`.

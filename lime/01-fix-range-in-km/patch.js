@@ -1,5 +1,5 @@
-// Range in kilometres. The mock stores range in miles and writes the number on every selection (data-range), the unit is fixed text beside it.
-// The patch converts what the mock writes and swaps the unit; nothing else is touched.
+// Kilometres, not miles. The mock stores range in miles and writes the number on every selection (data-range), the unit is fixed text beside it.
+// The patch converts what the mock writes and swaps the unit, and converts the ride sheet's fixed slow-mode speed; nothing else is touched.
 (() => {
   const KM_PER_MILE = 1.609344;
 
@@ -16,6 +16,9 @@
     const observer = new MutationObserver(convert);
     observer.observe(value, { childList: true, characterData: true, subtree: true });
     convert();  // a state opened already selected was filled before the patch ran
+
+    const slow = root.querySelector('.slow-row p');
+    slow.textContent = slow.textContent.replace(/(\d+(?:\.\d+)?) mph/, (_, mph) => `${Math.round(mph * KM_PER_MILE)} km/h`);
   }
 
   globalThis.redlinePatch = { apply };

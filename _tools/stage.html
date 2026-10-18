@@ -60,24 +60,26 @@
   .finger.on { opacity: 1; } .finger.down { scale: .84; background: #141414a8; }
   .ripple { position: absolute; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; border: 2px solid #1414148c;
     pointer-events: none; z-index: 9; animation: ripple .55s var(--ease) forwards; }
-  .credit { position: absolute; right: 72px; bottom: 18px; font-size: 13px; color: var(--muted); opacity: .7; z-index: 1; }
+  /* Credits sit in the header line, above the phone windows: never over the UI in the clip. Single layout has no header, so they border the frame. */
+  .credit { position: absolute; left: 72px; right: 72px; top: 40px; height: 40px; display: flex; justify-content: center; align-items: center;
+    font-size: 13px; color: var(--muted); opacity: .7; z-index: 1; }
   .credit a { color: inherit; text-decoration: none; }
   /* Single layout (portrait pages): no header (the page has one), one window at the mock's own size, the two panels stacked in it, crossfading.
      The label row names both sides and lights the one showing. */
   .switch { display: none; }
   body.single { position: relative; width: var(--stage-w); height: var(--stage-h); }
   body.single header, body.single .panel .label { display: none; }
-  body.single .panels { left: 0; right: 0; top: 88px; bottom: 48px; display: grid; grid-template-columns: max-content; justify-content: center; }
+  body.single .panels { left: 0; right: 0; top: 128px; bottom: 56px; display: grid; grid-template-columns: max-content; justify-content: center; }
   body.single .panel { grid-area: 1 / 1; transition: opacity .45s ease; }
   body.single[data-show="before"] .after, body.single[data-show="after"] .before { opacity: 0; }
   body.single .window { flex: none; width: var(--win-w); height: var(--win-h); }
   body.single.device .window { border-radius: var(--win-r); }
-  body.single .switch { position: absolute; left: 0; right: 0; top: 28px; height: 40px; display: flex; justify-content: center; align-items: center; gap: 28px; z-index: 1;
+  body.single .switch { position: absolute; left: 0; right: 0; top: 64px; height: 40px; display: flex; justify-content: center; align-items: center; gap: 28px; z-index: 1;
     font-size: 22px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); transition: opacity .45s ease; }
   body.single .switch span { transition: color .45s ease; }
   body.single[data-show="before"] .switch .b, body.single[data-show="after"] .switch .a { color: var(--ink); }
   body.single.curtain .switch { opacity: 0; }
-  body.single .credit { left: 24px; right: 24px; bottom: 14px; text-align: center; }
+  body.single .credit { position: absolute; left: 0; right: 0; top: 24px; height: 40px; justify-content: center; text-align: center; }
   @keyframes ripple { from { opacity: .9; scale: .7; } to { opacity: 0; scale: 1.9; } }
 </style>
 <script src="../_ios/devices.js"></script>
@@ -87,6 +89,7 @@
     <div class="brand"><span class="brand-mark"></span><span class="brand-word">Redlined</span></div>
     <div class="meta"><span id="product"></span><span class="num" id="number"></span></div>
   </header>
+  <div class="credit" id="credit"></div>
   <div class="switch" aria-hidden="true"><span class="b">Before</span><span>→</span><span class="a">After</span></div>
   <div class="panels">
     <section class="panel before" id="before">
@@ -98,7 +101,6 @@
       <div class="window"><div class="ring"></div><div class="receipt"></div></div>
     </section>
   </div>
-  <div class="credit" id="credit"></div>
   <div class="finger" id="finger"></div>
 <script>
   const params = new URLSearchParams(location.search);
@@ -121,7 +123,7 @@
     if (single) {
       // The window at the mock's own size: the phone at 1:1, or a desktop mock 1000 wide and about as tall as a wide-layout panel shows it.
       const win = device ? { w: device.width, h: device.height, r: device.radius } : { w: 1000, h: 1000, r: 18 };
-      [W, H] = [Math.max(win.w + 80, 600), win.h + 136];  // 88 above (label row), 48 below (credit)
+      [W, H] = [Math.max(win.w + 80, 600), win.h + 184];  // 40 for the credit, 88 above (label row), 56 below
       document.body.classList.add('single');
       document.body.dataset.show = 'before';
       for (const [name, value] of [['w', win.w], ['h', win.h], ['r', win.r]]) document.body.style.setProperty(`--win-${name}`, `${value}px`);
@@ -132,6 +134,8 @@
     }
     finger = { x: W / 2, y: H + 100 };
     if (parent !== window) parent.postMessage({ redlined: 'size', w: W, h: H }, '*');
+    // The embedding page cannot post to the iframe before it exists, so the stage asks for its scale once mounted.
+    requestAnimationFrame(() => frames().forEach(frame => frame.contentWindow?.postMessage({ redlined: 'scale-request' }, '*')));
     // "Deliverect Pickup Manager": the product in full weight, the surface after it. No separator glyph.
     const [name, ...rest] = (config.label ?? config.name).split(' · ');
     $('#product').innerHTML = `<b>${name}</b>${rest.map(part => ` ${part}`).join('')}`;
@@ -143,7 +147,7 @@
   const frames = () => [...document.querySelectorAll('.window iframe')];
   let displayScale = 1;
   const scaleOf = frame => frame.getBoundingClientRect().width / frame.offsetWidth;
-  const sendScale = frame => send(frame, { redlined: 'scale', scale: displayScale * scaleOf(frame) });
+  function sendScale(frame) { if (frame.contentWindow) send(frame, { redlined: 'scale', scale: displayScale * scaleOf(frame) }); }
   const toStage = (frame, x, y) => { const r = frame.getBoundingClientRect(), k = r.width / frame.offsetWidth; return [r.left + x * k, r.top + y * k]; };
   const toMock = (frame, x, y) => { const r = frame.getBoundingClientRect(), k = r.width / frame.offsetWidth; return [(x - r.left) / k, (y - r.top) / k]; };
 

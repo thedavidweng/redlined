@@ -19,17 +19,20 @@
 
   // The stage canvas is scaled down to fit the player box; the screen takes the scaled size.
   const player = $('.player'), portrait = matchMedia('(orientation: portrait)');
-  let size = { w: 1920, h: 1080 };
+  let size = { w: 1920, h: 1080 }, scale = 1;
   const fit = () => {
     const { width, height } = player.getBoundingClientRect();
-    const k = Math.min(width / size.w, height / size.h);
+    const k = scale = Math.min(width / size.w, height / size.h);
     Object.assign(stage.style, { width: `${size.w}px`, height: `${size.h}px`, transform: `scale(${k})` });
     Object.assign(screen.style, { width: `${size.w * k}px`, height: `${size.h * k}px` });
     send({ redlined: 'scale', scale: k });
   };
   new ResizeObserver(fit).observe(player);
   addEventListener('message', ({ source, data }) => {
-    if (source !== stage.contentWindow || data?.redlined !== 'size') return;
+    if (source !== stage.contentWindow) return;
+    // The stage asks for the scale when it mounts; the page may not have posted its first message before that.
+    if (data?.redlined === 'scale-request') { send({ redlined: 'scale', scale }); return; }
+    if (data?.redlined !== 'size') return;
     size = { w: data.w, h: data.h };
     document.body.style.setProperty('--stage-ratio', `${size.w} / ${size.h}`);
     fit();
@@ -66,8 +69,12 @@
     $('#n').textContent = `NO. ${String(entry.n).padStart(2, '0')}`;
     $('#title').textContent = entry.title;
     $('#caption').textContent = entry.caption;
-    $('#live').href = `mock/index.html?redline=${entry.folder}`;
-    $('#original').href = `mock/index.html?redline=${entry.folder}&side=before`;
+    const params = new URLSearchParams(entry.query);
+    params.set('redline', entry.folder);
+    params.delete('side');
+    $('#live').href = `mock/index.html?${params}`;
+    params.set('side', 'before');
+    $('#original').href = `mock/index.html?${params}`;
     for (const b of seg.children) b.setAttribute('aria-pressed', String(b.dataset.folder === entry.folder));
     seg.querySelector('[aria-pressed="true"]').scrollIntoView({ block: 'nearest', inline: 'center' });
     play();

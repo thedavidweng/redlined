@@ -5,6 +5,7 @@
 #   python3 _tools/sync.py --check  (write nothing; exit 1 listing the generated files that are stale; used by CI)
 # Order: the product README table (posting order), then redline folders it doesn't list yet, alphabetically.
 import json, pathlib, re, sys
+from urllib.parse import urlsplit
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 FOLDER = re.compile(r'^\d{2}-(?:fix|ux|feat|ui|a11y)-[a-z0-9-]+$')
@@ -28,6 +29,7 @@ def sync_product(product, files):
             'folder': folder,
             'title': readme_field(text, r'^# (.+)$', folder),
             'caption': readme_field(text, r'^\*\*Caption\*\*\s*\n\s*> (.+)$', ''),
+            'query': urlsplit(readme_field(text, r'^Live: \[[^\n]*?\]\(([^)]+)\)', '')).query,
         })
     stage = json.loads((product / '_shared' / 'stage.json').read_text())
     data = {'product': product.name, 'name': stage['name'], 'label': stage['label'], 'mock': stage['mock'], 'device': stage.get('device'),

@@ -6,7 +6,7 @@ These redlines cover the map home screen and the scooter sheet. They run on the 
 
 | # | Folder | Type | Description |
 | --- | --- | --- | --- |
-| 1 | [`01-fix-range-in-km`](01-fix-range-in-km/) | fix | The sheet prices in CAD but gives the range in miles. |
-| 2 | [`02-fix-trip-rate-missing`](02-fix-trip-rate-missing/) | fix | During the ride, the sheet lists only the unlock fee, not the per-minute rate. |
+| 1 | [`01-fix-range-in-km`](01-fix-range-in-km/) | fix | The sheet prices in CAD but gives the range in miles, and Slow mode in mph. |
+| 2 | [`02-feat-trip-rate-up-front`](02-feat-trip-rate-up-front/) | feat | The rate is not in the ride summary; propose it under the timer. |
 
 Preview: double-click `index.html`, or http://127.0.0.1:4173/lime/ with `python3 _tools/serve.py`. The map tiles need a network connection.

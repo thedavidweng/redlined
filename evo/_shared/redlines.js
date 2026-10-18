@@ -13,19 +13,22 @@ globalThis.REDLINED = {
       "n": 1,
       "folder": "01-feat-walk-route",
       "title": "Walk route",
-      "caption": "Select an Evo car and the app says \"0.31 km • 4 min\" with no hint where it comes from, and never shows the way. Now the figure is the real street walk, the route is on the map, and one tap opens the whole route with Directions in Apple Maps or Google Maps."
+      "caption": "Select an Evo car and the app says \"0.31 km • 4 min\" with no hint where it comes from, and never shows the way. Now the figure is the real street walk, the route is on the map, and one tap opens the whole route with Directions in Apple Maps or Google Maps.",
+      "query": "redline=01-feat-walk-route"
     },
     {
       "n": 2,
       "folder": "02-feat-find-parking",
       "title": "Find parking",
-      "caption": "In an Evo trip the map only shows Evo's own lots; the City of Vancouver meters you may also end at are only on a web page. Now Find parking shows every place the trip may end, picks the nearest by drive time, and Navigate opens Apple or Google Maps."
+      "caption": "In an Evo trip the map only shows Evo's own lots; the City of Vancouver meters you may also end at are only on a web page. Now Find parking shows every place the trip may end, picks the nearest by drive time, and Navigate opens Apple or Google Maps.",
+      "query": "redline=02-feat-find-parking&state=in-trip"
     },
     {
       "n": 3,
       "folder": "03-feat-parking-levels",
       "title": "Parking levels",
-      "caption": "70% of Evo members voted for parking pins that tell above ground from below ground. Today every lot is the same P and the level hides in the title. Now the sign carries a down or up arrow and its level, and the card says it in one line: \"Underground · Level P1\"."
+      "caption": "70% of Evo members voted for parking pins that tell above ground from below ground. Today every lot is the same P and the level hides in the title. Now the sign carries a down or up arrow and its level, and the card says it in one line: \"Underground · Level P1\".",
+      "query": "redline=03-feat-parking-levels"
     }
   ]
 };

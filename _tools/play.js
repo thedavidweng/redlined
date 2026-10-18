@@ -171,11 +171,15 @@
   }
 
   // ---- readiness ---------------------------------------------------------------------------------------------
+
   let clip = null;
+  // The stage loads clip.js for its `query` before mounting the mock. Request it again only when this document did not already run it:
+  // a second request can report an error while the first one ran, which must never leave the storyboard empty.
   const clipLoaded = new Promise(resolve => {
-    if (!/^[a-z0-9-]+$/.test(redline ?? '')) return resolve();
+    if (globalThis.redlineClip) return resolve(globalThis.redlineClip);
+    if (!/^[a-z0-9-]+$/.test(redline ?? '')) return resolve(null);
     document.head.append(Object.assign(document.createElement('script'), {
-      src: `../${redline}/clip.js`, onload: () => resolve((clip = globalThis.redlineClip ?? null)), onerror: () => resolve() }));  // no clip.js: nothing to animate
+      src: `../${redline}/clip.js`, onload: () => resolve(globalThis.redlineClip ?? null), onerror: () => resolve(null) }));  // no clip.js: nothing to animate
   });
   const retried = new WeakSet();
   function settled() {
@@ -192,7 +196,7 @@
     return images && idle && maps && Boolean(own);
   }
   async function whenReady() {
-    await clipLoaded;
+    clip = await clipLoaded;
     if (document.readyState !== 'complete') await new Promise(resolve => addEventListener('load', resolve, { once: true }));
     await document.fonts.ready;
     const t0 = performance.now();

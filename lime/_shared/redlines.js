@@ -12,14 +12,16 @@ globalThis.REDLINED = {
     {
       "n": 1,
       "folder": "01-fix-range-in-km",
-      "title": "Range in kilometres",
-      "caption": "The price on this sheet is in Canadian dollars, but the range is in miles. Canada measures in kilometres, so 13 mi becomes 21 km. Same scooter, same sheet, one less sum to do before you ride."
+      "title": "Kilometres, not miles",
+      "caption": "The price on this sheet is in Canadian dollars, but the range is in miles. Canada measures in kilometres, so 13 mi becomes 21 km. Slow mode on the ride sheet gets the same fix: 7 mph becomes 11 km/h.",
+      "query": "redline=01-fix-range-in-km"
     },
     {
       "n": 2,
-      "folder": "02-fix-trip-rate-missing",
-      "title": "Trip rate missing",
-      "caption": "Before the ride, Lime shows the price per minute. Once the timer starts, the ride sheet's Pricing lists only the $0 unlock fee. Here the rate sits under the timer."
+      "folder": "02-feat-trip-rate-up-front",
+      "title": "Trip rate up front",
+      "caption": "The ride summary shows time and range. What if it kept the per-minute rate beside them, without opening Pricing? This mock puts a sample rate under the timer.",
+      "query": "state=in-trip-expanded&redline=02-fix-trip-rate-up-front"
     }
   ]
 };

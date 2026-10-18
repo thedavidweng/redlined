@@ -13,37 +13,43 @@ globalThis.REDLINED = {
       "n": 1,
       "folder": "01-ux-swipe-to-confirm",
       "title": "Swipe to confirm",
-      "caption": "A single tap on Picked up closes the ticket instantly with no undo. Swiping across instead keeps the same flow and stops accidental completions during a rush."
+      "caption": "A single tap on Picked up closes the ticket instantly with no undo. Swiping across instead keeps the same flow and stops accidental completions during a rush.",
+      "query": "redline=01-ux-swipe-to-confirm"
     },
     {
       "n": 2,
       "folder": "02-ux-tap-twice-to-confirm",
       "title": "Tap twice to confirm",
-      "caption": "If swiping feels like too much, confirm twice instead. The first tap turns the button into Tap again for three seconds, and the second tap completes the order."
+      "caption": "If swiping feels like too much, confirm twice instead. The first tap turns the button into Tap again for three seconds, and the second tap completes the order.",
+      "query": "redline=02-ux-tap-twice-to-confirm"
     },
     {
       "n": 3,
       "folder": "03-feat-order-symbols",
       "title": "Order symbols",
-      "caption": "Similar customer names like Rohan and Ronan cause constant mixups on the counter. Giving each order a simple shape that prints on the receipt makes matching instant, even on plain thermal paper."
+      "caption": "Similar customer names like Rohan and Ronan cause constant mixups on the counter. Giving each order a simple shape that prints on the receipt makes matching instant, even on plain thermal paper.",
+      "query": "redline=03-feat-order-symbols"
     },
     {
       "n": 4,
       "folder": "04-feat-order-details",
       "title": "Order details on tap",
-      "caption": "Checking what items are in a bag should not force staff to leave the pickup screen. Tapping an order expands the items and kitchen notes right there so anyone can verify a ticket without losing their place."
+      "caption": "Checking what items are in a bag should not force staff to leave the pickup screen. Tapping an order expands the items and kitchen notes right there so anyone can verify a ticket without losing their place.",
+      "query": "redline=04-feat-order-details"
     },
     {
       "n": 5,
       "folder": "05-ux-picked-up-feedback",
       "title": "Picked up feedback",
-      "caption": "When an order disappears with zero feedback, staff second guess whether it actually went through. Showing a quick confirmation before the row leaves removes all doubt. Here are three ways to do it."
+      "caption": "When an order disappears with zero feedback, staff second guess whether it actually went through. Showing a quick confirmation before the row leaves removes all doubt. Here are three ways to do it.",
+      "query": "redline=05-ux-picked-up-feedback"
     },
     {
       "n": 6,
       "folder": "06-ux-channel-tabs",
       "title": "Channel tabs",
-      "caption": "Drivers always announce their app first, but filtering by channel takes three clicks in a dropdown. Dedicated tabs with order counts cut that down to a single tap."
+      "caption": "Drivers always announce their app first, but filtering by channel takes three clicks in a dropdown. Dedicated tabs with order counts cut that down to a single tap.",
+      "query": "redline=06-ux-channel-tabs"
     }
   ]
 };

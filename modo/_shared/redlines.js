@@ -13,43 +13,50 @@ globalThis.REDLINED = {
       "n": 1,
       "folder": "01-ux-one-time-entry",
       "title": "One entry for the trip time",
-      "caption": "Return type and time lived in two places, and you chose the type blind. Now one tap on the trip opens one sheet: pick up, return, SET or OPEN. A live line shows how many cars are free for it. On a car's page, the same sheet changes the return type in place."
+      "caption": "Return type and time lived in two places, and you chose the type blind. Now one tap on the trip opens one sheet: pick up, return, SET or OPEN. A live line shows how many cars are free for it. On a car's page, the same sheet changes the return type in place.",
+      "query": "redline=01-ux-one-time-entry"
     },
     {
       "n": 2,
       "folder": "02-ux-trip-times-together",
       "title": "Trip times together",
-      "caption": "Four places on one page show your trip's times, split by a button, BOOK and a row of numbers. To change the time you scroll past all of it. Now the strip, pick up, return and free window sit in one block, and each time opens its editor."
+      "caption": "Four places on one page show your trip's times, split by a button, BOOK and a row of numbers. To change the time you scroll past all of it. Now the strip, pick up, return and free window sit in one block, and each time opens its editor.",
+      "query": "redline=02-ux-trip-times-together&state=booked"
     },
     {
       "n": 3,
       "folder": "03-feat-drag-booking",
       "title": "Drag the booking",
-      "caption": "Your booking already shows as dark dots on the strip, but changing it sends you through a sheet of wheels, twice. Now the dots are one block: drag it to move the trip, drag an end to change pick up or return. It snaps to 15 minutes and stops at unavailable times."
+      "caption": "Your booking already shows as dark dots on the strip, but changing it sends you through a sheet of wheels, twice. Now the dots are one block: drag it to move the trip, drag an end to change pick up or return. It snaps to 15 minutes and stops at unavailable times.",
+      "query": "redline=03-feat-drag-booking&state=booked"
     },
     {
       "n": 4,
       "folder": "04-feat-day-view",
       "title": "Day view",
-      "caption": "A 12-hour open return runs off the edge of the hourly strip, and you can't see the free window at all. Now each day is one row, so the whole booking and everything free around it fit on screen. Drag it across midnight and it carries on in the next row."
+      "caption": "A 12-hour open return runs off the edge of the hourly strip, and you can't see the free window at all. Now each day is one row, so the whole booking and everything free around it fit on screen. Drag it across midnight and it carries on in the next row.",
+      "query": "redline=04-feat-day-view&state=booked"
     },
     {
       "n": 5,
       "folder": "05-feat-walk-and-directions",
       "title": "Walk and directions",
-      "caption": "Select a Modo car and it never says how far it is. Now: \"3 min · 240 m\" under the station. Tap it and the sheet drops away to show the whole walking route, with Directions in Apple Maps or Google Maps. No more guessing the walk."
+      "caption": "Select a Modo car and it never says how far it is. Now: \"3 min · 240 m\" under the station. Tap it and the sheet drops away to show the whole walking route, with Directions in Apple Maps or Google Maps. No more guessing the walk.",
+      "query": "redline=05-feat-walk-and-directions"
     },
     {
       "n": 6,
       "folder": "06-ux-filter-live-count",
       "title": "Live count on Filters",
-      "caption": "Filters give no feedback. You toggle chips, tap APPLY, check the map, reopen, change, close, check again. Now the button counts as you tap: SUV, \"SHOW 9 CARS\"; add all-wheel drive, \"SHOW 3 CARS\". Tap it and the map shows just those cars."
+      "caption": "Filters give no feedback. You toggle chips, tap APPLY, check the map, reopen, change, close, check again. Now the button counts as you tap: SUV, \"SHOW 9 CARS\"; add all-wheel drive, \"SHOW 3 CARS\". Tap it and the map shows just those cars.",
+      "query": "redline=06-ux-filter-live-count"
     },
     {
       "n": 7,
       "folder": "07-feat-filter-from-chips",
       "title": "Filter from chips",
-      "caption": "The nearest SUV is taken. The \"SUV\" chip on its card does nothing, so you open Filters, pick the class, apply, then scan the map. Now the chips are buttons: tap SUV and the map keeps only SUVs, with a toast, and the sheet jumps to the next-nearest one."
+      "caption": "The nearest SUV is taken. The \"SUV\" chip on its card does nothing, so you open Filters, pick the class, apply, then scan the map. Now the chips are buttons: tap SUV and the map keeps only SUVs, with a toast, and the sheet jumps to the next-nearest one.",
+      "query": "redline=07-feat-filter-from-chips"
     }
   ]
 };
