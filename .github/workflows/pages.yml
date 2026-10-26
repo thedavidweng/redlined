@@ -35,8 +35,8 @@ jobs:
         run: python3 _tools/sync.py --check || { echo "::error::Run python3 _tools/sync.py and commit the result."; exit 1; }
       - name: Lint and test
         run: |
-          pipx run ruff==0.17.0 check _tools
-          npx -y oxlint@1.87.0
+          pipx run ruff==0.17.2 check _tools
+          npx -y oxlint@1.89.0
           node deliverect/mock/model.test.mjs
           node _tools/performance.test.mjs
       - name: Build
