@@ -30,13 +30,13 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
-          python-version: '3.12'
+          python-version: '3.15'
       - name: Generated files are up to date
         run: python3 _tools/sync.py --check || { echo "::error::Run python3 _tools/sync.py and commit the result."; exit 1; }
       - name: Lint and test
         run: |
-          pipx run ruff==0.17.2 check _tools
-          npx -y oxlint@1.89.0
+          pipx run ruff==0.17.3 check _tools
+          npx -y oxlint@1.90.0
           node deliverect/mock/model.test.mjs
           node _tools/performance.test.mjs
       - name: Build
