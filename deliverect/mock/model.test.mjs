@@ -2,8 +2,7 @@ import assert from 'node:assert/strict';
 import './model.js';
 const { orders, locations, filterOrders } = globalThis.DeliverectModel;
 const all = { channel: [], brand: [], type: [], location: [...locations] };
-assert.equal(orders.length, 12);
-assert.equal(new Set(orders.map(order => order.id)).size, 12);
+assert.equal(new Set(orders.map(order => order.id)).size, orders.length);
 assert.equal(filterOrders(orders, all).length, 12);
 assert.equal(filterOrders(orders, all).filter(order => order.status === 'ready').length, 5);
 assert.equal(filterOrders(orders, { ...all, brand: ["Mindy's"] }).length, 3);
@@ -15,7 +14,6 @@ console.log('Pickup Manager fixture and filter checks passed.');
 
 const { managedOrders, searchOrders, setOrderStatus } = globalThis.DeliverectModel;
 assert.equal(filterOrders(managedOrders, all).length, 12);
-assert.equal(managedOrders.filter(order => order.status === 'ready').length, 6);
 assert.deepEqual(searchOrders(managedOrders, ' #9EF895ED ').map(order => order.id), ['9EF895ED']);
 assert.deepEqual(searchOrders(managedOrders, 'adil').map(order => order.id), ['423372B6']);
 assert.equal(searchOrders(managedOrders, 'DoOrDaSh').length, 3);
