@@ -26,5 +26,5 @@ Single-context: `GLOSSARY.md` and `docs/adr/` at the repo root. See `docs/agents
 
 ## Checks
 
-Run before pushing (CI runs the same): `python3 _tools/sync.py --check` (generated files are current), `uvx ruff@0.17.2 check _tools`,
-`npx -y oxlint@1.89.0`, `node deliverect/mock/model.test.mjs`. Ruff is lint-only; do not run `ruff format`.
+Run before pushing (CI runs the same): `python3 _tools/sync.py --check` (generated files are current), `uvx ruff@0.17.3 check _tools`,
+`npx -y oxlint@1.90.0`, `node deliverect/mock/model.test.mjs`. Ruff is lint-only; do not run `ruff format`.
